@@ -46,6 +46,7 @@ add_subdirectory(pwm_plus)
 
 add_subdirectory(rotary_encoder)
 add_subdirectory(st7735)
+add_subdirectory(mcp23008)
 
 add_subdirectory(gfx)
 add_subdirectory(oled)
