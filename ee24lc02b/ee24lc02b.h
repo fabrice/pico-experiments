@@ -52,6 +52,7 @@ public:
 	~ee24lc02b();
 
 	void write_byte( uint8_t address, uint8_t data );
+	void write_page( uint8_t address, uint8_t data[8] );
 
 	uint8_t read_byte( uint8_t address );
 	void read_bytes( uint8_t address, uint8_t buffer[], uint16_t length );

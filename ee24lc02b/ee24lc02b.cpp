@@ -48,6 +48,16 @@ void ee24lc02b::write_byte( uint8_t address, uint8_t data ) {
 
 //----------------------------------------------------------------
 
+void ee24lc02b::write_page( uint8_t address, uint8_t data[8] ) {
+	uint8_t buffer[9];
+	buffer[0] = address % EE24LC02B_PAGE_SIZE;
+	memcpy( buffer + 1, data, 8 );
+	i2c_write_blocking( wire, this->address, buffer, sizeof(buffer), false );
+	sleep_ms( EE24LC02B_WRITE_CYCLE );
+}
+
+//----------------------------------------------------------------
+
 uint8_t ee24lc02b::read_byte( uint8_t address ) {
 	int error = i2c_write_blocking( wire, this->address, &address, sizeof(address), true );
 	if ( error < PICO_OK ) return 0;
