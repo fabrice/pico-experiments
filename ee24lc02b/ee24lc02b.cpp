@@ -42,7 +42,6 @@ ee24lc02b::~ee24lc02b() {
 void ee24lc02b::write_byte( uint8_t address, uint8_t data ) {
 	uint8_t buffer[] = { address, data };
 	i2c_write_blocking( wire, this->address, buffer, sizeof(buffer), false );
-//	i2c_write_bytes_blocking( wire, this->address, address, data );
 	sleep_ms( EE24LC02B_WRITE_CYCLE );
 }
 
@@ -50,7 +49,7 @@ void ee24lc02b::write_byte( uint8_t address, uint8_t data ) {
 
 void ee24lc02b::write_page( uint8_t address, uint8_t data[8] ) {
 	uint8_t buffer[9];
-	buffer[0] = address % EE24LC02B_PAGE_SIZE;
+	buffer[0] = address - (address % EE24LC02B_PAGE_SIZE);
 	memcpy( buffer + 1, data, 8 );
 	i2c_write_blocking( wire, this->address, buffer, sizeof(buffer), false );
 	sleep_ms( EE24LC02B_WRITE_CYCLE );
