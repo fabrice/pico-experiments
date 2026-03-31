@@ -80,29 +80,25 @@ constexpr uint8_t DELAY_FLAG = 0x80;
 
 //----------------------------------------------------------------
 
-st7735::st7735( spi_ref spi, uint reset_gpio, uint chip_enable_gpio, uint dc_gpio, uint backlight_gpio, uint8_t offset, bool bgr )
-	: _spi( spi ),
-	  _reset_gpio( reset_gpio ),
-	  _chip_enable_gpio( chip_enable_gpio ),
-	  _dc_gpio( dc_gpio ),
-	  _backlight_gpio( backlight_gpio ),
-	  _offset( offset ),
-	  _width( ST7735_TFTWIDTH),
-	  _height( ST7735_TFTHEIGHT),
-	  _brightness( 63 ),
-	  _color( 0xffff ),
-	  _background_color( 0x0000 ),
-	  _line( 0 ),
-	  _column( 0 ),
-	  _font( font5x7 ) {
+st7735::st7735( wire_ref wire, uint reset_gpio, uint dc_gpio, uint backlight_gpio, uint8_t offset, bool bgr ):
+	_wire( wire ),
+	_reset_gpio( reset_gpio ),
+	_dc_gpio( dc_gpio ),
+	_backlight_gpio( backlight_gpio ),
+	_offset( offset ),
+	_width( ST7735_TFTWIDTH),
+	_height( ST7735_TFTHEIGHT),
+	_brightness( 63 ),
+	_foreground_color( 0xffff ),
+	_background_color( 0x0000 ),
+	_line( 0 ),
+	_column( 0 ),
+	_font( font5x7 ) {
 	_color_mode = bgr ? ST7735_MADCTL_BGR : ST7735_MADCTL_RGB;
 
 	gpio_init( _reset_gpio);
 	gpio_set_dir( _reset_gpio, GPIO_OUT );
-
-	gpio_init( _chip_enable_gpio );
-	gpio_set_dir(_chip_enable_gpio, GPIO_OUT );
-	gpio_put( _chip_enable_gpio, 1 );
+	gpio_put( _reset_gpio, 1 );
 
 	gpio_init( _dc_gpio );
 	gpio_set_dir( _dc_gpio, GPIO_OUT );
@@ -111,6 +107,8 @@ st7735::st7735( spi_ref spi, uint reset_gpio, uint chip_enable_gpio, uint dc_gpi
 	gpio_init( _backlight_gpio );
 	gpio_set_dir( _backlight_gpio, GPIO_OUT );
 	gpio_put( _backlight_gpio, 0 );
+
+	this->display_init();
 }
 
 //----------------------------------------------------------------
@@ -119,38 +117,14 @@ st7735::~st7735() {
 	this->erase();
 	this->set_on( false );
 	this->reset();
+
+	delete _wire;
+	_wire = nullptr;
 }
 
 //----------------------------------------------------------------
 
-void st7735::command( uint8_t c ) {
-	gpio_put( _dc_gpio, 0 );
-	gpio_put( _chip_enable_gpio, 0 );
-	spi_write_blocking( _spi, &c, 1 );
-	gpio_put( _chip_enable_gpio, 1 );
-}
-
-//----------------------------------------------------------------
-
-void st7735::data( uint8_t c ) {
-	gpio_put( _dc_gpio, 1 );
-	gpio_put( _chip_enable_gpio, 0 );
-	spi_write_blocking( _spi, &c, 1 );
-	gpio_put( _chip_enable_gpio, 1 );
-}
-
-//----------------------------------------------------------------
-
-void st7735::reset() {
-	gpio_put( _reset_gpio, 0 );
-	sleep_ms( 50 );
-	gpio_put( _reset_gpio, 1 );
-	sleep_ms( 50 );
-}
-
-//----------------------------------------------------------------
-
-void st7735::begin() {
+void st7735::display_init() {
 	this->reset();
 
 	const uint8_t commands[] = {
@@ -237,6 +211,38 @@ void st7735::begin() {
 
 //----------------------------------------------------------------
 
+void st7735::command( uint8_t c ) {
+	if ( _wire != nullptr ) {
+		gpio_put( _dc_gpio, 0 );
+		_wire->start();
+		_wire->write_bytes( c );
+		_wire->finish();
+		gpio_put( _dc_gpio, 1 );
+	}
+}
+
+//----------------------------------------------------------------
+
+void st7735::data( uint8_t c ) {
+	if ( _wire != nullptr ) {
+		gpio_put( _dc_gpio, 1 );
+		_wire->start();
+		_wire->write_bytes( c );
+		_wire->finish();
+	}
+}
+
+//----------------------------------------------------------------
+
+void st7735::reset() {
+	gpio_put( _reset_gpio, 0 );
+	sleep_ms( 50 );
+	gpio_put( _reset_gpio, 1 );
+	sleep_ms( 50 );
+}
+
+//----------------------------------------------------------------
+
 void st7735::set_on( bool on ) {
 	if ( !on ) this->set_brightness( 0 );
 
@@ -292,12 +298,14 @@ void st7735::draw_pixel( int16_t x, int16_t y, uint16_t color ) {
 
 	uint8_t buf[2] = {
 		static_cast<uint8_t>(color >> 8),
-		static_cast<uint8_t>(color & 0xFF),
+		static_cast<uint8_t>(color & 0xff),
 	};
-	gpio_put(_dc_gpio, 1);
-	gpio_put(_chip_enable_gpio, 0);
-	spi_write_blocking(_spi, buf, 2);
-	gpio_put(_chip_enable_gpio, 1);
+	if ( _wire != nullptr ) {
+		gpio_put( _dc_gpio, 1 );
+		_wire->start();
+		_wire->write_bytes( static_cast<uint8_t>(color >> 8), static_cast<uint8_t>(color & 0xff) );
+		_wire->finish();
+	}
 }
 
 //----------------------------------------------------------------
@@ -320,7 +328,7 @@ void st7735::draw_block( int16_t x, int16_t y, int16_t w, int16_t h, uint16_t co
 			buf[i + 1] = lo;
 		}
 
-		this->draw_pixelmap( x, y + rows, w, block_rows, buf, buf_len );
+		this->draw_pixmap( x, y + rows, w, block_rows, buf, buf_len );
 		delete[] buf;
 		rows += max_rows;
 	}
@@ -328,7 +336,7 @@ void st7735::draw_block( int16_t x, int16_t y, int16_t w, int16_t h, uint16_t co
 
 //----------------------------------------------------------------
 
-void st7735::draw_pixelmap( int16_t x, int16_t y, int16_t w, int16_t h, const uint8_t* buffer, size_t length ) {
+void st7735::draw_pixmap( int16_t x, int16_t y, int16_t w, int16_t h, const uint8_t* buffer, size_t length ) {
 	if (x >= _width || y >= _height) return;
 
 	if ((x + w - 1) >= _width) w = _width - x;
@@ -336,10 +344,12 @@ void st7735::draw_pixelmap( int16_t x, int16_t y, int16_t w, int16_t h, const ui
 
 	this->set_addr_window(x, y, x + w - 1, y + h - 1);
 
-	gpio_put( _dc_gpio, 1);
-	gpio_put( _chip_enable_gpio, 0 );
-	spi_write_blocking( _spi, buffer, length );
-	gpio_put( _chip_enable_gpio, 1) ;
+	if ( _wire != nullptr ) {
+		gpio_put( _dc_gpio, 1 );
+		_wire->start();
+		_wire->write_bytes( buffer, length );
+		_wire->finish();
+	}
 }
 
 //----------------------------------------------------------------
@@ -357,13 +367,13 @@ void st7735::draw_bitmap( int16_t x, int16_t y, int16_t w, int16_t h, const uint
 			uint16_t line = pixy / 8;
 			uint8_t bit = pixy % 8;
 			uint16_t idx = pixx + w * line;
-			uint16_t pixel = !!(buffer[ idx ] & (1 << bit)) ? _color : _background_color;
+			uint16_t pixel = !!(buffer[ idx ] & (1 << bit)) ? _foreground_color : _background_color;
 			pixelmap[ (pixx + w * pixy) * 2 + 0 ] = pixel >> 8;
 			pixelmap[ (pixx + w * pixy) * 2 + 1 ] = pixel & 0xff;
 		}
 	}
 
-	this->draw_pixelmap( x, y, w, h, (const uint8_t*)pixelmap , w * h * 2 );
+	this->draw_pixmap( x, y, w, h, (const uint8_t*)pixelmap , w * h * 2 );
 
 	delete[] pixelmap;
 }
@@ -402,8 +412,8 @@ void st7735::print( int16_t x, int16_t y, char character ) {
 	uint8_t char_image[6 * 8 * 2]; // 6 wide, 8 tall, 2 bytes per pixel
 	size_t idx = 0;
 
-	uint8_t color_hi = _color >> 8;
-	uint8_t color_lo = _color & 0xFF;
+	uint8_t color_hi = _foreground_color >> 8;
+	uint8_t color_lo = _foreground_color & 0xFF;
 	uint8_t bg_hi = _background_color >> 8;
 	uint8_t bg_lo = _background_color & 0xFF;
 
@@ -423,7 +433,7 @@ void st7735::print( int16_t x, int16_t y, char character ) {
 		}
 	}
 
-	this->draw_pixelmap( x, y, 6, 8, char_image, sizeof(char_image) );
+	this->draw_pixmap( x, y, 6, 8, char_image, sizeof(char_image) );
 }
 
 //----------------------------------------------------------------

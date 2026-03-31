@@ -15,7 +15,7 @@
 
 #include "pico/stdlib.h"
 
-#include "hardware/spi.h"
+#include "wire.h"
 
 #include <cstring>
 
@@ -23,8 +23,6 @@
 
 class st7735;
 using st7735_ref = st7735*;
-
-using spi_ref = spi_inst_t*;
 
 //----------------------------------------------------------------
 
@@ -34,13 +32,20 @@ constexpr uint8_t ST7735_TFTHEIGHT = 160;
 //----------------------------------------------------------------
 
 class st7735 {
+
 public:
-	st7735( spi_ref spi, uint reset_gpio, uint chip_enable_gpio, uint dc_gpio, uint backlight_gpio, uint8_t offset = 0, bool bgr = false );
+
+	st7735( wire_ref wire, uint reset_gpio, uint dc_gpio, uint backlight_gpio, uint8_t offset = 0, bool bgr = false );
 	~st7735();
 
-	void begin();
+private:
+
+	void display_init();
 	void command( uint8_t c );
 	void data( uint8_t c );
+
+public:
+
 	void reset();
 
 	inline uint16_t get_width() const { return _width; }
@@ -59,7 +64,7 @@ public:
 	void draw_pixel( int16_t x, int16_t y, uint16_t color );
 	void draw_block( int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color );
 
-	void draw_pixelmap( int16_t x, int16_t y, int16_t w, int16_t h, const uint8_t* buffer, size_t length );
+	void draw_pixmap( int16_t x, int16_t y, int16_t w, int16_t h, const uint8_t* buffer, size_t length );
 	void draw_bitmap( int16_t x, int16_t y, int16_t w, int16_t h, const uint8_t* buffer, size_t length );
 
 	void fill_screen( uint16_t color );
@@ -79,8 +84,8 @@ public:
 	void erase( uint8_t line );
 	void erase( uint8_t line, uint8_t column );
 
-	void set_color( uint16_t color ) { _color = color; }
-	void set_color( uint8_t red, uint8_t green, uint8_t blue ) { _color = rgb_to_565( red, green, blue ); }
+	void set_foreground_color( uint16_t color ) { _foreground_color = color; }
+	void set_foreground_color( uint8_t red, uint8_t green, uint8_t blue ) { _foreground_color = rgb_to_565( red, green, blue ); }
 	void set_background_color( uint16_t color ) { _background_color = color; }
 	void set_background_color( uint8_t red, uint8_t green, uint8_t blue ) { _background_color = rgb_to_565( red, green, blue ); }
 
@@ -90,21 +95,22 @@ public:
 	void set_rotation( uint8_t m );
 
 private:
-	spi_ref _spi;
+
+	wire_ref _wire;
 	uint _reset_gpio;
-	uint _chip_enable_gpio;
 	uint _dc_gpio;
 	uint _backlight_gpio;
 	uint8_t _offset;
 	uint16_t _width;
 	uint16_t _height;
 	uint8_t _brightness;
-	uint16_t _color;
+	uint16_t _foreground_color;
 	uint16_t _background_color;
 	uint8_t _line;
 	uint8_t _column;
 	uint8_t _color_mode;
 	const uint8_t* _font; // pointer to 5x7 font data in memory
+
 };
 
 //----------------------------------------------------------------
