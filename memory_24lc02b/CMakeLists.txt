@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.30)
 
-project(ee24lc02b_lib CXX C ASM)
+project(memory_24lc02b_lib CXX C ASM)
 
 add_library(${PROJECT_NAME} STATIC
-	ee24lc02b.cpp
+	memory_24lc02b.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

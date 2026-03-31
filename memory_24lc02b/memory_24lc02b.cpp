@@ -4,11 +4,12 @@
 // Target : PicoSDK C/C++
 // CFPT Électronique
 //
-// mcp23008
+// eeprom 256 bytes
+// memory_24lc02b
 //
 //----------------------------------------------------------------
 
-#include "ee24lc02b.h"
+#include "memory_24lc02b.h"
 
 #include "pico/stdlib.h"
 #include "hardware_i2c_plus.h"
@@ -20,26 +21,26 @@ constexpr uint32_t EE24LC02B_WRITE_CYCLE = 5; // ms
 
 //----------------------------------------------------------------
 
-ee24lc02b::ee24lc02b():
+memory_24lc02b::memory_24lc02b():
 	wire( nullptr ),
 	address( EE24LC02B_ADDRESS ) {
 }
 
 //----------------------------------------------------------------
 
-ee24lc02b::ee24lc02b( i2c_ref wire, uint8_t address ):
+memory_24lc02b::memory_24lc02b( i2c_ref wire, uint8_t address ):
 	wire( wire ),
 	address( address ) {
 }
 
 //----------------------------------------------------------------
 
-ee24lc02b::~ee24lc02b() {
+memory_24lc02b::~memory_24lc02b() {
 }
 
 //----------------------------------------------------------------
 
-void ee24lc02b::write_byte( uint8_t address, uint8_t data ) {
+void memory_24lc02b::write_byte( uint8_t address, uint8_t data ) {
 	uint8_t buffer[] = { address, data };
 	i2c_write_blocking( wire, this->address, buffer, sizeof(buffer), false );
 	sleep_ms( EE24LC02B_WRITE_CYCLE );
@@ -47,9 +48,11 @@ void ee24lc02b::write_byte( uint8_t address, uint8_t data ) {
 
 //----------------------------------------------------------------
 
-void ee24lc02b::write_page( uint8_t address, uint8_t data[8] ) {
+void memory_24lc02b::write_page( uint8_t address, uint8_t data[8] ) {
+	address -= address % EE24LC02B_PAGE_SIZE;
+
 	uint8_t buffer[9];
-	buffer[0] = address - (address % EE24LC02B_PAGE_SIZE);
+	buffer[0] = address;
 	memcpy( buffer + 1, data, 8 );
 	i2c_write_blocking( wire, this->address, buffer, sizeof(buffer), false );
 	sleep_ms( EE24LC02B_WRITE_CYCLE );
@@ -57,7 +60,7 @@ void ee24lc02b::write_page( uint8_t address, uint8_t data[8] ) {
 
 //----------------------------------------------------------------
 
-uint8_t ee24lc02b::read_byte( uint8_t address ) {
+uint8_t memory_24lc02b::read_byte( uint8_t address ) {
 	int error = i2c_write_blocking( wire, this->address, &address, sizeof(address), true );
 	if ( error < PICO_OK ) return 0;
 
@@ -68,7 +71,18 @@ uint8_t ee24lc02b::read_byte( uint8_t address ) {
 
 //----------------------------------------------------------------
 
-void ee24lc02b::read_bytes( uint8_t address, uint8_t buffer[], uint16_t length ) {
+void memory_24lc02b::read_page( uint8_t address, uint8_t data[8] ) {
+	address -= address % EE24LC02B_PAGE_SIZE;
+
+	int error = i2c_write_blocking( wire, this->address, &address, sizeof(address), true );
+	if ( error < PICO_OK ) return;
+
+	error = i2c_read_blocking( wire, this->address, data, 8, false );
+}
+
+//----------------------------------------------------------------
+
+void memory_24lc02b::read_bytes( uint8_t address, uint8_t buffer[], uint16_t length ) {
 	int error = i2c_write_blocking( wire, this->address, &address, sizeof(address), true );
 	if ( error < PICO_OK ) return;
 
@@ -77,7 +91,7 @@ void ee24lc02b::read_bytes( uint8_t address, uint8_t buffer[], uint16_t length )
 
 //----------------------------------------------------------------
 
-void ee24lc02b::fill( uint8_t data ) {
+void memory_24lc02b::fill( uint8_t data ) {
 	uint8_t buffer[EE24LC02B_PAGE_SIZE + 1];
 	memset( buffer + 1, data, EE24LC02B_PAGE_SIZE );
 
@@ -91,7 +105,7 @@ void ee24lc02b::fill( uint8_t data ) {
 
 //----------------------------------------------------------------
 
-void ee24lc02b::erase() {
+void memory_24lc02b::erase() {
 	this->fill( 0x00 );
 }
 

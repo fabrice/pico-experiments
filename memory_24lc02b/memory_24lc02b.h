@@ -4,7 +4,8 @@
 // Target : PicoSDK C/C++
 // CFPT Électronique
 //
-// ee24lc02b
+// eeprom 256 bytes
+// memory_24lc02b
 //
 //----------------------------------------------------------------
 
@@ -18,8 +19,8 @@
 
 //----------------------------------------------------------------
 
-class ee24lc02b;
-using ee24lc02b_ref = ee24lc02b*;
+class memory_24lc02b;
+using memory_24lc02b_ref = memory_24lc02b*;
 
 //----------------------------------------------------------------
 
@@ -32,7 +33,7 @@ constexpr uint8_t EE24LC02B_I2C_FREQUENCY = 8;
 
 //----------------------------------------------------------------
 
-class ee24lc02b {
+class memory_24lc02b {
 
 private:
 
@@ -44,17 +45,19 @@ private:
 
 public:
 
-	ee24lc02b();
-	ee24lc02b( i2c_ref wire, uint8_t address );
+	memory_24lc02b();
+	memory_24lc02b( i2c_ref wire, uint8_t address );
 
 public:
 
-	~ee24lc02b();
+	~memory_24lc02b();
 
 	void write_byte( uint8_t address, uint8_t data );
+
 	void write_page( uint8_t address, uint8_t data[8] );
 
 	uint8_t read_byte( uint8_t address );
+	void read_page( uint8_t address, uint8_t data[8] );
 	void read_bytes( uint8_t address, uint8_t buffer[], uint16_t length );
 
 	void fill( uint8_t data );
