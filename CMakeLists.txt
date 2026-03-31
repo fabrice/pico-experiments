@@ -3,7 +3,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Initialise pico_sdk from installed location
@@ -43,10 +43,14 @@ add_subdirectory(std_plus)
 add_subdirectory(pico_plus)
 add_subdirectory(gpio_plus)
 add_subdirectory(pwm_plus)
+add_subdirectory(pico_wire)
 
 add_subdirectory(rotary_encoder)
 add_subdirectory(st7735)
+
 add_subdirectory(mcp23008)
+add_subdirectory(mcp41xxx)
+add_subdirectory(ee24lc02b)
 
 add_subdirectory(gfx)
 add_subdirectory(oled)
@@ -69,8 +73,11 @@ target_link_libraries(${PROJECT_NAME}
 	pwm_plus_lib
 	rotary_encoder_lib
 	st7735_lib
+	mcp23008_lib
+	ee24lc02b_lib
 	gfx_lib
 	oled_lib
+	pico_wire_lib
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE

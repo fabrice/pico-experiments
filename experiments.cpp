@@ -11,10 +11,13 @@
 #include "pico/printf.h"
 
 #include "pwm.h"
+#include "wire_spi.h"
 #include "oled.h"
 #include "oled_fn.h"
 #include "rotary_encoder.h"
 #include "st7735.h"
+#include "mcp23008.h"
+#include "ee24lc02b.h"
 
 #include "font_5x7.h"
 
@@ -31,16 +34,16 @@
 
 // OLED
 
-constexpr uint I2C_SDA_GPIO = 4;
-constexpr uint I2C_SCL_GPIO = 5;
+constexpr uint I2C0_SDA_GPIO = 4;
+constexpr uint I2C0_SCL_GPIO = 5;
 
 constexpr uint OLED_RESET_GPIO = 7;
 
 // TFT ST7735
 
-constexpr uint SPI_SCK_GPIO = 18;
-constexpr uint SPI_MISO_GPIO = 16;
-constexpr uint SPI_MOSI_GPIO = 19;
+constexpr uint SPI0_SCLK_GPIO = 18;
+constexpr uint SPI0_MISO_GPIO = 16;
+constexpr uint SPI0_MOSI_GPIO = 19;
 
 constexpr uint ST7735_CS_GPIO = 17;
 constexpr uint ST7735_RESET_GPIO = 6;
@@ -247,11 +250,6 @@ void io_init() {
     gpio_set_dir( OLED_RESET_GPIO, GPIO_OUT );
     gpio_put( OLED_RESET_GPIO, 1 );
 
-	// I2C0 2 MHz
-    i2c_init( i2c0, 2e6 );
-    gpio_set_function( I2C_SCL_GPIO, GPIO_FUNC_I2C );
-    gpio_set_function( I2C_SDA_GPIO, GPIO_FUNC_I2C );
-
 	// TFT ST7735
 
     gpio_init( ST7735_BACKLIGHT_GPIO );
@@ -261,13 +259,6 @@ void io_init() {
     gpio_init( ST7735_RESET_GPIO );
     gpio_set_dir( ST7735_RESET_GPIO, GPIO_OUT );
     gpio_put( ST7735_RESET_GPIO, 0 );
-
-	// SPI0 8 MHz
-    spi_init( spi0, 8e6 );
-    gpio_set_function( SPI_SCK_GPIO, GPIO_FUNC_SPI );
-    gpio_set_function( SPI_MISO_GPIO, GPIO_FUNC_SPI );
-    gpio_set_function( SPI_MOSI_GPIO, GPIO_FUNC_SPI );
-
 }
 
 //----------------------------------------------------------------
@@ -277,66 +268,90 @@ int main() {
 	io_init();
 
 	// oled
-	oled_ref display_oled = new OLED( i2c0, SSD1309_ADDRESS, OLED_RESET_GPIO );
-	display_oled->draw_logo();
+	wire_i2c_ref display_wire_i2c = new wire_i2c( 0, SSD1309_ADDRESS );
+	display_wire_i2c->io_init( I2C0_SDA_GPIO, I2C0_SCL_GPIO, 1.5e6 );
+	oled_ref display_oled = nullptr;
+	display_oled = new OLED( display_wire_i2c, OLED_RESET_GPIO );
+	if ( display_oled != nullptr) display_oled->draw_logo();
 
 	// st7735
-	st7735_ref display_tft = new st7735( spi0, ST7735_RESET_GPIO, ST7735_CS_GPIO, ST7735_DC_GPIO, ST7735_BACKLIGHT_GPIO );
-    display_tft->begin();
-	display_tft->set_color( 28, 186, 111 );
-	display_tft->set_background_color( 0, 0, 0 );
-	display_tft->draw_bitmap( 0, 0, 128, 160, cfpt_logo_128_160, sizeof( cfpt_logo_128_160 ) );
+	wire_spi_ref display_wire_spi = new wire_spi( 0, ST7735_CS_GPIO );
+	display_wire_spi->io_init( SPI0_SCLK_GPIO, SPI0_MISO_GPIO, SPI0_MOSI_GPIO, 8e6 );
+	st7735_ref display_tft = nullptr;
+	display_tft = new st7735( display_wire_spi, ST7735_RESET_GPIO, ST7735_DC_GPIO, ST7735_BACKLIGHT_GPIO );
+	if ( display_tft != nullptr ) display_tft->set_foreground_color( 28, 186, 111 );
+	if ( display_tft != nullptr ) display_tft->set_background_color( 0, 0, 0 );
+	if ( display_tft != nullptr ) display_tft->draw_bitmap( 0, 0, 128, 160, cfpt_logo_128_160, sizeof( cfpt_logo_128_160 ) );
 
 	sleep_ms( 2500 );
 
-	display_oled->erase();
-	display_tft->erase();
+	if ( display_oled != nullptr ) display_oled->erase();
+	if ( display_tft != nullptr ) display_tft->erase();
 
 	sleep_ms( 250 );
 
-	display_oled->print_center( "Hello OLED", 1 );
-	display_tft->fill_screen( (31 << 11) | ( 0 << 5) | ( 0 << 0) );
+	if ( display_oled != nullptr) display_oled->print_center( "Hello OLED", 1 );
+	if ( display_tft != nullptr ) display_tft->fill_screen( (31 << 11) | ( 0 << 5) | ( 0 << 0) );
 	sleep_ms( 250 );
-	display_tft->fill_screen( ( 0 << 11) | (63 << 5) | ( 0 << 0) );
+	if ( display_tft != nullptr ) display_tft->fill_screen( ( 0 << 11) | (63 << 5) | ( 0 << 0) );
 	sleep_ms( 250 );
-	display_tft->fill_screen( ( 0 << 11) | ( 0 << 5) | (31 << 0) );
+	if ( display_tft != nullptr ) display_tft->fill_screen( ( 0 << 11) | ( 0 << 5) | (31 << 0) );
 	sleep_ms( 250 );
-	display_oled->print( '0', 0, 20 );
-	display_oled->print( '1', 1, 20 );
-	display_oled->print( '2', 2, 20 );
-	display_oled->print( '3', 3, 20 );
-	display_oled->print( '4', 4, 20 );
-	display_oled->print( '5', 5, 20 );
-	display_oled->print( '6', 6, 20 );
-	display_oled->print( "012345678901234567890", 7, 0 );
-	display_tft->fill_screen( 0, 0, 0 );
-	display_tft->set_color( 255, 255, 255 );
-	display_tft->set_background_color( 0, 0, 0 );
-	display_tft->set_lico( 4, 0 );
-	display_tft->print_center( 4, "Hello ST7735" );
+	if ( display_oled != nullptr) display_oled->print( '0', 0, 20 );
+	if ( display_oled != nullptr) display_oled->print( '1', 1, 20 );
+	if ( display_oled != nullptr) display_oled->print( '2', 2, 20 );
+	if ( display_oled != nullptr) display_oled->print( '3', 3, 20 );
+	if ( display_oled != nullptr) display_oled->print( '4', 4, 20 );
+	if ( display_oled != nullptr) display_oled->print( '5', 5, 20 );
+	if ( display_oled != nullptr) display_oled->print( '6', 6, 20 );
+	if ( display_oled != nullptr) display_oled->print( "012345678901234567890", 7, 0 );
+
+	if ( display_tft != nullptr ) display_tft->fill_screen( 0, 0, 0 );
+	if ( display_tft != nullptr ) display_tft->set_foreground_color( 255, 255, 255 );
+	if ( display_tft != nullptr ) display_tft->set_background_color( 0, 0, 0 );
+	if ( display_tft != nullptr ) display_tft->set_lico( 4, 0 );
+	if ( display_tft != nullptr ) display_tft->print_center( 4, "Hello ST7735" );
+
+	// expander
+	wire_i2c_ref expander_wire = new wire_i2c( 0, MCP23008_ADDRESS );
+	mcp23008_ref expander = nullptr;
+	expander = new mcp23008( expander_wire, 0xff, 0x00 );
+	if ( expander != nullptr ) expander->gpio_put_all( 0x00 );
+	if ( expander != nullptr ) expander->gpio_set_dir( 0, GPIO_OUT );
+	if ( expander != nullptr ) expander->gpio_set_pull_up( 0, false );
+	if ( expander != nullptr ) expander->gpio_set_dir( 1, GPIO_OUT );
+	if ( expander != nullptr ) expander->gpio_set_pull_up( 1, false );
+	if ( expander != nullptr ) expander->gpio_set_dir( 2, GPIO_OUT );
+	if ( expander != nullptr ) expander->gpio_set_pull_up( 2, false );
+	if ( expander != nullptr ) expander->gpio_set_dir( 3, GPIO_OUT );
+	if ( expander != nullptr ) expander->gpio_set_pull_up( 3, true );
+	if ( expander != nullptr ) expander->gpio_put_all( 0xa5 );
 
 	sleep_ms( 1000 );
 
-	display_oled->erase( 0 );
-	display_oled->erase( 7, 9 );
+	if ( expander != nullptr ) expander->gpio_put( 0, true );
+	if ( display_oled != nullptr) display_oled->erase( 0 );
+	if ( display_oled != nullptr) display_oled->erase( 7, 9 );
 
 	uint8_t glyph[] = { 0x44, 0x80, 0x90, 0x80, 0x44, 0x00 };
-	display_oled->set_lico( 5, 5 );
-	display_oled->print_glyph( glyph );
+	if ( display_oled != nullptr) display_oled->set_lico( 5, 5 );
+	if ( display_oled != nullptr) display_oled->print_glyph( glyph );
 
-	display_oled->set_lico( 6, 2 );
-	display_oled->printf( "value: %.2f V", (float)3.1415926 );
+	if ( display_oled != nullptr) display_oled->set_lico( 6, 2 );
+	if ( display_oled != nullptr) display_oled->printf( "value: %.2f V", (float)3.1415926 );
 
 	sleep_ms( 250 );
-	display_tft->erase( 4 );
+	if ( display_tft != nullptr ) display_tft->erase( 4 );
 	sleep_ms( 2500 );
-	display_tft->set_color( 255, 255, 255 );
-	display_tft->draw_bitmap( 0, 0, 128, 160, cfpt_logo_128_160, sizeof( cfpt_logo_128_160 ) );
-	display_tft->set_brightness( 7 );
+	if ( display_tft != nullptr ) display_tft->set_foreground_color( 255, 255, 255 );
+	if ( display_tft != nullptr ) display_tft->draw_bitmap( 0, 0, 128, 160, cfpt_logo_128_160, sizeof( cfpt_logo_128_160 ) );
+	if ( display_tft != nullptr ) display_tft->set_brightness( 7 );
+	if ( expander != nullptr ) expander->gpio_put( 0, false );
 
 	sleep_ms( 10000 );
-	display_oled->set_brightness( 0 );
+	if ( display_oled != nullptr) display_oled->set_brightness( 0 );
 	sleep_ms( 10000 );
+	if ( expander != nullptr ) expander->gpio_put( 0, true );
 
 	pwm_ref backlight = new pwm( ST7735_BACKLIGHT_GPIO, 120.0f, 0.5f );
 	backlight->set_enabled();
@@ -350,15 +365,24 @@ int main() {
 	sleep_ms( 1000 );
 	backlight->set_channel_enabled( false, 0 );
 	sleep_ms( 1000 );
+	if ( expander != nullptr ) expander->gpio_put( 0, false );
 
 //	oled->set_on( false );
 //	tft->set_on( false );
 
-	delete display_oled;
-	display_oled = nullptr;
+	if ( display_oled != nullptr) {
+		delete display_oled;
+		display_oled = nullptr;
+	}
 	backlight->set_channel_enabled( true, 1 );
-	delete display_tft;
-	display_tft = nullptr;
+	if ( display_tft != nullptr ) {
+		delete display_tft;
+		display_tft = nullptr;
+	}
+	if ( expander != nullptr ) {
+		delete expander;
+		expander = nullptr;
+	}
 
 	// encoder
 	rotary_encoder_ref encoder = new rotary_encoder( 10, 11, 14 );
