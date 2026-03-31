@@ -3,6 +3,7 @@
 // Raspberry Pico
 // Target : PicoSDK C/C++
 //
+// display ST7735
 // st7735
 //
 //----------------------------------------------------------------
@@ -21,8 +22,8 @@
 
 //----------------------------------------------------------------
 
-class st7735;
-using st7735_ref = st7735*;
+class display_7735;
+using display_7735_ref = display_7735*;
 
 //----------------------------------------------------------------
 
@@ -31,12 +32,12 @@ constexpr uint8_t ST7735_TFTHEIGHT = 160;
 
 //----------------------------------------------------------------
 
-class st7735 {
+class display_7735 {
 
 public:
 
-	st7735( wire_ref wire, uint reset_gpio, uint dc_gpio, uint backlight_gpio, uint8_t offset = 0, bool bgr = false );
-	~st7735();
+	display_7735( wire_ref wire, uint reset_gpio, uint dc_gpio, uint backlight_gpio, uint8_t offset = 0, bool bgr = false );
+	~display_7735();
 
 private:
 

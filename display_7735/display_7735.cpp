@@ -11,7 +11,7 @@
 
 #include "hardware/pwm.h"
 
-#include "st7735.h"
+#include "display_7735.h"
 #include "font_5x7.h"
 
 #include <cmath>
@@ -80,7 +80,7 @@ constexpr uint8_t DELAY_FLAG = 0x80;
 
 //----------------------------------------------------------------
 
-st7735::st7735( wire_ref wire, uint reset_gpio, uint dc_gpio, uint backlight_gpio, uint8_t offset, bool bgr ):
+display_7735::display_7735( wire_ref wire, uint reset_gpio, uint dc_gpio, uint backlight_gpio, uint8_t offset, bool bgr ):
 	_wire( wire ),
 	_reset_gpio( reset_gpio ),
 	_dc_gpio( dc_gpio ),
@@ -113,7 +113,7 @@ st7735::st7735( wire_ref wire, uint reset_gpio, uint dc_gpio, uint backlight_gpi
 
 //----------------------------------------------------------------
 
-st7735::~st7735() {
+display_7735::~display_7735() {
 	this->erase();
 	this->set_on( false );
 	this->reset();
@@ -124,7 +124,7 @@ st7735::~st7735() {
 
 //----------------------------------------------------------------
 
-void st7735::display_init() {
+void display_7735::display_init() {
 	this->reset();
 
 	const uint8_t commands[] = {
@@ -211,7 +211,7 @@ void st7735::display_init() {
 
 //----------------------------------------------------------------
 
-void st7735::command( uint8_t c ) {
+void display_7735::command( uint8_t c ) {
 	if ( _wire != nullptr ) {
 		gpio_put( _dc_gpio, 0 );
 		_wire->start();
@@ -223,7 +223,7 @@ void st7735::command( uint8_t c ) {
 
 //----------------------------------------------------------------
 
-void st7735::data( uint8_t c ) {
+void display_7735::data( uint8_t c ) {
 	if ( _wire != nullptr ) {
 		gpio_put( _dc_gpio, 1 );
 		_wire->start();
@@ -234,7 +234,7 @@ void st7735::data( uint8_t c ) {
 
 //----------------------------------------------------------------
 
-void st7735::reset() {
+void display_7735::reset() {
 	gpio_put( _reset_gpio, 0 );
 	sleep_ms( 50 );
 	gpio_put( _reset_gpio, 1 );
@@ -243,7 +243,7 @@ void st7735::reset() {
 
 //----------------------------------------------------------------
 
-void st7735::set_on( bool on ) {
+void display_7735::set_on( bool on ) {
 	if ( !on ) this->set_brightness( 0 );
 
 	this->command( on ? ST7735_DISPON : ST7735_DISPOFF );
@@ -254,7 +254,7 @@ void st7735::set_on( bool on ) {
 
 //----------------------------------------------------------------
 
-void st7735::set_brightness( uint8_t brightness ) {
+void display_7735::set_brightness( uint8_t brightness ) {
 	this->_brightness = brightness;
 
 	uint pwm_slice = pwm_gpio_to_slice_num( _backlight_gpio );
@@ -273,7 +273,7 @@ void st7735::set_brightness( uint8_t brightness ) {
 
 //----------------------------------------------------------------
 
-void st7735::set_addr_window( uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1 ) {
+void display_7735::set_addr_window( uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1 ) {
 	this->command(ST7735_CASET);
 	this->data(0x00);
 	this->data(x0 + _offset);
@@ -291,7 +291,7 @@ void st7735::set_addr_window( uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1 ) {
 
 //----------------------------------------------------------------
 
-void st7735::draw_pixel( int16_t x, int16_t y, uint16_t color ) {
+void display_7735::draw_pixel( int16_t x, int16_t y, uint16_t color ) {
 	if (x < 0 || x >= _width || y < 0 || y >= _height) return;
 
 	this->set_addr_window(x, y, x + 1, y + 1);
@@ -310,7 +310,7 @@ void st7735::draw_pixel( int16_t x, int16_t y, uint16_t color ) {
 
 //----------------------------------------------------------------
 
-void st7735::draw_block( int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color ) {
+void display_7735::draw_block( int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color ) {
 	int max_rows = 500 / w;
 	if (max_rows < 1) max_rows = 1;
 
@@ -336,7 +336,7 @@ void st7735::draw_block( int16_t x, int16_t y, int16_t w, int16_t h, uint16_t co
 
 //----------------------------------------------------------------
 
-void st7735::draw_pixmap( int16_t x, int16_t y, int16_t w, int16_t h, const uint8_t* buffer, size_t length ) {
+void display_7735::draw_pixmap( int16_t x, int16_t y, int16_t w, int16_t h, const uint8_t* buffer, size_t length ) {
 	if (x >= _width || y >= _height) return;
 
 	if ((x + w - 1) >= _width) w = _width - x;
@@ -354,7 +354,7 @@ void st7735::draw_pixmap( int16_t x, int16_t y, int16_t w, int16_t h, const uint
 
 //----------------------------------------------------------------
 
-void st7735::draw_bitmap( int16_t x, int16_t y, int16_t w, int16_t h, const uint8_t* buffer, size_t length ) {
+void display_7735::draw_bitmap( int16_t x, int16_t y, int16_t w, int16_t h, const uint8_t* buffer, size_t length ) {
 	if (x >= _width || y >= _height) return;
 
 	if ((x + w - 1) >= _width) w = _width - x;
@@ -380,19 +380,19 @@ void st7735::draw_bitmap( int16_t x, int16_t y, int16_t w, int16_t h, const uint
 
 //----------------------------------------------------------------
 
-void st7735::fill_screen( uint16_t color ) {
+void display_7735::fill_screen( uint16_t color ) {
 	this->draw_block( 0, 0, _width, _height, color );
 }
 
 //----------------------------------------------------------------
 
-void st7735::fill_screen( uint8_t red, uint8_t green, uint8_t blue ) {
+void display_7735::fill_screen( uint8_t red, uint8_t green, uint8_t blue ) {
 	this->fill_screen( rgb_to_565( red, green, blue ) );
 }
 
 //----------------------------------------------------------------
 
-void st7735::set_lico( uint8_t line, uint8_t column ) {
+void display_7735::set_lico( uint8_t line, uint8_t column ) {
 	if ( line >= get_line_count() ) line = this->get_line_count() - 1;
 	if ( column >= get_column_count() ) column = this->get_column_count() - 1;
 	_line = line;
@@ -401,7 +401,7 @@ void st7735::set_lico( uint8_t line, uint8_t column ) {
 
 //----------------------------------------------------------------
 
-void st7735::print( int16_t x, int16_t y, char character ) {
+void display_7735::print( int16_t x, int16_t y, char character ) {
 	if (!_font) return;
 
 	uint16_t fp = (character - 0x20) * 5;
@@ -438,7 +438,7 @@ void st7735::print( int16_t x, int16_t y, char character ) {
 
 //----------------------------------------------------------------
 
-void st7735::print( int16_t x, int16_t y, const char* text ) {
+void display_7735::print( int16_t x, int16_t y, const char* text ) {
 	while ( *text ) {
 		print( x, y, *text );
 		x += 6;
@@ -448,7 +448,7 @@ void st7735::print( int16_t x, int16_t y, const char* text ) {
 
 //----------------------------------------------------------------
 
-void st7735::print_center( uint8_t line, const char* text ) {
+void display_7735::print_center( uint8_t line, const char* text ) {
 
 	uint8_t column_count = this->get_column_count();
 	size_t text_length = strlen( text );
@@ -461,7 +461,7 @@ void st7735::print_center( uint8_t line, const char* text ) {
 
 //----------------------------------------------------------------
 
-void st7735::print( const char* text ) {
+void display_7735::print( const char* text ) {
 	int16_t x = _column * 6 + get_columns_offset();
 	int16_t y = _line * 8 + get_lines_offset();
 
@@ -470,7 +470,7 @@ void st7735::print( const char* text ) {
 
 //----------------------------------------------------------------
 
-void st7735::printf( const char* format, ... ) {
+void display_7735::printf( const char* format, ... ) {
 	va_list args;
 	va_start( args, format );
 	this->vprintf( format, args );
@@ -479,7 +479,7 @@ void st7735::printf( const char* format, ... ) {
 
 //----------------------------------------------------------------
 
-void st7735::vprintf( const char* format, va_list args ) {
+void display_7735::vprintf( const char* format, va_list args ) {
 	char text[27];
 	vsnprintf( text, 27, format, args );
 	this->print( text );
@@ -487,30 +487,30 @@ void st7735::vprintf( const char* format, va_list args ) {
 
 //----------------------------------------------------------------
 
-void st7735::erase() {
+void display_7735::erase() {
 	this->fill_screen( 0 );
 }
 //----------------------------------------------------------------
 
-void st7735::erase( uint8_t line ) {
+void display_7735::erase( uint8_t line ) {
 	this->draw_block( 0, 8 * line, this->get_width(), 8, _background_color );
 }
 
 //----------------------------------------------------------------
 
-void st7735::erase( uint8_t line, uint8_t column ) {
+void display_7735::erase( uint8_t line, uint8_t column ) {
 	this->draw_block( 6 * column, 8 * line, 6, 8, _background_color );
 }
 
 //----------------------------------------------------------------
 
-uint16_t st7735::rgb_to_565( uint8_t r, uint8_t g, uint8_t b ) {
+uint16_t display_7735::rgb_to_565( uint8_t r, uint8_t g, uint8_t b ) {
 	return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
 }
 
 //----------------------------------------------------------------
 
-void st7735::set_rotation( uint8_t m ) {
+void display_7735::set_rotation( uint8_t m ) {
 	this->command(ST7735_MADCTL);
 	uint8_t rotation = m % 4;
 

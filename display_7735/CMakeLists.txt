@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.30)
 
-project(st7735_lib CXX C ASM)
+project(display_7735_lib CXX C ASM)
 
 add_library(${PROJECT_NAME} STATIC
-	st7735.cpp
+	display_7735.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
