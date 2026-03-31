@@ -4,6 +4,7 @@
 // Target : PicoSDK C/C++
 // CFPT Électronique
 //
+// gpio expander
 // mcp23008
 //
 //----------------------------------------------------------------
@@ -30,6 +31,7 @@ constexpr uint8_t MCP23008_OLAT = 0x0a;
 //----------------------------------------------------------------
 
 mcp23008::mcp23008():
+	_wire( nullptr ),
 	wire( nullptr ),
 	address( MCP23008_ADDRESS ),
 	gpio_dir( 0x00 ),
@@ -39,10 +41,22 @@ mcp23008::mcp23008():
 
 //----------------------------------------------------------------
 
+mcp23008::mcp23008( wire_ref wire, uint8_t gpio_dir, uint8_t gpio_pull_up ):
+	_wire( wire ),
+	wire( nullptr ),
+	address( 0 ),
+	gpio_dir( gpio_dir ),
+	gpio_pull_up( gpio_pull_up ) {
+	this->gpio_init();
+}
+
+//----------------------------------------------------------------
+
 mcp23008::mcp23008( i2c_ref wire, uint8_t address, uint8_t gpio_dir, uint8_t gpio_pull_up ):
+	_wire( nullptr ),
 	wire( wire ),
 	address( address ),
-	gpio_dir( ~gpio_dir ),
+	gpio_dir( gpio_dir ),
 	gpio_pull_up( gpio_pull_up ) {
 	this->gpio_init();
 }
@@ -51,6 +65,10 @@ mcp23008::mcp23008( i2c_ref wire, uint8_t address, uint8_t gpio_dir, uint8_t gpi
 
 mcp23008::~mcp23008() {
 	this->gpio_put_all( 0 );
+	if ( _wire != nullptr ) {
+		delete _wire;
+		_wire = nullptr;
+	}
 }
 
 //----------------------------------------------------------------
@@ -58,7 +76,7 @@ mcp23008::~mcp23008() {
 void mcp23008::gpio_init() {
 	uint8_t buffer[] = {
 		MCP23008_IODIR, // register IODIR
-		gpio_dir, // IODIR
+		(uint8_t)~gpio_dir, // IODIR
 		0x00, // IPOL
 		0x00, // GPINTEN
 		0x00, // DEFVAL
@@ -69,10 +87,19 @@ void mcp23008::gpio_init() {
 		0x00, // GPIO
 		0x00 // OLAT
 	};
-	i2c_write_blocking( wire, address, buffer, sizeof(buffer), false );
+	if ( _wire ) {
+		_wire->start();
+		_wire->write_bytes( buffer, sizeof(buffer) );
+		_wire->write_bytes( MCP23008_IODIR, ~gpio_dir );
+		_wire->write_bytes( MCP23008_GPPU, gpio_pull_up );
+		_wire->finish();
+	}
+	else {
+		i2c_write_blocking( wire, address, buffer, sizeof(buffer), false );
 
-	i2c_write_bytes_blocking( wire, address, MCP23008_IODIR, gpio_dir );
-	i2c_write_bytes_blocking( wire, address, MCP23008_GPPU, gpio_pull_up );
+		i2c_write_bytes_blocking( wire, address, MCP23008_IODIR, ~gpio_dir );
+		i2c_write_bytes_blocking( wire, address, MCP23008_GPPU, gpio_pull_up );
+	}
 }
 
 //----------------------------------------------------------------
@@ -80,9 +107,16 @@ void mcp23008::gpio_init() {
 void mcp23008::gpio_set_dir( uint8_t gpio, bool out ) {
 	if ( gpio > 7 ) return;
 
-	if ( out ) gpio_dir &= ~(1 << gpio);
-	else gpio_dir |= (1 << gpio);
-	i2c_write_bytes_blocking( wire, address, MCP23008_IODIR, gpio_dir );
+	if ( out ) gpio_dir |= (1 << gpio);
+	else gpio_dir &= ~(1 << gpio);
+	if ( _wire ) {
+		_wire->start();
+		_wire->write_bytes( MCP23008_IODIR, ~gpio_dir );
+		_wire->finish();
+	}
+	else {
+		i2c_write_bytes_blocking( wire, address, MCP23008_IODIR, ~gpio_dir );
+	}
 }
 
 //----------------------------------------------------------------
@@ -92,15 +126,31 @@ void mcp23008::gpio_set_pull_up( uint8_t gpio, bool up ) {
 
 	if ( up ) gpio_pull_up |= (1 << gpio);
 	else gpio_pull_up &= ~(1 << gpio);
-	i2c_write_bytes_blocking( wire, address, MCP23008_GPPU, gpio_pull_up );
+	if ( _wire ) {
+		_wire->start();
+		_wire->write_bytes( MCP23008_GPPU, gpio_pull_up );
+		_wire->finish();
+	}
+	else {
+		i2c_write_bytes_blocking( wire, address, MCP23008_GPPU, gpio_pull_up );
+	}
 }
 
 //----------------------------------------------------------------
 
 uint8_t mcp23008::gpio_get_all() {
 	uint8_t data = 0;
-	i2c_write_bytes_blocking( wire, address, MCP23008_GPIO );
-	i2c_read_blocking( wire, address, &data, sizeof( data ), false );
+	size_t data_length = sizeof(data);
+	if ( _wire ) {
+		_wire->start();
+		_wire->write_bytes( MCP23008_GPIO );
+		_wire->read_bytes( &data, &data_length );
+		_wire->finish();
+	}
+	else {
+		i2c_write_bytes_blocking( wire, address, MCP23008_GPIO );
+		i2c_read_blocking( wire, address, &data, data_length, false );
+	}
 
 	return data;
 }
@@ -108,7 +158,14 @@ uint8_t mcp23008::gpio_get_all() {
 //----------------------------------------------------------------
 
 void mcp23008::gpio_put_all( uint8_t value ) {
-	i2c_write_bytes_blocking( wire, address, MCP23008_GPIO, value );
+	if ( _wire ) {
+		_wire->start();
+		_wire->write_bytes( MCP23008_GPIO, value );
+		_wire->finish();
+	}
+	else {
+		i2c_write_bytes_blocking( wire, address, MCP23008_GPIO, value );
+	}
 }
 
 //----------------------------------------------------------------

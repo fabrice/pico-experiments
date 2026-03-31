@@ -4,6 +4,7 @@
 // Target : PicoSDK C/C++
 // CFPT Électronique
 //
+// gpio expander
 // mcp23008
 //
 //----------------------------------------------------------------
@@ -13,7 +14,8 @@
 //----------------------------------------------------------------
 
 #include "pico/stdlib.h"
-#include "hardware/i2c.h"
+
+#include "wire_i2c.h"
 #include "hardware_i2c_plus.h"
 
 //----------------------------------------------------------------
@@ -31,6 +33,7 @@ class mcp23008 {
 
 private:
 
+	wire_ref _wire;
 	i2c_ref wire;
 	uint8_t address;
 
@@ -40,6 +43,7 @@ private:
 public:
 
 	mcp23008();
+	mcp23008( wire_ref wire, uint8_t gpio_dir, uint8_t gpio_pull_up );
 	mcp23008( i2c_ref wire, uint8_t address, uint8_t gpio_dir, uint8_t gpio_pull_up );
 
 private:
