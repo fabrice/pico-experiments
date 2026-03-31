@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.30)
 
-project(oled_lib CXX C ASM)
+project(display_1309_lib CXX C ASM)
 
 add_library(${PROJECT_NAME} STATIC
 	oled.cpp
