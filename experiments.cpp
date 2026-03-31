@@ -15,9 +15,9 @@
 #include "oled.h"
 #include "oled_fn.h"
 #include "rotary_encoder.h"
-#include "st7735.h"
+#include "display_7735.h"
 #include "mcp23008.h"
-#include "ee24lc02b.h"
+#include "memory_24lc02b.h"
 
 #include "font_5x7.h"
 
@@ -274,11 +274,11 @@ int main() {
 	display_oled = new OLED( display_wire_i2c, OLED_RESET_GPIO );
 	if ( display_oled != nullptr) display_oled->draw_logo();
 
-	// st7735
+	// display_7735
 	wire_spi_ref display_wire_spi = new wire_spi( 0, ST7735_CS_GPIO );
 	display_wire_spi->io_init( SPI0_SCLK_GPIO, SPI0_MISO_GPIO, SPI0_MOSI_GPIO, 8e6 );
-	st7735_ref display_tft = nullptr;
-	display_tft = new st7735( display_wire_spi, ST7735_RESET_GPIO, ST7735_DC_GPIO, ST7735_BACKLIGHT_GPIO );
+	display_7735_ref display_tft = nullptr;
+	display_tft = new display_7735( display_wire_spi, ST7735_RESET_GPIO, ST7735_DC_GPIO, ST7735_BACKLIGHT_GPIO );
 	if ( display_tft != nullptr ) display_tft->set_foreground_color( 28, 186, 111 );
 	if ( display_tft != nullptr ) display_tft->set_background_color( 0, 0, 0 );
 	if ( display_tft != nullptr ) display_tft->draw_bitmap( 0, 0, 128, 160, cfpt_logo_128_160, sizeof( cfpt_logo_128_160 ) );

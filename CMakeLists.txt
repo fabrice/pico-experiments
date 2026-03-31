@@ -46,14 +46,14 @@ add_subdirectory(pwm_plus)
 add_subdirectory(pico_wire)
 
 add_subdirectory(rotary_encoder)
-add_subdirectory(st7735)
+add_subdirectory(display_7735)
 
 add_subdirectory(mcp23008)
 add_subdirectory(mcp41xxx)
-add_subdirectory(ee24lc02b)
+add_subdirectory(memory_24lc02b)
 
 add_subdirectory(gfx)
-add_subdirectory(oled)
+add_subdirectory(display_1309)
 
 pico_set_program_name(${PROJECT_NAME} "Buttons")
 pico_set_program_version(${PROJECT_NAME} "0.1")
@@ -72,11 +72,11 @@ target_link_libraries(${PROJECT_NAME}
 	gpio_plus_lib
 	pwm_plus_lib
 	rotary_encoder_lib
-	st7735_lib
+	display_7735_lib
 	mcp23008_lib
-	ee24lc02b_lib
+	memory_24lc02b_lib
 	gfx_lib
-	oled_lib
+	display_1309_lib
 	pico_wire_lib
 )
 
