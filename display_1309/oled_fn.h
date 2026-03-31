@@ -39,6 +39,7 @@ void oled_set_on( oled_ref oled, bool on );
 void oled_set_orientation( oled_ref oled, uint8_t orientation );
 void oled_set_dark_mode( oled_ref oled, bool mode );
 void oled_set_brightness( oled_ref oled, uint8_t brightness );
+void oled_set_brightness_db( oled_ref oled, float brightness_db );
 
 void oled_set_lico( oled_ref oled, uint8_t line, uint8_t column );
 

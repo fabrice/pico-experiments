@@ -93,6 +93,14 @@ void oled_set_brightness( oled_ref oled, uint8_t brightness ) {
 
 //----------------------------------------------------------------
 
+void oled_set_brightness_db( oled_ref oled, float brightness_db ) {
+	if ( oled == nullptr ) return;
+
+	oled->set_brightness_db( brightness_db );
+}
+
+//----------------------------------------------------------------
+
 void oled_set_lico( oled_ref oled, uint8_t line, uint8_t column ) {
 	if ( oled == nullptr ) return;
 

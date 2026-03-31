@@ -14,5 +14,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 target_link_libraries(${PROJECT_NAME}
 	pico_stdlib
 	hardware_pwm
+	std_plus_lib
 	pico_wire_lib
 )

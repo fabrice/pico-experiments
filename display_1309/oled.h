@@ -76,6 +76,7 @@ public:
 	void set_orientation( uint8_t orientation );
 	void set_dark_mode( bool mode );
 	void set_brightness( uint8_t brightness );
+	void set_brightness_db( float brightness_db );
 
 	void draw_logo();
 

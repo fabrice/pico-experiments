@@ -198,6 +198,18 @@ void OLED::set_brightness( uint8_t brightness ) {
 
 //----------------------------------------------------------------
 
+/*! OLED::set_brightness_db()
+ * \brief règle la luminosité en dB.
+ * \param brightness_db luminosité, 0 dB : 255, -6 dB : 127, -20 dB : 25, -48 : 1
+ */
+void OLED::set_brightness_db( float brightness_db ) {
+	float brightness = std::pow( 10.0f, brightness_db / 20.0f ) * 255.0f;
+	brightness = std::round( constrain( brightness, 0.0f, 255.0f ) );
+	this->set_brightness( brightness );
+}
+
+//----------------------------------------------------------------
+
 void OLED::draw_logo() {
 	this->draw_bitmap( 0, 0, 128, 64, cfpt_logo_128_64, cfpt_logo_128_64_length );
 }

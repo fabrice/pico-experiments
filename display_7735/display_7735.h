@@ -59,6 +59,7 @@ public:
 
 	void set_on( bool on );
 	void set_brightness( uint8_t brightness );
+	void set_brightness_db( float brightness_db );
 
 	void set_addr_window( uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1 );
 

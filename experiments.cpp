@@ -345,7 +345,7 @@ int main() {
 	sleep_ms( 2500 );
 	if ( display_tft != nullptr ) display_tft->set_foreground_color( 255, 255, 255 );
 	if ( display_tft != nullptr ) display_tft->draw_bitmap( 0, 0, 128, 160, cfpt_logo_128_160, sizeof( cfpt_logo_128_160 ) );
-	if ( display_tft != nullptr ) display_tft->set_brightness( 7 );
+	if ( display_tft != nullptr ) display_tft->set_brightness_db( -30 );
 	if ( expander != nullptr ) expander->gpio_put( 0, false );
 
 	sleep_ms( 10000 );
@@ -355,8 +355,8 @@ int main() {
 
 	pwm_ref backlight = new pwm( ST7735_BACKLIGHT_GPIO, 120.0f, 0.5f );
 	backlight->set_enabled();
-	for ( uint level = 0; level < 256; ++ level ) {
-		backlight->set_duty( (float)level / 255.0 );
+	for ( int level = -50; level <= 0; ++ level ) {
+		backlight->set_duty_db( (float)level );
 		sleep_ms( 100 );
 	}
 	backlight->set_duty( 0 );

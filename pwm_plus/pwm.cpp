@@ -134,11 +134,24 @@ void pwm::set_level( uint16_t level ) {
 void pwm::set_duty( float duty ) {
 	valid_params_if( HARDWARE_PWM, (duty >= 0.0f) && (duty <= 1.0f) );
 
+	duty = constrain( duty, 0.0f, 1.0f );
 	this->level = (uint16_t)(duty * (float)this->slice->get_wrap());
 
 	uint slice_num = pwm_gpio_to_slice_num( this->gpio );
 	uint channel_num = pwm_gpio_to_channel( this->gpio );
 	pwm_set_chan_level( slice_num, channel_num, this->level );
+}
+
+//----------------------------------------------------------------
+
+/*! pwm::set_duty_db()
+ * \brief règle le rapport cyclique en dB, 0 correspondant à 100%, -40 correspondant à 1%.
+ * \param duty_dB rapport cyclique, 0 dB : 100%, -6 dB : 50%, -40 dB : 1%, -60 : 0.1%
+ */
+void pwm::set_duty_db( float duty_dB ) {
+	float duty = std::pow( 10.0f, duty_dB / 20.0f );
+	duty = constrain( duty, 0.0f, 1.0f );
+	this->set_duty( duty );
 }
 
 //----------------------------------------------------------------

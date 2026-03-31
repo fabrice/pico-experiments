@@ -14,6 +14,7 @@
 #include "display_7735.h"
 #include "font_5x7.h"
 
+#include "math_plus.h"
 #include <cmath>
 #include <algorithm>
 #include <cstdio>
@@ -264,11 +265,19 @@ void display_7735::set_brightness( uint8_t brightness ) {
     pwm_set_wrap( pwm_slice, 1000 );
 
 	float level = (float)brightness / 255.0 * 1000.0;
-	pwm_set_chan_level( pwm_slice, pwm_channel, (uint16_t)floorf( level ) );
+	pwm_set_chan_level( pwm_slice, pwm_channel, (uint16_t)std::floor( level ) );
 
 	pwm_set_enabled( pwm_slice, true );
 
 	gpio_set_function( _backlight_gpio, GPIO_FUNC_PWM );
+}
+
+//----------------------------------------------------------------
+
+void display_7735::set_brightness_db( float brightness_db ) {
+	float brightness = std::pow( 10.0f, brightness_db / 20.0f ) * 255.0f;
+	brightness = std::round( constrain( brightness, 0.0f, 255.0f ) );
+	this->set_brightness( brightness );
 }
 
 //----------------------------------------------------------------

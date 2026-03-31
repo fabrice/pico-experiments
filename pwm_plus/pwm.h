@@ -76,6 +76,7 @@ public:
 
 	void set_level( uint16_t level );
 	void set_duty( float duty );
+	void set_duty_db( float duty_dB );
 
 	void set_channel_enabled();
 	void set_channel_enabled( bool enabled, bool state );
