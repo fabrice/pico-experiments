@@ -18,7 +18,7 @@
 //----------------------------------------------------------------
 
 void OLEDKitInit( void* oled );
-void OLEDKitInit( uint8_t i2c_num );
+[[deprecated]] void OLEDKitInit( uint8_t i2c_num, uint reset_gpio = 0 );
 
 //----------------------------------------------------------------
 

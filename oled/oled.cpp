@@ -16,8 +16,6 @@
 #include "font_5x7.h"
 #include "cfpt_logo.h"
 
-#include "hardware/i2c.h"
-
 #include <cmath>
 #include "math_plus.h"
 #include "pico/printf.h"
@@ -90,7 +88,6 @@ constexpr uint8_t SET_COMMAND_LOCK = 0xfd;
 
 OLED::OLED():
 	_wire( nullptr ),
-	_address( SSD1309_ADDRESS ),
 	_reset_gpio( 0 ),
 	_width( SSD1309_WIDTH ),
 	_height( SSD1309_HEIGHT ),
@@ -101,10 +98,9 @@ OLED::OLED():
 
 //----------------------------------------------------------------
 
-OLED::OLED( i2c_ref wire, uint8_t address, uint reset_pin ):
+OLED::OLED( wire_ref wire, uint reset_gpio ):
 	_wire( wire ),
-	_address( address ),
-	_reset_gpio( reset_pin ),
+	_reset_gpio( reset_gpio ),
 	_width( SSD1309_WIDTH ),
 	_height( SSD1309_HEIGHT ),
 	_line( 0 ),
@@ -145,28 +141,28 @@ void OLED::init() {
 void OLED::display_init() {
 	if ( _wire == nullptr ) return;
 
-	i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_DISPLAY_OFF );
+	_wire->write_bytes( WRITE_COMMAND, SET_DISPLAY_OFF );
 
-	i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_LINE_ADDRESS + 0 );
-	i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_LOW_COLUMN_ADDRESS + 0 );
-	i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_HIGH_COLUMN_ADDRESS + 0 );
+	_wire->write_bytes( WRITE_COMMAND, SET_LINE_ADDRESS + 0 );
+	_wire->write_bytes( WRITE_COMMAND, SET_LOW_COLUMN_ADDRESS + 0 );
+	_wire->write_bytes( WRITE_COMMAND, SET_HIGH_COLUMN_ADDRESS + 0 );
 
-	i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_MEMORY_ADDRESSING_MODE, SET_MEMORY_ADDRESSING_MODE_HORIZONTAL );
-	i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, DISPLAY_NOP );
-	i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, DISPLAY_ACTIVE_HIGH );
-	i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_MULTIPLEX_RATIO, 0x3f );
-	i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_VERTICAL_OFFSET, 0x00 );
+	_wire->write_bytes( WRITE_COMMAND, SET_MEMORY_ADDRESSING_MODE, SET_MEMORY_ADDRESSING_MODE_HORIZONTAL );
+	_wire->write_bytes( WRITE_COMMAND, DISPLAY_NOP );
+	_wire->write_bytes( WRITE_COMMAND, DISPLAY_ACTIVE_HIGH );
+	_wire->write_bytes( WRITE_COMMAND, SET_MULTIPLEX_RATIO, 0x3f );
+	_wire->write_bytes( WRITE_COMMAND, SET_VERTICAL_OFFSET, 0x00 );
 
-	i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_DISPLAY_CLOCK, 0x70 ); // reset
-	i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_PRECHARGE_PERIOD, 0x22 ); // reset
-	//i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_COM_PINS, 0x12 );
-	//i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_VCOMH_DESELECT_LEVEL, 0x40 );
+	_wire->write_bytes( WRITE_COMMAND, SET_DISPLAY_CLOCK, 0x70 ); // reset
+	_wire->write_bytes( WRITE_COMMAND, SET_PRECHARGE_PERIOD, 0x22 ); // reset
+//	_wire_i2c->write_bytes( WRITE_COMMAND, SET_COM_PINS, 0x12 );
+//	_wire_i2c->write_bytes( WRITE_COMMAND, SET_VCOMH_DESELECT_LEVEL, 0x40 );
 }
 
 //----------------------------------------------------------------
 
 void OLED::set_on( bool on ) {
-	i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, on ? SET_DISPLAY_ON : SET_DISPLAY_OFF );
+	_wire->write_bytes( WRITE_COMMAND, on ? SET_DISPLAY_ON : SET_DISPLAY_OFF );
 }
 
 //----------------------------------------------------------------
@@ -174,16 +170,16 @@ void OLED::set_on( bool on ) {
 void OLED::set_orientation( uint8_t orientation ) {
 	switch ( orientation ) {
 	case 0:
-		i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_LEFT_RIGHT );
-		i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_TOP_BOTTOM );
+		_wire->write_bytes( WRITE_COMMAND, SET_LEFT_RIGHT );
+		_wire->write_bytes( WRITE_COMMAND, SET_TOP_BOTTOM );
 		break;
 	case 1:
-		i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_RIGHT_LEFT );
-		i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_BOTTOM_TOP );
+		_wire->write_bytes( WRITE_COMMAND, SET_RIGHT_LEFT );
+		_wire->write_bytes( WRITE_COMMAND, SET_BOTTOM_TOP );
 		break;
 	default:
-		i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_LEFT_RIGHT );
-		i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_TOP_BOTTOM );
+		_wire->write_bytes( WRITE_COMMAND, SET_LEFT_RIGHT );
+		_wire->write_bytes( WRITE_COMMAND, SET_TOP_BOTTOM );
 		break;
 	}
 }
@@ -191,13 +187,13 @@ void OLED::set_orientation( uint8_t orientation ) {
 //----------------------------------------------------------------
 
 void OLED::set_dark_mode( bool mode ) {
-	i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, mode ? DISPLAY_ACTIVE_LOW : DISPLAY_ACTIVE_HIGH );
+	_wire->write_bytes( WRITE_COMMAND, mode ? DISPLAY_ACTIVE_LOW : DISPLAY_ACTIVE_HIGH );
 }
 
 //----------------------------------------------------------------
 
 void OLED::set_brightness( uint8_t brightness ) {
-	i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_CONTRAST, brightness );
+	_wire->write_bytes( WRITE_COMMAND, SET_CONTRAST, brightness );
 }
 
 //----------------------------------------------------------------
@@ -214,9 +210,9 @@ void OLED::set_lico( uint8_t line, uint8_t column ) {
 
 	uint16_t y = _column * 6 + get_columns_offset();
 
-	i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_LINE_ADDRESS + _line );
-	i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_LOW_COLUMN_ADDRESS + ( (y >> 0) & 0x0f ) );
-	i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_HIGH_COLUMN_ADDRESS + ( (y >> 4) & 0x0f ) );
+	_wire->write_bytes( WRITE_COMMAND, SET_LINE_ADDRESS + _line );
+	_wire->write_bytes( WRITE_COMMAND, SET_LOW_COLUMN_ADDRESS + ( (y >> 0) & 0x0f ) );
+	_wire->write_bytes( WRITE_COMMAND, SET_HIGH_COLUMN_ADDRESS + ( (y >> 4) & 0x0f ) );
 }
 
 //----------------------------------------------------------------
@@ -249,7 +245,7 @@ void OLED::print( const char* text ) {
 		if ( x > width ) break;
 	}
 
-	i2c_write_blocking( _wire, _address, buffer, sizeof( buffer ), false );
+	_wire->write_bytes( buffer, sizeof( buffer ) );
 }
 
 //----------------------------------------------------------------
@@ -307,7 +303,7 @@ void OLED::print( char character ) {
 	memcpy( buffer + 1, &_font[ index ], 5 );
 	buffer[6] = 0x00;
 
-	i2c_write_blocking( _wire, _address, buffer, 7, false );
+	_wire->write_bytes( buffer, 7 );
 }
 
 //----------------------------------------------------------------
@@ -326,7 +322,7 @@ void OLED::print_glyph( uint8_t glyph[6] ) {
 	buffer[0] = WRITE_DATA;
 	memcpy( buffer + 1, glyph, 6 );
 
-	i2c_write_blocking( _wire, _address, buffer, 7, false );
+	_wire->write_bytes( buffer, 7 );
 }
 
 //----------------------------------------------------------------
@@ -337,12 +333,12 @@ void OLED::draw_bitmap( int16_t x, int16_t y, int16_t width, int16_t height, con
 	buffer[0] = WRITE_DATA;
 
 	for ( uint8_t line = 0; line < 8; ++ line ) {
-		i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_LINE_ADDRESS + line );
-		i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_LOW_COLUMN_ADDRESS + 0 );
-		i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_HIGH_COLUMN_ADDRESS + 0 );
+		_wire->write_bytes( WRITE_COMMAND, SET_LINE_ADDRESS + line );
+		_wire->write_bytes( WRITE_COMMAND, SET_LOW_COLUMN_ADDRESS + 0 );
+		_wire->write_bytes( WRITE_COMMAND, SET_HIGH_COLUMN_ADDRESS + 0 );
 
 		memcpy( buffer + 1, bitmap + line * 128, 128 );
-		i2c_write_blocking( _wire, _address, buffer, std::min( 1 + this->get_width(), 129 ), false );
+		_wire->write_bytes( buffer, std::min( 1 + this->get_width(), 129 ) );
 	}
 }
 
@@ -354,10 +350,10 @@ void OLED::erase() {
 	buffer[0] = WRITE_DATA;
 
 	for ( uint8_t line = 0; line < this->get_line_count(); ++ line ) {
-		i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_LINE_ADDRESS + line );
-		i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_LOW_COLUMN_ADDRESS + 0 );
-		i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_HIGH_COLUMN_ADDRESS + 0 );
-		i2c_write_blocking( _wire, _address, buffer, std::min( 1 + this->get_width(), 129 ), false );
+		_wire->write_bytes( WRITE_COMMAND, SET_LINE_ADDRESS + line );
+		_wire->write_bytes( WRITE_COMMAND, SET_LOW_COLUMN_ADDRESS + 0 );
+		_wire->write_bytes( WRITE_COMMAND, SET_HIGH_COLUMN_ADDRESS + 0 );
+		_wire->write_bytes( buffer, std::min( 1 + this->get_width(), 129 ) );
 	}
 }
 //----------------------------------------------------------------
@@ -367,10 +363,10 @@ void OLED::erase( uint8_t line ) {
 	memset( buffer, 0x00, 129 );
 	buffer[0] = WRITE_DATA;
 
-	i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_LINE_ADDRESS + line );
-	i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_LOW_COLUMN_ADDRESS + 0 );
-	i2c_write_bytes_blocking( _wire, _address, WRITE_COMMAND, SET_HIGH_COLUMN_ADDRESS + 0 );
-	i2c_write_blocking( _wire, _address, buffer, std::min( 1 + this->get_width(), 129 ), false );
+	_wire->write_bytes( WRITE_COMMAND, SET_LINE_ADDRESS + line );
+	_wire->write_bytes( WRITE_COMMAND, SET_LOW_COLUMN_ADDRESS + 0 );
+	_wire->write_bytes( WRITE_COMMAND, SET_HIGH_COLUMN_ADDRESS + 0 );
+	_wire->write_bytes( buffer, std::min( 1 + this->get_width(), 129 ) );
 }
 
 //----------------------------------------------------------------
@@ -381,7 +377,7 @@ void OLED::erase( uint8_t line, uint8_t column ) {
 	memset( buffer + 1, 0x00, 6 );
 
 	this->set_lico( line, column );
-	i2c_write_blocking( _wire, _address, buffer, 7, false );
+	_wire->write_bytes( buffer, 7 );
 }
 
 //----------------------------------------------------------------

@@ -17,7 +17,7 @@
 
 #include "pico/stdlib.h"
 
-#include "hardware_i2c_plus.h"
+#include "wire.h"
 
 //----------------------------------------------------------------
 /*
@@ -35,13 +35,11 @@ constexpr uint8_t SSD1309_ADDRESS = 0x3c;
 constexpr uint16_t SSD1309_WIDTH = 128;
 constexpr uint16_t SSD1309_HEIGHT = 64;
 
-
 //----------------------------------------------------------------
 //
 
 class OLED;
 using oled_ref = OLED*;
-
 
 //----------------------------------------------------------------
 // classe
@@ -54,7 +52,7 @@ private:
 
 public:
 
-	OLED( i2c_ref wire, uint8_t address, uint reset_pin );
+	OLED( wire_ref wire, uint reset_gpio );
 	~OLED();
 
 private:
@@ -64,8 +62,7 @@ private:
 
 public:
 
-	i2c_ref get_i2c() const { return this->_wire; }
-	uint8_t get_address() const { return this->_address; }
+	wire_ref get_wire() const { return this->_wire; }
 
 	uint16_t get_width() const { return this->_width; }
 	uint16_t get_height() const { return this->_height; }
@@ -105,8 +102,7 @@ public:
 
 private:
 
-	i2c_ref _wire;
-	uint8_t _address;
+	wire_ref _wire;
 	uint _reset_gpio;
 
 	uint16_t _width;

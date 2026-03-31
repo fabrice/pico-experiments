@@ -11,7 +11,7 @@
 
 #include "pico/stdlib.h"
 #include "pico/stdio.h"
-#include "hardware/i2c.h"
+#include "wire_i2c.h"
 
 #include "oled.h"
 
@@ -32,10 +32,11 @@ void OLEDKitInit( void* oled ) {
 
 //----------------------------------------------------------------
 
-void OLEDKitInit( uint8_t i2c_num ) {
+void OLEDKitInit( uint8_t i2c_num, uint reset_gpio ) {
 	if ( oled != nullptr ) return;
 
-	oled = new OLED( i2c_get_instance( i2c_num ), SSD1309_ADDRESS, 0 );
+	wire_ref wire = new wire_i2c( i2c_num, SSD1309_ADDRESS );
+	oled = new OLED( wire, reset_gpio );
 }
 
 //----------------------------------------------------------------
@@ -135,9 +136,7 @@ void AfficheImage( unsigned char image[] ) {
 void AfficherByte( uint8_t byte ) {
 	if ( oled == nullptr ) return;
 
-	i2c_ref wire = oled->get_i2c();
-	uint8_t address = oled->get_address();
-	i2c_write_bytes_blocking( wire, address, /*WRITE_DATA*/0x40, byte );
+	oled->get_wire()->write_bytes( /*WRITE_DATA*/0x40, byte );
 }
 
 //----------------------------------------------------------------

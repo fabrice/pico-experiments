@@ -13,7 +13,7 @@
 #include "oled.h"
 
 #include "pico/stdlib.h"
-#include "hardware_i2c_plus.h"
+#include "wire_i2c.h"
 
 #include <cmath>
 #include "math_plus.h"
@@ -21,8 +21,9 @@
 
 //----------------------------------------------------------------
 
-oled_ref oled_init( i2c_ref wire, uint8_t address, uint reset_gpio ) {
-	return new OLED( wire, address, reset_gpio );
+oled_ref oled_init( uint8_t i2c_num, uint8_t address, uint reset_gpio ) {
+	wire_ref wire = new wire_i2c( i2c_num, address );
+	return new OLED( wire, reset_gpio );
 }
 
 //----------------------------------------------------------------

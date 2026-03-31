@@ -17,8 +17,6 @@
 
 #include "pico/stdlib.h"
 
-#include "hardware_i2c_plus.h"
-
 //----------------------------------------------------------------
 
 class OLED;
@@ -27,7 +25,7 @@ using oled_ref = OLED*;
 //----------------------------------------------------------------
 // fonctions
 
-oled_ref oled_init( i2c_ref wire, uint8_t address, uint reset_gpio );
+oled_ref oled_init( uint8_t i2c_num, uint8_t address, uint reset_gpio );
 
 //----------------------------------------------------------------
 
