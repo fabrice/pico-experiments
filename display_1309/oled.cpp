@@ -141,6 +141,8 @@ void OLED::init() {
 void OLED::display_init() {
 	if ( _wire == nullptr ) return;
 
+	_wire->start_communication();
+
 	_wire->write_bytes( WRITE_COMMAND, SET_DISPLAY_OFF );
 
 	_wire->write_bytes( WRITE_COMMAND, SET_LINE_ADDRESS + 0 );
@@ -157,12 +159,16 @@ void OLED::display_init() {
 	_wire->write_bytes( WRITE_COMMAND, SET_PRECHARGE_PERIOD, 0x22 ); // reset
 //	_wire_i2c->write_bytes( WRITE_COMMAND, SET_COM_PINS, 0x12 );
 //	_wire_i2c->write_bytes( WRITE_COMMAND, SET_VCOMH_DESELECT_LEVEL, 0x40 );
+
+	_wire->finish_communication();
 }
 
 //----------------------------------------------------------------
 
 void OLED::set_on( bool on ) {
+	_wire->start_communication();
 	_wire->write_bytes( WRITE_COMMAND, on ? SET_DISPLAY_ON : SET_DISPLAY_OFF );
+	_wire->finish_communication();
 }
 
 //----------------------------------------------------------------
@@ -170,16 +176,22 @@ void OLED::set_on( bool on ) {
 void OLED::set_orientation( uint8_t orientation ) {
 	switch ( orientation ) {
 	case 0:
+		_wire->start_communication();
 		_wire->write_bytes( WRITE_COMMAND, SET_LEFT_RIGHT );
 		_wire->write_bytes( WRITE_COMMAND, SET_TOP_BOTTOM );
+		_wire->finish_communication();
 		break;
 	case 1:
+		_wire->start_communication();
 		_wire->write_bytes( WRITE_COMMAND, SET_RIGHT_LEFT );
 		_wire->write_bytes( WRITE_COMMAND, SET_BOTTOM_TOP );
+		_wire->finish_communication();
 		break;
 	default:
+		_wire->start_communication();
 		_wire->write_bytes( WRITE_COMMAND, SET_LEFT_RIGHT );
 		_wire->write_bytes( WRITE_COMMAND, SET_TOP_BOTTOM );
+		_wire->finish_communication();
 		break;
 	}
 }
@@ -187,13 +199,17 @@ void OLED::set_orientation( uint8_t orientation ) {
 //----------------------------------------------------------------
 
 void OLED::set_dark_mode( bool mode ) {
+	_wire->start_communication();
 	_wire->write_bytes( WRITE_COMMAND, mode ? DISPLAY_ACTIVE_LOW : DISPLAY_ACTIVE_HIGH );
+	_wire->finish_communication();
 }
 
 //----------------------------------------------------------------
 
 void OLED::set_brightness( uint8_t brightness ) {
+	_wire->start_communication();
 	_wire->write_bytes( WRITE_COMMAND, SET_CONTRAST, brightness );
+	_wire->finish_communication();
 }
 
 //----------------------------------------------------------------
@@ -222,9 +238,11 @@ void OLED::set_lico( uint8_t line, uint8_t column ) {
 
 	uint16_t y = _column * 6 + get_columns_offset();
 
+	_wire->start_communication();
 	_wire->write_bytes( WRITE_COMMAND, SET_LINE_ADDRESS + _line );
 	_wire->write_bytes( WRITE_COMMAND, SET_LOW_COLUMN_ADDRESS + ( (y >> 0) & 0x0f ) );
 	_wire->write_bytes( WRITE_COMMAND, SET_HIGH_COLUMN_ADDRESS + ( (y >> 4) & 0x0f ) );
+	_wire->finish_communication();
 }
 
 //----------------------------------------------------------------
@@ -257,7 +275,9 @@ void OLED::print( const char* text ) {
 		if ( x > width ) break;
 	}
 
+	_wire->start_communication();
 	_wire->write_bytes( buffer, sizeof( buffer ) );
+	_wire->finish_communication();
 }
 
 //----------------------------------------------------------------
@@ -315,7 +335,9 @@ void OLED::print( char character ) {
 	memcpy( buffer + 1, &_font[ index ], 5 );
 	buffer[6] = 0x00;
 
+	_wire->start_communication();
 	_wire->write_bytes( buffer, 7 );
+	_wire->finish_communication();
 }
 
 //----------------------------------------------------------------
@@ -334,7 +356,9 @@ void OLED::print_glyph( uint8_t glyph[6] ) {
 	buffer[0] = WRITE_DATA;
 	memcpy( buffer + 1, glyph, 6 );
 
+	_wire->start_communication();
 	_wire->write_bytes( buffer, 7 );
+	_wire->finish_communication();
 }
 
 //----------------------------------------------------------------
@@ -344,6 +368,7 @@ void OLED::draw_bitmap( int16_t x, int16_t y, int16_t width, int16_t height, con
 	memset( buffer, 0x00, 129 );
 	buffer[0] = WRITE_DATA;
 
+	_wire->start_communication();
 	for ( uint8_t line = 0; line < 8; ++ line ) {
 		_wire->write_bytes( WRITE_COMMAND, SET_LINE_ADDRESS + line );
 		_wire->write_bytes( WRITE_COMMAND, SET_LOW_COLUMN_ADDRESS + 0 );
@@ -352,6 +377,7 @@ void OLED::draw_bitmap( int16_t x, int16_t y, int16_t width, int16_t height, con
 		memcpy( buffer + 1, bitmap + line * 128, 128 );
 		_wire->write_bytes( buffer, std::min( 1 + this->get_width(), 129 ) );
 	}
+	_wire->finish_communication();
 }
 
 //----------------------------------------------------------------
@@ -361,12 +387,14 @@ void OLED::erase() {
 	memset( buffer, 0x00, 129 );
 	buffer[0] = WRITE_DATA;
 
+	_wire->start_communication();
 	for ( uint8_t line = 0; line < this->get_line_count(); ++ line ) {
 		_wire->write_bytes( WRITE_COMMAND, SET_LINE_ADDRESS + line );
 		_wire->write_bytes( WRITE_COMMAND, SET_LOW_COLUMN_ADDRESS + 0 );
 		_wire->write_bytes( WRITE_COMMAND, SET_HIGH_COLUMN_ADDRESS + 0 );
 		_wire->write_bytes( buffer, std::min( 1 + this->get_width(), 129 ) );
 	}
+	_wire->finish_communication();
 }
 //----------------------------------------------------------------
 
@@ -375,10 +403,12 @@ void OLED::erase( uint8_t line ) {
 	memset( buffer, 0x00, 129 );
 	buffer[0] = WRITE_DATA;
 
+	_wire->start_communication();
 	_wire->write_bytes( WRITE_COMMAND, SET_LINE_ADDRESS + line );
 	_wire->write_bytes( WRITE_COMMAND, SET_LOW_COLUMN_ADDRESS + 0 );
 	_wire->write_bytes( WRITE_COMMAND, SET_HIGH_COLUMN_ADDRESS + 0 );
 	_wire->write_bytes( buffer, std::min( 1 + this->get_width(), 129 ) );
+	_wire->finish_communication();
 }
 
 //----------------------------------------------------------------
@@ -389,7 +419,9 @@ void OLED::erase( uint8_t line, uint8_t column ) {
 	memset( buffer + 1, 0x00, 6 );
 
 	this->set_lico( line, column );
+	_wire->start_communication();
 	_wire->write_bytes( buffer, 7 );
+	_wire->finish_communication();
 }
 
 //----------------------------------------------------------------

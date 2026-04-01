@@ -45,15 +45,16 @@ public:
 	virtual ~wire_spi() override;
 
 	void io_init( uint sclk_gpio, uint miso_gpio, uint mosi_gpio, uint bitrate );
+
 	virtual void set_bitrate( uint bitrate ) override;
 
-	virtual void start() override;
+	virtual void start_communication() override;
 
 	virtual int write_bytes( const uint8_t* bytes, size_t length ) override;
 
 	virtual int read_bytes( uint8_t* bytes, size_t* length ) override;
 
-	virtual void finish() override;
+	virtual void finish_communication() override;
 
 };
 

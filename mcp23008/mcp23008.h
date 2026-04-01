@@ -33,8 +33,7 @@ class mcp23008 {
 
 private:
 
-	wire_ref _wire;
-	i2c_ref wire;
+	wire_ref wire;
 	uint8_t address;
 
 	uint8_t gpio_dir;
@@ -44,7 +43,6 @@ public:
 
 	mcp23008();
 	mcp23008( wire_ref wire, uint8_t gpio_dir, uint8_t gpio_pull_up );
-	mcp23008( i2c_ref wire, uint8_t address, uint8_t gpio_dir, uint8_t gpio_pull_up );
 
 private:
 

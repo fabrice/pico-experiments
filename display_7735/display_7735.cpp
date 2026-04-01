@@ -215,9 +215,9 @@ void display_7735::display_init() {
 void display_7735::command( uint8_t c ) {
 	if ( _wire != nullptr ) {
 		gpio_put( _dc_gpio, false );
-		_wire->start();
+		_wire->start_communication();
 		_wire->write_bytes( c );
-		_wire->finish();
+		_wire->finish_communication();
 		gpio_put( _dc_gpio, true );
 	}
 }
@@ -227,9 +227,9 @@ void display_7735::command( uint8_t c ) {
 void display_7735::data( uint8_t c ) {
 	if ( _wire != nullptr ) {
 		gpio_put( _dc_gpio, true );
-		_wire->start();
+		_wire->start_communication();
 		_wire->write_bytes( c );
-		_wire->finish();
+		_wire->finish_communication();
 	}
 }
 
@@ -311,9 +311,9 @@ void display_7735::draw_pixel( int16_t x, int16_t y, uint16_t color ) {
 	};
 	if ( _wire != nullptr ) {
 		gpio_put( _dc_gpio, true );
-		_wire->start();
+		_wire->start_communication();
 		_wire->write_bytes( static_cast<uint8_t>(color >> 8), static_cast<uint8_t>(color & 0xff) );
-		_wire->finish();
+		_wire->finish_communication();
 	}
 }
 
@@ -355,9 +355,9 @@ void display_7735::draw_pixmap( int16_t x, int16_t y, int16_t w, int16_t h, cons
 
 	if ( _wire != nullptr ) {
 		gpio_put( _dc_gpio, true );
-		_wire->start();
+		_wire->start_communication();
 		_wire->write_bytes( buffer, length );
-		_wire->finish();
+		_wire->finish_communication();
 	}
 }
 

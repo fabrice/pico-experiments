@@ -48,9 +48,9 @@ mcp41xxx::mcp41xxx( wire_ref wire ):
 
 mcp41xxx::~mcp41xxx() {
 	if ( wire != nullptr ) {
-		wire->start();
+		wire->start_communication();
 		wire->write_bytes( MCP41_SHUTDOWN_POT11, 0x00 );
-		wire->finish();
+		wire->finish_communication();
 
 		delete wire;
 		wire = nullptr;
@@ -64,17 +64,17 @@ void mcp41xxx::set_step( uint pot, uint8_t step ) {
 		case 0:
 			step_p01 = step;
 			if ( wire != nullptr ) {
-				wire->start();
+				wire->start_communication();
 				wire->write_bytes( MCP41_WRITE_POT01, step_p01 );
-				wire->finish();
+				wire->finish_communication();
 			}
 			break;
 		case 1:
 			step_p10 = step;
 			if ( wire != nullptr ) {
-				wire->start();
+				wire->start_communication();
 				wire->write_bytes( MCP41_WRITE_POT10, step_p10 );
-				wire->finish();
+				wire->finish_communication();
 			}
 			break;
 	}
@@ -86,9 +86,9 @@ void mcp41xxx::set_step_all( uint8_t step ) {
 	step_p01 = step;
 	step_p10 = step;
 	if ( wire != nullptr ) {
-		wire->start();
+		wire->start_communication();
 		wire->write_bytes( MCP41_WRITE_POT11, step );
-		wire->finish();
+		wire->finish_communication();
 	}
 }
 

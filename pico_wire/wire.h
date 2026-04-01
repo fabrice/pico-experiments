@@ -34,7 +34,8 @@ public:
 
 	virtual void set_bitrate( uint bitrate ) = 0;
 
-	virtual void start();
+	virtual void start_communication();
+	virtual void start_transaction();
 
 	virtual int write_bytes( const uint8_t* bytes, size_t length ) = 0;
 
@@ -46,7 +47,8 @@ public:
 
 	virtual int read_bytes( uint8_t* bytes, size_t* length ) = 0;
 
-	virtual void finish();
+	virtual void finish_transaction();
+	virtual void finish_communication();
 
 };
 
