@@ -395,11 +395,11 @@ void OLED::erase( uint8_t line, uint8_t column ) {
 //----------------------------------------------------------------
 
 void OLED::reset() {
-	gpio_put( _reset_gpio, 1 );
+	gpio_put( _reset_gpio, true );
 	sleep_ms( 100 );
-	gpio_put( _reset_gpio, 0 );
+	gpio_put( _reset_gpio, false );
 	sleep_ms( 200 );
-	gpio_put( _reset_gpio, 1 );
+	gpio_put( _reset_gpio, true );
 	sleep_ms( 100 );
 }
 

@@ -80,13 +80,13 @@ pwm::pwm( uint gpio, pwm_slice_ref slice ):
 void pwm::io_init() {
 	gpio_init( this->gpio );
 	gpio_set_dir( this->gpio, GPIO_OUT );
-	gpio_put( this->gpio, 0 );
+	gpio_put( this->gpio, false );
 }
 
 //----------------------------------------------------------------
 
 pwm::~pwm() {
-	this->set_channel_enabled( false, 0 );
+	this->set_channel_enabled( false, false );
 	gpio_deinit( gpio );
 
 	this->slice->release();

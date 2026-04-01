@@ -64,7 +64,7 @@ mcp23008::mcp23008( i2c_ref wire, uint8_t address, uint8_t gpio_dir, uint8_t gpi
 //----------------------------------------------------------------
 
 mcp23008::~mcp23008() {
-	this->gpio_put_all( 0 );
+	this->gpio_put_all( false );
 	if ( _wire != nullptr ) {
 		delete _wire;
 		_wire = nullptr;

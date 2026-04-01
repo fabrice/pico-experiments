@@ -248,17 +248,17 @@ void io_init() {
 
 	gpio_init( OLED_RESET_GPIO );
     gpio_set_dir( OLED_RESET_GPIO, GPIO_OUT );
-    gpio_put( OLED_RESET_GPIO, 1 );
+    gpio_put( OLED_RESET_GPIO, true );
 
 	// TFT ST7735
 
     gpio_init( ST7735_BACKLIGHT_GPIO );
     gpio_set_dir( ST7735_BACKLIGHT_GPIO, GPIO_OUT );
-    gpio_put( ST7735_BACKLIGHT_GPIO, 0 );
+    gpio_put( ST7735_BACKLIGHT_GPIO, false );
 
     gpio_init( ST7735_RESET_GPIO );
     gpio_set_dir( ST7735_RESET_GPIO, GPIO_OUT );
-    gpio_put( ST7735_RESET_GPIO, 0 );
+    gpio_put( ST7735_RESET_GPIO, false );
 }
 
 //----------------------------------------------------------------

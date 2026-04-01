@@ -99,15 +99,15 @@ display_7735::display_7735( wire_ref wire, uint reset_gpio, uint dc_gpio, uint b
 
 	gpio_init( _reset_gpio);
 	gpio_set_dir( _reset_gpio, GPIO_OUT );
-	gpio_put( _reset_gpio, 1 );
+	gpio_put( _reset_gpio, true );
 
 	gpio_init( _dc_gpio );
 	gpio_set_dir( _dc_gpio, GPIO_OUT );
-	gpio_put( _dc_gpio, 1 );
+	gpio_put( _dc_gpio, true );
 
 	gpio_init( _backlight_gpio );
 	gpio_set_dir( _backlight_gpio, GPIO_OUT );
-	gpio_put( _backlight_gpio, 0 );
+	gpio_put( _backlight_gpio, false );
 
 	this->display_init();
 }
@@ -214,11 +214,11 @@ void display_7735::display_init() {
 
 void display_7735::command( uint8_t c ) {
 	if ( _wire != nullptr ) {
-		gpio_put( _dc_gpio, 0 );
+		gpio_put( _dc_gpio, false );
 		_wire->start();
 		_wire->write_bytes( c );
 		_wire->finish();
-		gpio_put( _dc_gpio, 1 );
+		gpio_put( _dc_gpio, true );
 	}
 }
 
@@ -226,7 +226,7 @@ void display_7735::command( uint8_t c ) {
 
 void display_7735::data( uint8_t c ) {
 	if ( _wire != nullptr ) {
-		gpio_put( _dc_gpio, 1 );
+		gpio_put( _dc_gpio, true );
 		_wire->start();
 		_wire->write_bytes( c );
 		_wire->finish();
@@ -236,9 +236,9 @@ void display_7735::data( uint8_t c ) {
 //----------------------------------------------------------------
 
 void display_7735::reset() {
-	gpio_put( _reset_gpio, 0 );
+	gpio_put( _reset_gpio, false );
 	sleep_ms( 50 );
-	gpio_put( _reset_gpio, 1 );
+	gpio_put( _reset_gpio, true );
 	sleep_ms( 50 );
 }
 
@@ -310,7 +310,7 @@ void display_7735::draw_pixel( int16_t x, int16_t y, uint16_t color ) {
 		static_cast<uint8_t>(color & 0xff),
 	};
 	if ( _wire != nullptr ) {
-		gpio_put( _dc_gpio, 1 );
+		gpio_put( _dc_gpio, true );
 		_wire->start();
 		_wire->write_bytes( static_cast<uint8_t>(color >> 8), static_cast<uint8_t>(color & 0xff) );
 		_wire->finish();
@@ -354,7 +354,7 @@ void display_7735::draw_pixmap( int16_t x, int16_t y, int16_t w, int16_t h, cons
 	this->set_addr_window(x, y, x + w - 1, y + h - 1);
 
 	if ( _wire != nullptr ) {
-		gpio_put( _dc_gpio, 1 );
+		gpio_put( _dc_gpio, true );
 		_wire->start();
 		_wire->write_bytes( buffer, length );
 		_wire->finish();

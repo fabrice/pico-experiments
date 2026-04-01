@@ -27,13 +27,13 @@ wire_spi::wire_spi( uint spi_num, uint chip_select_gpio ):
 
 	gpio_init( this->chip_select_gpio );
 	gpio_set_dir( this->chip_select_gpio, GPIO_OUT );
-	gpio_put( this->chip_select_gpio, 1 );
+	gpio_put( this->chip_select_gpio, true );
 }
 
 //----------------------------------------------------------------
 
 wire_spi::~wire_spi() {
-	gpio_put( this->chip_select_gpio, 0 );
+	gpio_put( this->chip_select_gpio, false );
 	gpio_deinit( this->chip_select_gpio );
 }
 
@@ -54,8 +54,8 @@ void wire_spi::set_bitrate( uint bitrate ) {
 
 //----------------------------------------------------------------
 
-void wire_spi::start() {
-	gpio_put( this->chip_select_gpio, 0 );
+void wire_spi::start_communication() {
+	gpio_put( this->chip_select_gpio, false );
 }
 
 //----------------------------------------------------------------
@@ -73,8 +73,8 @@ int wire_spi::read_bytes( uint8_t* bytes, size_t* length ) {
 
 //----------------------------------------------------------------
 
-void wire_spi::finish() {
-	gpio_put( this->chip_select_gpio, 1 );
+void wire_spi::finish_communication() {
+	gpio_put( this->chip_select_gpio, true );
 }
 
 //----------------------------------------------------------------
