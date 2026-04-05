@@ -14,12 +14,14 @@
 //----------------------------------------------------------------
 
 #include "pico/stdlib.h" // all the pico base stuff
+
 #include "hardware/pwm.h"
 #include "hardware/clocks.h"
 
 //----------------------------------------------------------------
 
-constexpr float pwm_divider_max = 255.0 + 15.0 / 16.0;
+constexpr float pwm_divider_max = 255.0f + 15.0f / 16.0f;
+constexpr float pwm_counter_max = 65536.0f;
 
 //----------------------------------------------------------------
 
@@ -51,7 +53,7 @@ static inline void pwm_set_chan_duty( uint slice_num, uint chan, float duty ) {
 
 inline float pwm_get_frequency_min() {
 	float clock = (float)clock_get_hz( clk_sys );
-	return clock / (pwm_divider_max * 65536.0);
+	return clock / (pwm_divider_max * pwm_counter_max);
 }
 
 //----------------------------------------------------------------

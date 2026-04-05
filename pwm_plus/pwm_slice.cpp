@@ -20,23 +20,23 @@
 
 pwm_slice::pwm_slice( uint slice_num ):
 	v_reference_count( true ),
-	slice_num( slice_num ),
-	divider_uint( 1 ),
-	divider_frac( 0 ),
-	wrap( 65535 ) {
+	_slice_num( slice_num ),
+	_divider_uint( 1 ),
+	_divider_frac( 0 ),
+	_wrap( 65535 ) {
 	check_slice_num_param( slice_num );
-	this->set_divider( this->divider_uint, this->divider_frac );
-	this->set_wrap( this->wrap );
+	this->set_divider( _divider_uint, _divider_frac );
+	this->set_wrap( _wrap );
 }
 
 //----------------------------------------------------------------
 
 pwm_slice::pwm_slice( uint slice_num, uint8_t divider_uint, uint8_t divider_frac, uint16_t wrap ):
 	v_reference_count( true ),
-	slice_num( slice_num ),
-	divider_uint( divider_uint ),
-	divider_frac( divider_frac ),
-	wrap( wrap ) {
+	_slice_num( slice_num ),
+	_divider_uint( divider_uint ),
+	_divider_frac( divider_frac ),
+	_wrap( wrap ) {
 	check_slice_num_param( slice_num );
 	this->set_divider( divider_uint, divider_frac );
 	this->set_wrap( wrap );
@@ -46,10 +46,10 @@ pwm_slice::pwm_slice( uint slice_num, uint8_t divider_uint, uint8_t divider_frac
 
 pwm_slice::pwm_slice( uint slice_num, float divider, uint16_t wrap ):
 	v_reference_count( true ),
-	slice_num( slice_num ),
-	divider_uint( 1 ),
-	divider_frac( 0 ),
-	wrap( wrap ) {
+	_slice_num( slice_num ),
+	_divider_uint( 1 ),
+	_divider_frac( 0 ),
+	_wrap( wrap ) {
 	check_slice_num_param( slice_num );
 	this->set_divider( divider );
 	this->set_wrap( wrap );
@@ -59,10 +59,10 @@ pwm_slice::pwm_slice( uint slice_num, float divider, uint16_t wrap ):
 
 pwm_slice::pwm_slice( uint slice_num, float frequency ):
 	v_reference_count( true ),
-	slice_num( slice_num ),
-	divider_uint( 1 ),
-	divider_frac( 0 ),
-	wrap( 65535 ) {
+	_slice_num( slice_num ),
+	_divider_uint( 1 ),
+	_divider_frac( 0 ),
+	_wrap( 65535 ) {
 	check_slice_num_param( slice_num );
 	this->set_frequency( frequency );
 }
@@ -76,7 +76,7 @@ pwm_slice::~pwm_slice() {
 //----------------------------------------------------------------
 
 float pwm_slice::get_divider() const {
-	return (float)divider_uint + (float)divider_frac / 16.0f;
+	return (float)_divider_uint + (float)_divider_frac / 16.0f;
 }
 
 //----------------------------------------------------------------
@@ -85,10 +85,10 @@ void pwm_slice::set_divider( uint8_t divider_uint, uint8_t divider_frac ) {
 	valid_params_if( HARDWARE_PWM, divider_uint >= 1 );
 	valid_params_if( HARDWARE_PWM, divider_frac < 16 );
 
-	this->divider_uint = divider_uint;
-	this->divider_frac = divider_frac;
+	_divider_uint = divider_uint;
+	_divider_frac = divider_frac;
 
-	pwm_set_clkdiv_int_frac4( this->slice_num, this->divider_uint, this->divider_frac );
+	pwm_set_clkdiv_int_frac4( _slice_num, _divider_uint, _divider_frac );
 }
 
 //----------------------------------------------------------------
@@ -98,18 +98,18 @@ void pwm_slice::set_divider( float divider ) {
 	valid_params_if( HARDWARE_PWM, divider <= (255.0f + 15.0f / 16.0f) );
 
 	divider += 0.5f / 16.0f;
-	this->divider_uint = (uint8_t)divider;
-	this->divider_frac = (uint8_t)((divider - this->divider_uint) * 16.0f);
+	_divider_uint = (uint8_t)divider;
+	_divider_frac = (uint8_t)((divider - _divider_uint) * 16.0f);
 
-	pwm_set_clkdiv_int_frac4( this->slice_num, this->divider_uint, this->divider_frac );
+	pwm_set_clkdiv_int_frac4( _slice_num, _divider_uint, _divider_frac );
 }
 
 //----------------------------------------------------------------
 
 void pwm_slice::set_wrap( uint16_t wrap ) {
-	this->wrap = wrap;
+	_wrap = wrap;
 
-	pwm_set_wrap( this->slice_num, this->wrap );
+	pwm_set_wrap( _slice_num, _wrap );
 }
 
 //----------------------------------------------------------------
@@ -117,7 +117,7 @@ void pwm_slice::set_wrap( uint16_t wrap ) {
 float pwm_slice::get_frequency() const {
 	float clock = (float)clock_get_hz( clk_sys );
 
-	return clock / (this->get_divider() * (float)this->wrap);
+	return clock / (this->get_divider() * (float)_wrap);
 }
 
 //----------------------------------------------------------------
@@ -138,18 +138,18 @@ void pwm_slice::set_frequency( float frequency ) {
 	float wrap = floorf( cycles / divider - 1.0f );
 	wrap = fmaxf( 0.0f, fminf( wrap, 65535.0f ) );
 
-	this->divider_uint = (uint8_t)divider_uint;
-	this->divider_frac = (uint8_t)divider_frac;
-	this->wrap = (uint16_t)wrap;
+	_divider_uint = (uint8_t)divider_uint;
+	_divider_frac = (uint8_t)divider_frac;
+	_wrap = (uint16_t)wrap;
 
-	pwm_set_clkdiv_int_frac4( this->slice_num, this->divider_uint, this->divider_frac );
-	pwm_set_wrap( this->slice_num, this->wrap );
+	pwm_set_clkdiv_int_frac4( _slice_num, _divider_uint, _divider_frac );
+	pwm_set_wrap( _slice_num, _wrap );
 }
 
 //----------------------------------------------------------------
 
 void pwm_slice::set_enabled( bool enabled ) {
-	pwm_set_enabled( this->slice_num, enabled );
+	pwm_set_enabled( _slice_num, enabled );
 }
 
 //----------------------------------------------------------------
