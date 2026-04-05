@@ -160,7 +160,7 @@ void oled_print( oled_ref oled, char character, uint8_t line, uint8_t column ) {
 
 //----------------------------------------------------------------
 
-void oled_print_glyph( oled_ref oled, uint8_t glyph[6] ) {
+void oled_print_glyph( oled_ref oled, const uint8_t glyph[6] ) {
 	if ( oled == nullptr ) return;
 
 	oled->print_glyph( glyph );
@@ -168,7 +168,7 @@ void oled_print_glyph( oled_ref oled, uint8_t glyph[6] ) {
 
 //----------------------------------------------------------------
 
-void oled_draw_bitmap( oled_ref oled, int16_t x, int16_t y, int16_t width, int16_t height, uint8_t* bitmap, uint16_t length ) {
+void oled_draw_bitmap( oled_ref oled, int16_t x, int16_t y, int16_t width, int16_t height, const uint8_t* bitmap, uint16_t length ) {
 	if ( oled == nullptr ) return;
 
 	oled->draw_bitmap( x, y, width, height, bitmap, length );

@@ -22,6 +22,7 @@
 #include <cstdio>
 #include <cstring>
 #include <algorithm>
+#include <vector>
 
 
 //----------------------------------------------------------------
@@ -291,6 +292,18 @@ void OLED::print( const char* text, uint8_t line, uint8_t column ) {
 
 //----------------------------------------------------------------
 
+void OLED::print_left( const char* text, uint8_t line ) {
+	if ( _font == nullptr ) return;
+
+	size_t text_length = strlen( text );
+	if ( text_length == 0 ) return;
+
+	this->set_lico( line, 0 );
+	this->print( text );
+}
+
+//----------------------------------------------------------------
+
 void OLED::print_center( const char* text, uint8_t line ) {
 	if ( _font == nullptr ) return;
 
@@ -300,6 +313,51 @@ void OLED::print_center( const char* text, uint8_t line ) {
 	uint8_t column_count = this->get_column_count();
 	uint8_t column = 0;
 	if ( text_length < column_count ) column = (column_count - text_length) / 2;
+
+	this->set_lico( line, column );
+	this->print( text );
+}
+
+//----------------------------------------------------------------
+
+void OLED::print_right( const char* text, uint8_t line ) {
+	if ( _font == nullptr ) return;
+
+	size_t text_length = strlen( text );
+	if ( text_length == 0 ) return;
+
+	uint8_t column_count = this->get_column_count();
+	uint8_t column = 0;
+	if ( text_length < column_count ) column = column_count - text_length;
+
+	this->set_lico( line, column );
+	this->print( text );
+}
+
+//----------------------------------------------------------------
+
+void OLED::print_aligned( const char* text, uint8_t line, char alignement ) {
+	if ( _font == nullptr ) return;
+
+	size_t text_length = strlen( text );
+	if ( text_length == 0 ) return;
+
+	uint8_t column_count = this->get_column_count();
+	uint8_t column = 0;
+
+	switch ( alignement ) {
+	case '<':
+		if ( text_length < column_count ) column = 0;
+		break;
+	case '^':
+		if ( text_length < column_count ) column = (column_count - text_length) / 2;
+		break;
+	case '>':
+		if ( text_length < column_count ) column = column_count - text_length;
+		break;
+	default:
+		break;
+	}
 
 	this->set_lico( line, column );
 	this->print( text );
@@ -351,7 +409,7 @@ void OLED::print( char character, uint8_t line, uint8_t column ) {
 
 //----------------------------------------------------------------
 
-void OLED::print_glyph( uint8_t glyph[6] ) {
+void OLED::print_glyph( const uint8_t glyph[6] ) {
 	uint8_t buffer[7];
 	buffer[0] = WRITE_DATA;
 	memcpy( buffer + 1, glyph, 6 );
@@ -363,7 +421,7 @@ void OLED::print_glyph( uint8_t glyph[6] ) {
 
 //----------------------------------------------------------------
 
-void OLED::draw_bitmap( int16_t x, int16_t y, int16_t width, int16_t height, const uint8_t* bitmap, size_t length ) {
+void OLED::draw_bitmap( int16_t x, int16_t y, uint16_t width, uint16_t height, const uint8_t* bitmap, size_t length ) {
 	uint8_t buffer[129];
 	memset( buffer, 0x00, 129 );
 	buffer[0] = WRITE_DATA;
@@ -378,6 +436,24 @@ void OLED::draw_bitmap( int16_t x, int16_t y, int16_t width, int16_t height, con
 		_wire->write_bytes( buffer, std::min( 1 + this->get_width(), 129 ) );
 	}
 	_wire->finish_communication();
+}
+
+//----------------------------------------------------------------
+
+void OLED::draw_bitmap( int16_t x, int16_t y, uint16_t width, uint16_t height, std::vector< bool > bitmap ) {
+	size_t length = (width * height + 7) / 8;
+	std::vector< uint8_t > bytes( length, 0x00 );
+	for ( int16_t y = 0 ; y < height ; y += 8 ) {
+		for ( int16_t x = 0 ; x < width ; ++ x ) {
+			uint8_t byte = 0;
+			for ( uint8_t bit = 0 ; bit < 8 ; ++ bit ) {
+				byte |= bitmap[ x + (y + bit) * width ] << bit;
+			}
+			bytes[ x + y / 8 * height ] = byte;
+		}
+	}
+
+	this->draw_bitmap( x, y, width, height, bytes.data(), length );
 }
 
 //----------------------------------------------------------------

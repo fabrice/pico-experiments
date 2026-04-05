@@ -41,15 +41,15 @@ void OLEDKitInit( uint8_t i2c_num, uint reset_gpio ) {
 
 //----------------------------------------------------------------
 
-void OLEDKitSendMessage( const char text[], uint8_t line, uint8_t column ) {
+void OLEDKitSendMessage( const char* text, uint8_t line, uint8_t column ) {
 	if ( oled == nullptr ) return;
 
-	oled->print( (const char*)text, line, column );
+	oled->print( text, line, column );
 }
 
 //----------------------------------------------------------------
 
-void OLEDKitSendMessageINT( const char text[], int value, uint8_t line, uint8_t column ) {
+void OLEDKitSendMessageINT( const char* text, int value, uint8_t line, uint8_t column ) {
 	if ( oled == nullptr ) return;
 
 	oled->set_lico( line, column );
@@ -77,7 +77,7 @@ void OLEDKitPrintInfo() {
 
 //----------------------------------------------------------------
 
-void OLEDKitPrintImage( unsigned char image[] ) {
+void OLEDKitPrintImage( const uint8_t* image ) {
 	if ( oled == nullptr ) return;
 
 	oled->draw_bitmap( 0, 0, SSD1309_WIDTH, SSD1309_HEIGHT, image, SSD1309_WIDTH * SSD1309_HEIGHT / 8 );
@@ -117,7 +117,7 @@ void AfficherCaractere( char caractere ) {
 
 //----------------------------------------------------------------
 
-void AfficherGlyph( unsigned char glyph[] ) {
+void AfficherGlyph( const uint8_t glyph[6] ) {
 	if ( oled == nullptr ) return;
 
 	oled->print_glyph( glyph );
@@ -125,7 +125,7 @@ void AfficherGlyph( unsigned char glyph[] ) {
 
 //----------------------------------------------------------------
 
-void AfficheImage( unsigned char image[] ) {
+void AfficheImage( const uint8_t* image ) {
 	if ( oled == nullptr ) return;
 
 	oled->draw_bitmap( 0, 0, SSD1309_WIDTH, SSD1309_HEIGHT, image, SSD1309_WIDTH * SSD1309_HEIGHT / 8 );
@@ -157,15 +157,15 @@ void SelectPosCaractLiCo( uint8_t line, uint8_t column ) {
 
 //----------------------------------------------------------------
 
-void AfficherChaineAZT( const char texte[] ) {
+void AfficherChaineAZT( const char* texte ) {
 	if ( oled == nullptr ) return;
 
-	oled->print( (const char*)texte );
+	oled->print( texte );
 }
 
 //----------------------------------------------------------------
 
-void AfficherChaineAZTCentreLi( const char texte[], uint8_t ligne ) {
+void AfficherChaineAZTCentreLi( const char* texte, uint8_t ligne ) {
 	if ( oled == nullptr ) return;
 
 	oled->print_center( texte, ligne );
