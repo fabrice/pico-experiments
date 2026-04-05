@@ -32,9 +32,9 @@ class wire_i2c : public virtual wire {
 
 private:
 
-	i2c_ref i2c_instance;
-	uint8_t address;
-	bool transaction;
+	i2c_ref _i2c_instance;
+	uint8_t _address;
+	bool _transaction;
 
 public:
 

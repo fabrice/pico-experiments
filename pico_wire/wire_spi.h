@@ -32,8 +32,8 @@ class wire_spi : public virtual wire {
 
 private:
 
-	spi_ref spi_instance;
-	uint chip_select_gpio;
+	spi_ref _spi_instance;
+	uint _chip_select_gpio;
 
 private:
 
