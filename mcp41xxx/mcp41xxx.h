@@ -28,10 +28,10 @@ class mcp41xxx {
 
 private:
 
-	wire_ref wire;
+	wire_ref _wire;
 
-	uint8_t step_p01;
-	uint8_t step_p10;
+	uint8_t _step_p01;
+	uint8_t _step_p10;
 
 private:
 
