@@ -31,20 +31,20 @@ constexpr uint8_t MCP23008_OLAT = 0x0a;
 //----------------------------------------------------------------
 
 mcp23008::mcp23008():
-	wire( nullptr ),
-	address( MCP23008_ADDRESS ),
-	gpio_dir( 0x00 ),
-	gpio_pull_up( 0x00 ) {
+	_wire( nullptr ),
+	_address( MCP23008_ADDRESS ),
+	_gpio_dir( 0x00 ),
+	_gpio_pull_up( 0x00 ) {
 	this->gpio_init();
 }
 
 //----------------------------------------------------------------
 
 mcp23008::mcp23008( wire_ref wire, uint8_t gpio_dir, uint8_t gpio_pull_up ):
-	wire( wire ),
-	address( 0 ),
-	gpio_dir( gpio_dir ),
-	gpio_pull_up( gpio_pull_up ) {
+	_wire( wire ),
+	_address( 0 ),
+	_gpio_dir( gpio_dir ),
+	_gpio_pull_up( gpio_pull_up ) {
 	this->gpio_init();
 }
 
@@ -52,9 +52,9 @@ mcp23008::mcp23008( wire_ref wire, uint8_t gpio_dir, uint8_t gpio_pull_up ):
 
 mcp23008::~mcp23008() {
 	this->gpio_put_all( false );
-	if ( wire != nullptr ) {
-		delete wire;
-		wire = nullptr;
+	if ( _wire != nullptr ) {
+		delete _wire;
+		_wire = nullptr;
 	}
 }
 
@@ -63,23 +63,23 @@ mcp23008::~mcp23008() {
 void mcp23008::gpio_init() {
 	uint8_t buffer[] = {
 		MCP23008_IODIR, // register IODIR
-		(uint8_t)~gpio_dir, // IODIR
+		(uint8_t)~_gpio_dir, // IODIR
 		0x00, // IPOL
 		0x00, // GPINTEN
 		0x00, // DEFVAL
 		0x00, // INTCON
 		0x00, // IOCON
-		gpio_pull_up, // GPPU
+		_gpio_pull_up, // GPPU
 		0x00, // INTF
 		0x00, // GPIO
 		0x00 // OLAT
 	};
-	if ( wire ) {
-		wire->start_communication();
-		wire->write_bytes( buffer, sizeof(buffer) );
-		wire->write_bytes( MCP23008_IODIR, ~gpio_dir );
-		wire->write_bytes( MCP23008_GPPU, gpio_pull_up );
-		wire->finish_communication();
+	if ( _wire ) {
+		_wire->start_communication();
+		_wire->write_bytes( buffer, sizeof(buffer) );
+		_wire->write_bytes( MCP23008_IODIR, ~_gpio_dir );
+		_wire->write_bytes( MCP23008_GPPU, _gpio_pull_up );
+		_wire->finish_communication();
 	}
 }
 
@@ -88,12 +88,12 @@ void mcp23008::gpio_init() {
 void mcp23008::gpio_set_dir( uint8_t gpio, bool out ) {
 	if ( gpio > 7 ) return;
 
-	if ( out ) gpio_dir |= (1 << gpio);
-	else gpio_dir &= ~(1 << gpio);
-	if ( wire ) {
-		wire->start_communication();
-		wire->write_bytes( MCP23008_IODIR, ~gpio_dir );
-		wire->finish_communication();
+	if ( out ) _gpio_dir |= (1 << gpio);
+	else _gpio_dir &= ~(1 << gpio);
+	if ( _wire ) {
+		_wire->start_communication();
+		_wire->write_bytes( MCP23008_IODIR, ~_gpio_dir );
+		_wire->finish_communication();
 	}
 }
 
@@ -102,12 +102,12 @@ void mcp23008::gpio_set_dir( uint8_t gpio, bool out ) {
 void mcp23008::gpio_set_pull_up( uint8_t gpio, bool up ) {
 	if ( gpio > 7 ) return;
 
-	if ( up ) gpio_pull_up |= (1 << gpio);
-	else gpio_pull_up &= ~(1 << gpio);
-	if ( wire ) {
-		wire->start_communication();
-		wire->write_bytes( MCP23008_GPPU, gpio_pull_up );
-		wire->finish_communication();
+	if ( up ) _gpio_pull_up |= (1 << gpio);
+	else _gpio_pull_up &= ~(1 << gpio);
+	if ( _wire ) {
+		_wire->start_communication();
+		_wire->write_bytes( MCP23008_GPPU, _gpio_pull_up );
+		_wire->finish_communication();
 	}
 }
 
@@ -116,11 +116,11 @@ void mcp23008::gpio_set_pull_up( uint8_t gpio, bool up ) {
 uint8_t mcp23008::gpio_get_all() {
 	uint8_t data = 0;
 	size_t data_length = sizeof(data);
-	if ( wire ) {
-		wire->start_communication();
-		wire->write_bytes( MCP23008_GPIO );
-		wire->read_bytes( &data, &data_length );
-		wire->finish_communication();
+	if ( _wire ) {
+		_wire->start_communication();
+		_wire->write_bytes( MCP23008_GPIO );
+		_wire->read_bytes( &data, &data_length );
+		_wire->finish_communication();
 	}
 
 	return data;
@@ -129,10 +129,10 @@ uint8_t mcp23008::gpio_get_all() {
 //----------------------------------------------------------------
 
 void mcp23008::gpio_put_all( uint8_t value ) {
-	if ( wire ) {
-		wire->start_communication();
-		wire->write_bytes( MCP23008_GPIO, value );
-		wire->finish_communication();
+	if ( _wire ) {
+		_wire->start_communication();
+		_wire->write_bytes( MCP23008_GPIO, value );
+		_wire->finish_communication();
 	}
 }
 

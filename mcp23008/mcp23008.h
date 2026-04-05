@@ -33,11 +33,11 @@ class mcp23008 {
 
 private:
 
-	wire_ref wire;
-	uint8_t address;
+	wire_ref _wire;
+	uint8_t _address;
 
-	uint8_t gpio_dir;
-	uint8_t gpio_pull_up;
+	uint8_t _gpio_dir;
+	uint8_t _gpio_pull_up;
 
 public:
 
