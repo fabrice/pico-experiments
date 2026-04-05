@@ -21,15 +21,15 @@ class v_reference_count {
 
 private:
 
-	uint8_t reference_count;
+	uint8_t _reference_count;
 
 public:
 
-	inline v_reference_count(): reference_count( 0 ) {};
-	inline v_reference_count( uint8_t reference_count ): reference_count( reference_count ) {};
-	inline v_reference_count( bool retained ): reference_count( retained ? 1 : 0 ) {};
+	inline v_reference_count(): _reference_count( 0 ) {}
+	inline v_reference_count( uint8_t reference_count ): _reference_count( reference_count ) {}
+	inline v_reference_count( bool retained ): _reference_count( retained ? 1 : 0 ) {}
 
-	inline v_reference_count( v_reference_count& that ): reference_count( 0 ) {};
+	inline v_reference_count( v_reference_count& that ): _reference_count( 0 ) {}
 
 protected:
 
@@ -37,13 +37,13 @@ protected:
 
 public:
 
-	inline uint8_t get_reference_count() const { return this->reference_count; };
+	inline uint8_t get_reference_count() const { return _reference_count; }
 
-	inline void retain() { ++ this->reference_count; }
+	inline void retain() { ++_reference_count; }
 
 	bool release() {
-		if ( this->reference_count > 0 ) -- this->reference_count;
-		if ( this->reference_count == 0 ) { delete this; return true; }
+		if ( _reference_count > 0 ) --_reference_count;
+		if ( _reference_count == 0 ) { delete this; return true; }
 		return false;
 	}
 
