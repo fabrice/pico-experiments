@@ -245,18 +245,23 @@ void display_7735::reset() {
 //----------------------------------------------------------------
 
 void display_7735::set_on( bool on ) {
-	if ( !on ) this->set_brightness( 0 );
+	if ( !on ) {
+		this->set_brightness( 0 );
+		sleep_ms( 100 );
+	}
 
 	this->command( on ? ST7735_DISPON : ST7735_DISPOFF );
-	sleep_ms( 50 );
 
-	if ( on ) this->set_brightness( _brightness );
+	if ( on ) {
+		sleep_ms( 100 );
+		this->set_brightness( _brightness );
+	}
 }
 
 //----------------------------------------------------------------
 
 void display_7735::set_brightness( uint8_t brightness ) {
-	this->_brightness = brightness;
+	_brightness = brightness;
 
 	uint pwm_slice = pwm_gpio_to_slice_num( _backlight_gpio );
 	uint pwm_channel = pwm_gpio_to_channel( _backlight_gpio );
@@ -319,7 +324,7 @@ void display_7735::draw_pixel( int16_t x, int16_t y, uint16_t color ) {
 
 //----------------------------------------------------------------
 
-void display_7735::draw_block( int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color ) {
+void display_7735::draw_block( int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t color ) {
 	int max_rows = 500 / w;
 	if (max_rows < 1) max_rows = 1;
 
@@ -345,7 +350,7 @@ void display_7735::draw_block( int16_t x, int16_t y, int16_t w, int16_t h, uint1
 
 //----------------------------------------------------------------
 
-void display_7735::draw_pixmap( int16_t x, int16_t y, int16_t w, int16_t h, const uint8_t* buffer, size_t length ) {
+void display_7735::draw_pixmap( int16_t x, int16_t y, uint16_t w, uint16_t h, const uint8_t* pixmap, size_t length ) {
 	if (x >= _width || y >= _height) return;
 
 	if ((x + w - 1) >= _width) w = _width - x;
@@ -356,14 +361,14 @@ void display_7735::draw_pixmap( int16_t x, int16_t y, int16_t w, int16_t h, cons
 	if ( _wire != nullptr ) {
 		gpio_put( _dc_gpio, true );
 		_wire->start_communication();
-		_wire->write_bytes( buffer, length );
+		_wire->write_bytes( pixmap, length );
 		_wire->finish_communication();
 	}
 }
 
 //----------------------------------------------------------------
 
-void display_7735::draw_bitmap( int16_t x, int16_t y, int16_t w, int16_t h, const uint8_t* buffer, size_t length ) {
+void display_7735::draw_bitmap( int16_t x, int16_t y, uint16_t w, uint16_t h, const uint8_t* bitmap, size_t length ) {
 	if (x >= _width || y >= _height) return;
 
 	if ((x + w - 1) >= _width) w = _width - x;
@@ -376,7 +381,7 @@ void display_7735::draw_bitmap( int16_t x, int16_t y, int16_t w, int16_t h, cons
 			uint16_t line = pixy / 8;
 			uint8_t bit = pixy % 8;
 			uint16_t idx = pixx + w * line;
-			uint16_t pixel = !!(buffer[ idx ] & (1 << bit)) ? _foreground_color : _background_color;
+			uint16_t pixel = !!(bitmap[ idx ] & (1 << bit)) ? _foreground_color : _background_color;
 			pixelmap[ (pixx + w * pixy) * 2 + 0 ] = pixel >> 8;
 			pixelmap[ (pixx + w * pixy) * 2 + 1 ] = pixel & 0xff;
 		}
@@ -466,6 +471,79 @@ void display_7735::print_center( uint8_t line, const char* text ) {
 	int16_t x = column * 6 + this->get_columns_offset();
 	int16_t y = line * 8 + get_lines_offset();
 	this->print( x, y, text );
+}
+
+//----------------------------------------------------------------
+
+void display_7735::print_left( const char* text, uint8_t line ) {
+	if ( _font == nullptr ) return;
+
+	size_t text_length = strlen( text );
+	if ( text_length == 0 ) return;
+
+	this->set_lico( line, 0 );
+	this->print( text );
+}
+
+//----------------------------------------------------------------
+
+void display_7735::print_center( const char* text, uint8_t line ) {
+	if ( _font == nullptr ) return;
+
+	size_t text_length = strlen( text );
+	if ( text_length == 0 ) return;
+
+	uint8_t column_count = this->get_column_count();
+	uint8_t column = 0;
+	if ( text_length < column_count ) column = (column_count - text_length) / 2;
+
+	this->set_lico( line, column );
+	this->print( text );
+}
+
+//----------------------------------------------------------------
+
+void display_7735::print_right( const char* text, uint8_t line ) {
+	if ( _font == nullptr ) return;
+
+	size_t text_length = strlen( text );
+	if ( text_length == 0 ) return;
+
+	uint8_t column_count = this->get_column_count();
+	uint8_t column = 0;
+	if ( text_length < column_count ) column = column_count - text_length;
+
+	this->set_lico( line, column );
+	this->print( text );
+}
+
+//----------------------------------------------------------------
+
+void display_7735::print_aligned( const char* text, uint8_t line, char alignement ) {
+	if ( _font == nullptr ) return;
+
+	size_t text_length = strlen( text );
+	if ( text_length == 0 ) return;
+
+	uint8_t column_count = this->get_column_count();
+	uint8_t column = 0;
+
+	switch ( alignement ) {
+	case '<':
+		if ( text_length < column_count ) column = 0;
+		break;
+	case '^':
+		if ( text_length < column_count ) column = (column_count - text_length) / 2;
+		break;
+	case '>':
+		if ( text_length < column_count ) column = column_count - text_length;
+		break;
+	default:
+		break;
+	}
+
+	this->set_lico( line, column );
+	this->print( text );
 }
 
 //----------------------------------------------------------------

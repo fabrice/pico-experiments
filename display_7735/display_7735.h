@@ -9,8 +9,8 @@
 //----------------------------------------------------------------
 
 #pragma once
-#ifndef _ST7735_H
-#define _ST7735_H
+#ifndef _DISPLAY_7735_H
+#define _DISPLAY_7735_H
 
 //----------------------------------------------------------------
 
@@ -64,10 +64,10 @@ public:
 	void set_addr_window( uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1 );
 
 	void draw_pixel( int16_t x, int16_t y, uint16_t color );
-	void draw_block( int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color );
+	void draw_block( int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t color );
 
-	void draw_pixmap( int16_t x, int16_t y, int16_t w, int16_t h, const uint8_t* buffer, size_t length );
-	void draw_bitmap( int16_t x, int16_t y, int16_t w, int16_t h, const uint8_t* buffer, size_t length );
+	void draw_pixmap( int16_t x, int16_t y, uint16_t w, uint16_t h, const uint8_t* pixmap, size_t length );
+	void draw_bitmap( int16_t x, int16_t y, uint16_t w, uint16_t h, const uint8_t* bitmap, size_t length );
 
 	void fill_screen( uint16_t color );
 	void fill_screen( uint8_t red, uint8_t green, uint8_t blue );
@@ -76,7 +76,11 @@ public:
 
 	void print( int16_t x, int16_t y, char character );
 	void print( int16_t x, int16_t y, const char* text );
+	void print_left( const char* text, uint8_t line );
 	void print_center( uint8_t line, const char* text );
+	void print_center( const char* text, uint8_t line );
+	void print_right( const char* text, uint8_t line );
+	void print_aligned( const char* text, uint8_t line, char alignement );
 	void print( const char* text );
 
 	void printf( const char* format, ... );
