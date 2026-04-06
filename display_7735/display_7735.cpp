@@ -433,7 +433,7 @@ void display_7735::print( int16_t x, int16_t y, char character ) {
 
 	for (int bit = 0; bit < 8; bit++) {
 		for (int c = 0; c < 6; c++) {
-			if ((char_buf[c] >> bit) & 1) {
+			if ((char_buf[c] >> bit) & 0x01) {
 				char_image[idx] = color_hi;
 				++ idx;
 				char_image[idx] = color_lo;
@@ -592,7 +592,7 @@ void display_7735::erase( uint8_t line, uint8_t column ) {
 //----------------------------------------------------------------
 
 uint16_t display_7735::rgb_to_565( uint8_t r, uint8_t g, uint8_t b ) {
-	return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
+	return ((r & 0b11111000) << 8) | ((g & 0b11111100) << 3) | ((b & 0b11111000) >> 3);
 }
 
 //----------------------------------------------------------------

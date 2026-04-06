@@ -17,9 +17,9 @@
 
 constexpr uint8_t MCP41_WRITE = 0x10;
 constexpr uint8_t MCP41_SHUTDOWN = 0x20;
-constexpr uint8_t MCP41_POT01 = 0x01;
-constexpr uint8_t MCP41_POT10 = 0x02;
-constexpr uint8_t MCP41_POT11 = 0x03;
+constexpr uint8_t MCP41_POT01 = 0b0001;
+constexpr uint8_t MCP41_POT10 = 0b0010;
+constexpr uint8_t MCP41_POT11 = 0b0011;
 
 constexpr uint8_t MCP41_WRITE_POT01 = MCP41_WRITE | MCP41_POT01;
 constexpr uint8_t MCP41_WRITE_POT10 = MCP41_WRITE | MCP41_POT10;

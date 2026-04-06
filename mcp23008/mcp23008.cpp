@@ -33,8 +33,8 @@ constexpr uint8_t MCP23008_OLAT = 0x0a;
 mcp23008::mcp23008():
 	_wire( nullptr ),
 	_address( MCP23008_ADDRESS ),
-	_gpio_dir( 0x00 ),
-	_gpio_pull_up( 0x00 ) {
+	_gpio_dir( 0b00000000 ),
+	_gpio_pull_up( 0b00000000 ) {
 	this->gpio_init();
 }
 
