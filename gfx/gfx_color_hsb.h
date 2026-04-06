@@ -14,15 +14,19 @@
 
 //----------------------------------------------------------------
 
-#include "pico.h"
 #include "pico/stdlib.h"
+
+#include "gfx_types.h"
+#include "gfx_color_rgb.h"
+
+#include "literals_plus.h"
+#include "math_plus.h"
 
 #include <cmath>
 
-
 //----------------------------------------------------------------
 
-class gfx_color;
+class gfx_color_rgb;
 class gfx_color_hsb;
 
 //----------------------------------------------------------------
@@ -30,28 +34,34 @@ class gfx_color_hsb;
 class gfx_color_hsb {
 
 private:
-	float hue;
-	float sat;
-	float bri;
+
+	float _hue;
+	float _sat;
+	float _bri;
 
 public:
 
-	gfx_color_hsb(): hue( 0 ), sat( 0 ), bri( 0 ) {}
+	gfx_color_hsb(): _hue( 0 ), _sat( 0 ), _bri( 0 ) {}
 	gfx_color_hsb( const gfx_color_hsb& that );
 	gfx_color_hsb( uint16_t hue, uint8_t sat, uint8_t bri );
+	gfx_color_hsb( float hue, float sat, float bri ): _hue( hue ), _sat( sat ), _bri( bri ) {}
 
-	inline uint16_t get_hue() const { return fmodf( floor( hue ), 360.0 ); }
-	inline uint8_t get_sat() const { return floor( sat * 255.0 ); }
-	inline uint8_t get_bri() const { return floor( bri * 255.0 ); }
+	inline uint16_t get_hue() const { return (uint16_t)std::fmod( std::floor( _hue ), 360.0f ); }
+	inline uint8_t get_sat() const { return (uint8_t)std::floor( _sat * 255.0f ); }
+	inline uint8_t get_bri() const { return (uint8_t)std::floor( _bri * 255.0f ); }
 
 	uint8_t get_lit() const;
 	uint8_t get_chroma() const;
 
-	inline bool is_black() const { return this->bri == 0.0; };
-	inline bool is_white() const { return (this->sat == 0.0) && (this->bri > 0.0); };
+	inline bool is_black() const { return _bri == 0.0f; };
+	inline bool is_white() const { return (_bri > 0.0f) && (_sat == 0.0f); };
+	inline bool is_gray() const { return (_bri > 0.0f) && (_sat == 0.0f); }
+	inline bool is_lit() const { return _bri > 0.0f; };
+
+	inline uint32_t to_988() const { return pack( get_hue(), pack( get_sat(), get_bri() ) ); }
 
 	[[nodiscard]]
-	gfx_color to_rgb() const;
+	gfx_color_rgb to_rgb() const;
 
 };
 

@@ -11,7 +11,7 @@
 
 #include "gfx_color_hsb.h"
 
-#include "gfx_color.h"
+#include "gfx_color_rgb.h"
 
 #include <cmath>
 #include "math_plus.h"
@@ -20,89 +20,89 @@
 //----------------------------------------------------------------
 
 gfx_color_hsb::gfx_color_hsb( uint16_t hue, uint8_t sat, uint8_t bri ):
-	hue( hue ),
-	sat( (float)sat / 255.0 ),
-	bri( (float)bri / 255.0 ) {
+	_hue( hue ),
+	_sat( (float)sat / 255.0f ),
+	_bri( (float)bri / 255.0f ) {
 }
 
 //----------------------------------------------------------------
 
 gfx_color_hsb::gfx_color_hsb( const gfx_color_hsb& that ):
-    hue( that.hue ),
-    sat( that.sat ),
-    bri( that.bri ) {
-    this->hue = std::fmod( std::abs( this->hue ), 360.0 );
-    this->sat = std::abs( this->sat );
-    this->sat = constrain( this->sat, 0.0, 1.0 );
-    this->bri = std::abs( this->bri );
-    this->bri = constrain( this->bri, 0.0, 1.0 );
+    _hue( that._hue ),
+    _sat( that._sat ),
+    _bri( that._bri ) {
+    _hue = std::fmod( std::abs( _hue ), 360.0f );
+    _sat = std::abs( _sat );
+    _sat = constrain( _sat, 0.0f, 1.0f );
+    _bri = std::abs( _bri );
+    _bri = constrain( _bri, 0.0f, 1.0f );
 }
 
 //----------------------------------------------------------------
 
 uint8_t gfx_color_hsb::get_lit() const {
-	return floor( (1.0 - this->sat / 2.0) * this->bri * 100.0 );
+	return std::floor( (1.0f - _sat / 2.0f) * _bri * 100.0f );
 }
 
 //----------------------------------------------------------------
 
 uint8_t gfx_color_hsb::get_chroma() const {
-	return floor( this->sat * this->bri * 100.0 );
+	return std::floor( _sat * _bri * 100.0f );
 }
 
 //----------------------------------------------------------------
 
-gfx_color gfx_color_hsb::to_rgb() const {
-	float chroma = this->sat * this->bri;
-	float H = this->hue / 60.0;
-	float X = chroma * (1.0 - fabsf( fmodf( H , 2.0 ) - 1.0 ));
+gfx_color_rgb gfx_color_hsb::to_rgb() const {
+	float chroma = _sat * _bri;
+	float h = _hue / 60.0f;
+	float x = chroma * (1.0f - std::abs( std::fmod( h , 2.0f ) - 1.0f ));
 
-	float red = 0;
-	float green = 0;
-	float blue = 0;
+	float red = 0.0f;
+	float green = 0.0f;
+	float blue = 0.0f;
 
-	if ( (H >= 0.0) && (H <= 1.0) ) {
+	if ( (h >= 0.0f) && (h <= 1.0f) ) {
 		red = chroma;
-		green = X;
-		blue = 0.0;
+		green = x;
+		blue = 0.0f;
 	}
-	else if ( (H > 1.0) && (H <= 2.0) ) {
-		red = X;
+	else if ( (h > 1.0f) && (h <= 2.0f) ) {
+		red = x;
 		green = chroma;
-		blue = 0.0;
+		blue = 0.0f;
 	}
-	else if ( (H > 2.0) && (H <= 3.0) ) {
-		red = 0.0;
+	else if ( (h > 2.0f) && (h <= 3.0f) ) {
+		red = 0.0f;
 		green = chroma;
-		blue = X;
+		blue = x;
 	}
-	else if ( (H > 3.0) && (H <= 4.0) ) {
-		red = 0.0;
-		green = X;
+	else if ( (h > 3.0f) && (h <= 4.0f) ) {
+		red = 0.0f;
+		green = x;
 		blue = chroma;
 	}
-	else if ( (H > 4.0) && (H <= 5.0) ) {
-		red = X;
-		green = 0.0;
+	else if ( (h > 4.0f) && (h <= 5.0f) ) {
+		red = x;
+		green = 0.0f;
 		blue = chroma;
 	}
-	else if ( (H > 5.0) && (H <= 6.0) ) {
+	else if ( (h > 5.0f) && (h <= 6.0f) ) {
 		red = chroma;
-		green = 0.0;
-		blue = X;
+		green = 0.0f;
+		blue = x;
 	}
 	else {
-		red = 0.0;
-		green = 0.0;
-		blue = 0.0;
+		red = 0.0f;
+		green = 0.0f;
+		blue = 0.0f;
 	}
 
-	float m = this->bri - chroma;
+	float m = _bri - chroma;
 	red += m;
 	green += m;
 	blue += m;
 
-	return gfx_color( red, green, blue );
+	return gfx_color_rgb( red, green, blue );
 }
 
 //----------------------------------------------------------------
