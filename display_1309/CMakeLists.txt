@@ -6,6 +6,7 @@ add_library(${PROJECT_NAME} STATIC
 	oled.cpp
 	oled_fn.cpp
 	oled_oledkit_fn.cpp
+	cfpt_mono_6x8.cpp
 	cfpt_logo.cpp
 )
 

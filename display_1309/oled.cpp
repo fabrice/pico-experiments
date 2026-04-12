@@ -13,7 +13,7 @@
 
 #include "oled.h"
 
-#include "font_5x7.h"
+#include "cfpt_mono_6x8.h"
 #include "cfpt_logo.h"
 
 #include <cmath>
@@ -94,7 +94,7 @@ OLED::OLED():
 	_height( SSD1309_HEIGHT ),
 	_line( 0 ),
 	_column( 0 ),
-	_font( font5x7 ) {
+	_font( &cfpt_mono_6x8[0][0] ) {
 }
 
 //----------------------------------------------------------------
@@ -106,7 +106,7 @@ OLED::OLED( wire_ref wire, uint reset_gpio ):
 	_height( SSD1309_HEIGHT ),
 	_line( 0 ),
 	_column( 0 ),
-	_font( font5x7 ) {
+	_font( &cfpt_mono_6x8[0][0] ) {
 	this->init();
 }
 
@@ -264,10 +264,8 @@ void OLED::print( const char* text ) {
 
 	for ( uint8_t character_index = 0; character_index < text_length; ++ character_index ) {
 		char character = text[ character_index ];
-		if ( character < ' ' ) break;
-		if ( character > 127 ) break;
 
-		uint16_t index = (character - 0x20) * 5;
+		uint16_t index = character * 5;
 		memcpy( &buffer[ x ], &_font[ index ], 5 );
 		x += 5;
 		buffer[ x ] = 0x00;
@@ -384,12 +382,10 @@ void OLED::vprintf( const char* format, va_list args ) {
 
 void OLED::print( char character ) {
 	if ( _font == nullptr ) return;
-	if ( character < ' ' ) return;
-	if ( character > 127 ) return;
 
-	uint16_t index = (character - 0x20) * 5;
 	uint8_t buffer[7];
 	buffer[0] = WRITE_DATA;
+	uint16_t index = character * 5;
 	memcpy( buffer + 1, &_font[ index ], 5 );
 	buffer[6] = 0x00;
 

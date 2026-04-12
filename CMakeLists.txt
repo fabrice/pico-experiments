@@ -55,7 +55,10 @@ add_subdirectory(memory_24lc02b)
 add_subdirectory(gfx)
 add_subdirectory(display_1309)
 
-pico_set_program_name(${PROJECT_NAME} "Buttons")
+add_compile_options(-fexec-charset=ISO-8859-1)
+target_compile_options(${PROJECT_NAME} PRIVATE -fexec-charset=ISO-8859-1)
+
+pico_set_program_name(${PROJECT_NAME} "Playground")
 pico_set_program_version(${PROJECT_NAME} "0.1")
 
 # Modify the below lines to enable/disable output over UART/USB

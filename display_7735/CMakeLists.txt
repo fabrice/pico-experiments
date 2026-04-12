@@ -4,6 +4,7 @@ project(display_7735_lib CXX C ASM)
 
 add_library(${PROJECT_NAME} STATIC
 	display_7735.cpp
+	cfpt_mono_6x8.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

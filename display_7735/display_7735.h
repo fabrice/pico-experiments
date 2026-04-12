@@ -115,7 +115,7 @@ private:
 	uint8_t _line;
 	uint8_t _column;
 	uint8_t _color_mode;
-	const uint8_t* _font; // pointer to 5x7 font data in memory
+	const uint8_t* _font;
 
 };
 

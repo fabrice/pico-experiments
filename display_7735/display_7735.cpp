@@ -12,7 +12,7 @@
 #include "hardware/pwm.h"
 
 #include "display_7735.h"
-#include "font_5x7.h"
+#include "cfpt_mono_6x8.h"
 
 #include "math_plus.h"
 #include <cmath>
@@ -94,7 +94,7 @@ display_7735::display_7735( wire_ref wire, uint reset_gpio, uint dc_gpio, uint b
 	_background_color( 0x0000 ),
 	_line( 0 ),
 	_column( 0 ),
-	_font( font5x7 ) {
+	_font( &cfpt_mono_6x8[0][0] ) {
 	_color_mode = bgr ? ST7735_MADCTL_BGR : ST7735_MADCTL_RGB;
 
 	gpio_init( _reset_gpio);
@@ -418,9 +418,9 @@ void display_7735::set_lico( uint8_t line, uint8_t column ) {
 void display_7735::print( int16_t x, int16_t y, char character ) {
 	if (!_font) return;
 
-	uint16_t fp = (character - 0x20) * 5;
 	uint8_t char_buf[6];
-	memcpy(char_buf, &_font[fp], 5);
+	uint16_t index = character * 5;
+	memcpy(char_buf, &_font[ index ], 5);
 	char_buf[5] = 0;
 
 	uint8_t char_image[6 * 8 * 2]; // 6 wide, 8 tall, 2 bytes per pixel

@@ -117,7 +117,7 @@ private:
 
 	uint8_t _line;
 	uint8_t _column;
-	const uint8_t* _font; // 5x7
+	const uint8_t* _font;
 
 };
 
