@@ -46,7 +46,7 @@ public:
 
 private:
 
-	~pwm_slice();
+	virtual ~pwm_slice() override;
 
 public:
 
