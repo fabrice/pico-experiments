@@ -51,8 +51,7 @@ public:
 	inline gfx_xy_t get_y() const { return _y; }
 	inline void set_y( gfx_xy_t y ) { _y = y; }
 
-	void set_xy( gfx_xy_t x, gfx_xy_t y ) { _x = x; _y = y; }
-	void set_rectangular( gfx_xy_t x, gfx_xy_t y ) { _x = x; _y = y; }
+	inline void set_xy( gfx_xy_t x, gfx_xy_t y ) { _x = x; _y = y; }
 
 	inline float get_r() const { return std::hypot( _x, _y ); }
 	void set_r( float r );

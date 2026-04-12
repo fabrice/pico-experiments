@@ -4,13 +4,11 @@
 // Target : PicoSDK C/C++
 // CFPT Électronique
 //
-// gfx_bitmap
+// gfx_pixmap
 //
 //----------------------------------------------------------------
 
 #pragma once
-#ifndef _GFX_BITMAP_H
-#define _GFX_BITMAP_H
 
 //----------------------------------------------------------------
 
@@ -29,19 +27,19 @@
 
 //----------------------------------------------------------------
 
-class gfx_bitmap : public virtual gfx_image {
+class gfx_pixmap : public virtual gfx_image {
 
 private:
 
 	gfx_dimension _dimension;
-	gfx_bytemap_data _bytemap;
+	std::vector< gfx_color_rgb > _pixmap;
 
 public:
 
-	gfx_bitmap();
-	gfx_bitmap( const gfx_dimension& dimension );
-	gfx_bitmap( gfx_wh_t width, gfx_wh_t height );
-	virtual ~gfx_bitmap() override;
+	gfx_pixmap();
+	gfx_pixmap( const gfx_dimension& dimension );
+	gfx_pixmap( gfx_wh_t width, gfx_wh_t height );
+	virtual ~gfx_pixmap() override;
 
 	inline gfx_wh_t get_width() const { return _dimension.get_width(); }
 	inline gfx_wh_t get_height() const { return _dimension.get_height(); }
@@ -58,15 +56,13 @@ public:
 	virtual void set_pixel( gfx_xy_t x, gfx_xy_t y, gfx_color_bit lit ) override;
 	virtual void set_pixel( gfx_point point, gfx_color_bit lit ) override;
 
-	virtual void set_pixel( gfx_xy_t x, gfx_xy_t y, gfx_color_rgb color ) override;
+   	virtual void set_pixel( gfx_xy_t x, gfx_xy_t y, gfx_color_rgb color ) override;
 	virtual void set_pixel( gfx_point point, gfx_color_rgb color ) override;
 
 	virtual void erase() override;
 
+	std::vector< uint16_t > make_pixmap_565() const;
+
 };
-
-//----------------------------------------------------------------
-
-#endif
 
 //----------------------------------------------------------------
