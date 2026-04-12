@@ -33,7 +33,7 @@ public:
 
 protected:
 
-	inline ~v_reference_count() {}
+	virtual ~v_reference_count();
 
 public:
 
@@ -41,11 +41,7 @@ public:
 
 	inline void retain() { ++_reference_count; }
 
-	bool release() {
-		if ( _reference_count > 0 ) --_reference_count;
-		if ( _reference_count == 0 ) { delete this; return true; }
-		return false;
-	}
+	bool release();
 
 };
 
