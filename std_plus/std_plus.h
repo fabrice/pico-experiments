@@ -7,6 +7,7 @@
 //
 //----------------------------------------------------------------
 
+#include "cast_plus.h"
 #include "literals_plus.h"
 #include "pointers_plus.h"
 

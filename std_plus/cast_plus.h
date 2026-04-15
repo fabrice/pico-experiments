@@ -3,7 +3,7 @@
 // Raspberry Pico
 // Target : PicoSDK C/C++
 //
-// pointers_plus
+// cast_plus
 //
 //----------------------------------------------------------------
 
@@ -11,14 +11,9 @@
 
 //----------------------------------------------------------------
 
-inline bool is_null( const void* pointer ) {
-	return pointer == nullptr;
-}
-
-//----------------------------------------------------------------
-
-inline bool is_not_null( const void* pointer ) {
-	return !(pointer == nullptr);
-}
+#define s_cast static_cast
+#define d_cast dynamic_cast
+#define c_cast const_cast
+#define r_cast reinterpret_cast
 
 //----------------------------------------------------------------

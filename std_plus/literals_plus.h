@@ -16,7 +16,7 @@
 //----------------------------------------------------------------
 
 constexpr bool operator""_bit( unsigned long long value ) {
-	return !!value;
+	return static_cast< bool >( value );
 }
 
 //----------------------------------------------------------------
@@ -39,8 +39,26 @@ constexpr uint16_t operator""_u16( unsigned long long value ) {
 
 //----------------------------------------------------------------
 
+constexpr int16_t operator""_i16( unsigned long long value ) {
+	return static_cast< int16_t >( value );
+}
+
+//----------------------------------------------------------------
+
 constexpr uint32_t operator""_u32( unsigned long long value ) {
 	return static_cast< uint32_t >( value );
+}
+
+//----------------------------------------------------------------
+
+constexpr int32_t operator""_i32( unsigned long long value ) {
+	return static_cast< int32_t >( value );
+}
+
+//----------------------------------------------------------------
+
+constexpr size_t operator""_uz( unsigned long long value ) {
+	return static_cast< size_t >( value );
 }
 
 //----------------------------------------------------------------
