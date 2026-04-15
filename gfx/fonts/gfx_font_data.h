@@ -41,7 +41,7 @@ struct gfx_glyph_data {
 	gfx_wh_t width { 0 };
 	gfx_wh_t height { 0 };
 	gfx_dxy_t x_advance { 0 };
-	gfx_bytemap_data bytemap {};
+	gfx_bytemap_data bytemap { size_t(0) };
 };
 
 //----------------------------------------------------------------

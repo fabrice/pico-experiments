@@ -176,16 +176,16 @@ void gfx_font::print_gfx_font_files( gfx_font_ptr font, const char* font_name ) 
 	printf( ".glyphs = {\n" );
 
 	printf( "//           +-- character\n" );
-	printf( "//           |     +-- left\n" );
-	printf( "//           |     |     +-- top\n" );
-	printf( "//           |     |     |     +-- width\n" );
-	printf( "//           |     |     |     |     +-- height\n" );
-	printf( "//           |     |     |     |     |     +-- x_advance\n" );
-	printf( "//           |     |     |     |     |     |\n" );
+	printf( "//           |       +-- left\n" );
+	printf( "//           |       |       +-- top\n" );
+	printf( "//           |       |       |     +-- width\n" );
+	printf( "//           |       |       |     |     +-- height\n" );
+	printf( "//           |       |       |     |     |     +-- x_advance\n" );
+	printf( "//           |       |       |     |     |     |\n" );
 	uint bitmap_offset = 0;
 	for ( const auto& [ character, glyph ] : font->get_glyph_map() ) {
 
-		printf( "{ 0x%02x , { %3u , %3u , %3u , %3u , %3u , %3u ,", (uint) character, (uint) character, (uint) glyph.get_left(), (uint) glyph.get_top(), (uint) glyph.get_width(), (uint) glyph.get_height(), (uint) glyph.get_x_advance() );
+		printf( "{ 0x%02x_c , { %3u_c , %3u , %3u , %3u , %3u , %3u ,", (uint) character, (uint) character, (uint) glyph.get_left(), (uint) glyph.get_top(), (uint) glyph.get_width(), (uint) glyph.get_height(), (uint) glyph.get_x_advance() );
 
 		size_t bit_count = glyph.get_dimension().get_area();
 		size_t byte_count = (bit_count + 7) / 8;

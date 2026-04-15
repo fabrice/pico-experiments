@@ -21,6 +21,12 @@ constexpr bool operator""_bit( unsigned long long value ) {
 
 //----------------------------------------------------------------
 
+constexpr char operator""_c( unsigned long long value ) {
+	return static_cast< char >( value );
+}
+
+//----------------------------------------------------------------
+
 constexpr uint8_t operator""_u8( unsigned long long value ) {
 	return static_cast< uint8_t >( value );
 }

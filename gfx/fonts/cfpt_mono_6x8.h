@@ -23,6 +23,6 @@
 // https://www.ascii-code.com/
 
 extern const gfx_font_data cfpt_mono_6x8_font_data;
-extern const uint8_t cfpt_mono_6x8_array[][6];
+extern const uint8_t cfpt_mono_6x8_array[256][6];
 
 //----------------------------------------------------------------
