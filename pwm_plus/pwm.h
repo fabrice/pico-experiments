@@ -25,7 +25,7 @@
 //----------------------------------------------------------------
 
 class pwm;
-using pwm_ref = pwm*;
+using pwm_ptr = pwm*;
 
 //----------------------------------------------------------------
 
@@ -33,17 +33,18 @@ class pwm {
 
 private:
 
-	uint _gpio;
-	pwm_slice_ref _slice;
-	uint16_t _level;
+	uint _gpio { 255 };
+	pwm_slice_ptr _slice { nullptr };
+	uint16_t _level { 32767 };
 
 public:
 
+	pwm() = delete;
 	pwm( uint gpio );
 	pwm( uint gpio, float divider, uint16_t wrap, uint16_t level );
 	pwm( uint gpio, uint8_t divider_uint, uint8_t divider_frac, uint16_t wrap, uint16_t level );
 	pwm( uint gpio, float frequency, float duty );
-	pwm( uint gpio, pwm_slice_ref slice );
+	pwm( uint gpio, pwm_slice_ptr slice );
 
 private:
 
@@ -57,7 +58,7 @@ public:
 
 	// slice
 
-	inline pwm_slice_ref get_slice() { return _slice; };
+	inline pwm_slice_ptr get_slice() { return _slice; };
 
 	inline uint8_t get_divider_uint() const { return _slice->get_divider_uint(); };
 	inline uint8_t get_divider_frac() const { return _slice->get_divider_frac(); };

@@ -24,7 +24,7 @@
 //----------------------------------------------------------------
 
 class pwm_slice;
-using pwm_slice_ref = pwm_slice*;
+using pwm_slice_ptr = pwm_slice*;
 
 //----------------------------------------------------------------
 
@@ -32,13 +32,14 @@ class pwm_slice : public virtual v_reference_count {
 
 private:
 
-	uint _slice_num;
-	uint8_t _divider_uint;
-	uint8_t _divider_frac;
-	uint16_t _wrap;
+	uint _slice_num { 0 };
+	uint8_t _divider_uint { 1 };
+	uint8_t _divider_frac { 0 };
+	uint16_t _wrap { 65535 };
 
 public:
 
+	pwm_slice() = delete;
 	pwm_slice( uint slice_num );
 	pwm_slice( uint slice_num, uint8_t divider_uint, uint8_t divider_frac, uint16_t wrap );
 	pwm_slice( uint slice_num, float divider, uint16_t wrap );

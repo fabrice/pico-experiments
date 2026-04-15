@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.30)
 project(pwm_plus_lib CXX C ASM)
 
 add_library(${PROJECT_NAME} STATIC
-	pwm.cpp
-	pwm_slice.cpp
+	pwm.cxx
+	pwm_slice.cxx
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
