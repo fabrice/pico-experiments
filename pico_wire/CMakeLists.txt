@@ -3,9 +3,10 @@ cmake_minimum_required(VERSION 3.30)
 project(pico_wire_lib CXX C ASM)
 
 add_library(${PROJECT_NAME} STATIC
-	wire.cpp
-	wire_i2c.cpp
-	wire_spi.cpp
+	wire.cxx
+	wire_i2c.cxx
+	wire_spi.cxx
+	wire_uart.cxx
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

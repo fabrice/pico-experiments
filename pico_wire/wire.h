@@ -18,7 +18,7 @@
 //----------------------------------------------------------------
 
 class wire;
-using wire_ref = wire*;
+using wire_ptr = wire*;
 
 //----------------------------------------------------------------
 
@@ -26,7 +26,7 @@ class wire {
 
 protected:
 
-	wire() {}
+	wire() = default;
 
 public:
 
@@ -47,6 +47,7 @@ public:
 
 	virtual int read_bytes( uint8_t* bytes, size_t* length ) = 0;
 
+	virtual void continue_transaction();
 	virtual void finish_transaction();
 	virtual void finish_communication();
 

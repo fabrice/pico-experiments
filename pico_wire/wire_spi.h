@@ -22,9 +22,9 @@
 //----------------------------------------------------------------
 
 class wire_spi;
-using wire_spi_ref = wire_spi*;
+using wire_spi_ptr = wire_spi*;
 
-using spi_ref = spi_inst_t*;
+using spi_ptr = spi_inst_t*;
 
 //----------------------------------------------------------------
 
@@ -32,15 +32,12 @@ class wire_spi : public virtual wire {
 
 private:
 
-	spi_ref _spi_instance;
-	uint _chip_select_gpio;
-
-private:
-
-	wire_spi();
+	spi_ptr _spi_instance { nullptr };
+	uint _chip_select_gpio { 255 };
 
 public:
 
+	wire_spi() = delete;
 	wire_spi( uint spi_num, uint chip_select_gpio );
 	virtual ~wire_spi() override;
 

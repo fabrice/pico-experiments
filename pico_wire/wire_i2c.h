@@ -22,9 +22,9 @@
 //----------------------------------------------------------------
 
 class wire_i2c;
-using wire_i2c_ref = wire_i2c*;
+using wire_i2c_ptr = wire_i2c*;
 
-using i2c_ref = i2c_inst_t*;
+using i2c_ptr = i2c_inst_t*;
 
 //----------------------------------------------------------------
 
@@ -32,12 +32,13 @@ class wire_i2c : public virtual wire {
 
 private:
 
-	i2c_ref _i2c_instance;
-	uint8_t _address;
-	bool _transaction;
+	i2c_ptr _i2c_instance { nullptr };
+	uint8_t _address { 0x00 };
+	bool _transaction { false };
 
 public:
 
+	wire_i2c() = delete;
 	wire_i2c( uint i2c_num, uint8_t address );
 	virtual ~wire_i2c() override;
 
@@ -51,6 +52,7 @@ public:
 
 	virtual int read_bytes( uint8_t* bytes, size_t* length ) override;
 
+	virtual void continue_transaction() override;
 	virtual void finish_transaction() override;
 
 };

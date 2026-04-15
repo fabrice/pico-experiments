@@ -14,15 +14,17 @@
 //----------------------------------------------------------------
 
 wire_i2c::wire_i2c( uint i2c_num, uint8_t address ):
-	_i2c_instance( nullptr ),
-	_address( address ),
-	_transaction( false ) {
+	_i2c_instance { nullptr },
+	_address { address },
+	_transaction { false } {
+
 	_i2c_instance = i2c_get_instance( i2c_num );
 }
 
 //----------------------------------------------------------------
 
 wire_i2c::~wire_i2c() {
+	//i2c_deinit( _i2c_instance );
 }
 
 //----------------------------------------------------------------
@@ -56,6 +58,12 @@ int wire_i2c::write_bytes( const uint8_t* bytes, size_t length ) {
 int wire_i2c::read_bytes( uint8_t* bytes, size_t* length ) {
 	*length = i2c_read_blocking( _i2c_instance, _address, bytes, *length, _transaction );
 	return *length;
+}
+
+//----------------------------------------------------------------
+
+void wire_i2c::continue_transaction() {
+	_transaction = false;
 }
 
 //----------------------------------------------------------------

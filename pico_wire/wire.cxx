@@ -11,8 +11,7 @@
 
 //----------------------------------------------------------------
 
-wire::~wire() {
-}
+wire::~wire() = default;
 
 //----------------------------------------------------------------
 
@@ -33,29 +32,34 @@ int wire::write_bytes( uint8_t byte1 ) {
 //----------------------------------------------------------------
 
 int wire::write_bytes( uint8_t byte1, uint8_t byte2 ) {
-	uint8_t buffer[] = { byte1, byte2 };
+	uint8_t buffer[] { byte1, byte2 };
 	return this->write_bytes( buffer, sizeof(buffer) );
 }
 
 //----------------------------------------------------------------
 
 int wire::write_bytes( uint8_t byte1, uint8_t byte2, uint8_t byte3 ) {
-	uint8_t buffer[] = { byte1, byte2, byte3 };
+	uint8_t buffer[] { byte1, byte2, byte3 };
 	return this->write_bytes( buffer, sizeof(buffer) );
 }
 
 //----------------------------------------------------------------
 
 int wire::write_bytes( uint8_t byte1, uint8_t byte2, uint8_t byte3, uint8_t byte4 ) {
-	uint8_t buffer[] = { byte1, byte2, byte3, byte4 };
+	uint8_t buffer[] { byte1, byte2, byte3, byte4 };
 	return this->write_bytes( buffer, sizeof(buffer) );
 }
 
 //----------------------------------------------------------------
 
 int wire::write_bytes( uint8_t byte1, uint8_t byte2, uint8_t byte3, uint8_t byte4, uint8_t byte5 ) {
-	uint8_t buffer[] = { byte1, byte2, byte3, byte4, byte5 };
+	uint8_t buffer[] { byte1, byte2, byte3, byte4, byte5 };
 	return this->write_bytes( buffer, sizeof(buffer) );
+}
+
+//----------------------------------------------------------------
+
+void wire::continue_transaction() {
 }
 
 //----------------------------------------------------------------

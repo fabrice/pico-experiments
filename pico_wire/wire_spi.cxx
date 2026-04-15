@@ -13,16 +13,10 @@
 
 //----------------------------------------------------------------
 
-wire_spi::wire_spi():
-	_spi_instance( nullptr ),
-	_chip_select_gpio( 0 ) {
-}
-
-//----------------------------------------------------------------
-
 wire_spi::wire_spi( uint spi_num, uint chip_select_gpio ):
-	_spi_instance( nullptr ),
-	_chip_select_gpio( chip_select_gpio ) {
+	_spi_instance { nullptr },
+	_chip_select_gpio { chip_select_gpio } {
+
 	_spi_instance = spi_get_instance( spi_num );
 
 	gpio_init( _chip_select_gpio );
