@@ -1,8 +1,8 @@
 # Generated Cmake Pico project file
 
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.30)
 
-set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD 17)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -55,8 +55,9 @@ add_subdirectory(memory_24lc02b)
 add_subdirectory(gfx)
 add_subdirectory(display_1309)
 
-add_compile_options(-fexec-charset=ISO-8859-1)
+#add_compile_options(-fexec-charset=ISO-8859-1)
 target_compile_options(${PROJECT_NAME} PRIVATE -fexec-charset=ISO-8859-1)
+target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
 
 pico_set_program_name(${PROJECT_NAME} "Playground")
 pico_set_program_version(${PROJECT_NAME} "0.1")
@@ -88,3 +89,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 )
 
 pico_add_extra_outputs(${PROJECT_NAME})
+
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+	COMMAND arm-none-eabi-size $<TARGET_FILE:${PROJECT_NAME}>
+	COMMENT "Binary size:"
+)

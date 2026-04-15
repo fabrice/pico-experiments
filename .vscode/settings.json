@@ -33,6 +33,7 @@
         "PICO_TOOLCHAIN_PATH": "${env:HOME}/.pico-sdk/toolchain/14_2_Rel1",
         "PATH": "${env:HOME}/.pico-sdk/toolchain/14_2_Rel1/bin:${env:HOME}/.pico-sdk/picotool/2.2.0-a4/picotool:${env:HOME}/.pico-sdk/cmake/v3.31.5/bin:${env:HOME}/.pico-sdk/ninja/v1.12.1:${env:PATH}"
     },
+	"terminal.integrated.scrollback": 10000,
     "raspberry-pi-pico.cmakeAutoConfigure": true,
     "raspberry-pi-pico.useCmakeTools": false,
     "raspberry-pi-pico.cmakePath": "${HOME}/.pico-sdk/cmake/v3.31.5/bin/cmake",
@@ -41,5 +42,5 @@
 	"editor.detectIndentation": false,
 	"editor.fontFamily": "'JetBrains Mono NL Regular', 'Monaspace Neon NF Regular', Menlo, Consolas, 'Courier New', monospace",
 	"editor.fontLigatures": true,
-	"editor.fontSize": 13
+	"editor.insertSpaces": false,
 }

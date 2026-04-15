@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.30)
 
-target_sources(${PROJECT_NAME} PRIVATE
+project(gfx_lib CXX C ASM)
+
+add_library(${PROJECT_NAME} PRIVATE
 	gfx_point.cpp
 	gfx_rectangle.cpp
 	gfx_color_rgb.cpp
@@ -17,4 +19,9 @@ target_sources(${PROJECT_NAME} PRIVATE
 
 target_include_directories(${PROJECT_NAME} PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/
+)
+
+target_link_libraries(${PROJECT_NAME}
+	std_plus_lib
+	pico_stdlib
 )
