@@ -19,11 +19,9 @@
 //----------------------------------------------------------------
 
 pwm::pwm( uint gpio ):
-	_gpio { gpio },
-	_slice { nullptr },
-	_level { 0 } {
+	_gpio { gpio } {
 
-	uint slice_num = pwm_gpio_to_slice_num( _gpio );
+	const uint slice_num = pwm_gpio_to_slice_num( _gpio );
 	_slice = new pwm_slice( slice_num );
 	this->io_init();
 	this->set_duty( 0.5f );
@@ -33,10 +31,9 @@ pwm::pwm( uint gpio ):
 
 pwm::pwm( uint gpio, float divider, uint16_t wrap, uint16_t level ):
 	_gpio { gpio },
-	_slice { nullptr },
 	_level { level } {
 
-	uint slice_num = pwm_gpio_to_slice_num( _gpio );
+	const uint slice_num = pwm_gpio_to_slice_num( _gpio );
 	_slice = new pwm_slice( slice_num, divider, wrap );
 	this->io_init();
 	this->set_level( level );
@@ -46,10 +43,9 @@ pwm::pwm( uint gpio, float divider, uint16_t wrap, uint16_t level ):
 
 pwm::pwm( uint gpio, uint8_t divider_uint, uint8_t divider_frac, uint16_t wrap, uint16_t level ):
 	_gpio { gpio },
-	_slice { nullptr },
 	_level { level } {
 
-	uint slice_num = pwm_gpio_to_slice_num( _gpio );
+	const uint slice_num = pwm_gpio_to_slice_num( _gpio );
 	_slice = new pwm_slice( slice_num, divider_uint, divider_frac, wrap );
 	this->io_init();
 	this->set_level( level );
@@ -58,10 +54,9 @@ pwm::pwm( uint gpio, uint8_t divider_uint, uint8_t divider_frac, uint16_t wrap, 
 //----------------------------------------------------------------
 
 pwm::pwm( uint gpio, float frequency, float duty ):
-	_gpio { gpio },
-	_slice { nullptr },
-	_level { 0 } {
-	uint slice_num = pwm_gpio_to_slice_num( _gpio );
+	_gpio { gpio } {
+
+	const uint slice_num = pwm_gpio_to_slice_num( _gpio );
 	_slice = new pwm_slice( slice_num, frequency );
 	this->io_init();
 	this->set_duty( duty );
@@ -71,8 +66,8 @@ pwm::pwm( uint gpio, float frequency, float duty ):
 
 pwm::pwm( uint gpio, pwm_slice_ptr slice ):
 	_gpio { gpio },
-	_slice { slice },
-	_level { 0 } {
+	_slice { slice } {
+
 	_slice->retain();
 	this->io_init();
 	this->set_duty( 0.5f );
@@ -127,8 +122,8 @@ void pwm::set_frequency( float frequency ) {
 void pwm::set_level( uint16_t level ) {
 	_level = level;
 
-	uint slice_num = pwm_gpio_to_slice_num( _gpio );
-	uint channel_num = pwm_gpio_to_channel( _gpio );
+	const uint slice_num = pwm_gpio_to_slice_num( _gpio );
+	const uint channel_num = pwm_gpio_to_channel( _gpio );
 	pwm_set_chan_level( slice_num, channel_num, level );
 }
 
@@ -140,8 +135,8 @@ void pwm::set_duty( float duty ) {
 	duty = constrain( duty, 0.0f, 1.0f );
 	_level = (uint16_t)(duty * (float)_slice->get_wrap());
 
-	uint slice_num = pwm_gpio_to_slice_num( _gpio );
-	uint channel_num = pwm_gpio_to_channel( _gpio );
+	const uint slice_num = pwm_gpio_to_slice_num( _gpio );
+	const uint channel_num = pwm_gpio_to_channel( _gpio );
 	pwm_set_chan_level( slice_num, channel_num, _level );
 }
 
@@ -160,8 +155,8 @@ void pwm::set_duty_db( float duty_dB ) {
 //----------------------------------------------------------------
 
 void pwm::set_channel_enabled() {
-	uint slice_num = pwm_gpio_to_slice_num( _gpio );
-	uint channel_num = pwm_gpio_to_channel( _gpio );
+	const uint slice_num = pwm_gpio_to_slice_num( _gpio );
+	const uint channel_num = pwm_gpio_to_channel( _gpio );
 	pwm_set_chan_level( slice_num, channel_num, _level );
 	pwm_set_enabled( slice_num, true );
 
@@ -171,8 +166,8 @@ void pwm::set_channel_enabled() {
 //----------------------------------------------------------------
 
 void pwm::set_channel_enabled( bool enabled, bool state ) {
-	uint slice_num = pwm_gpio_to_slice_num( _gpio );
-	uint channel_num = pwm_gpio_to_channel( _gpio );
+	const uint slice_num = pwm_gpio_to_slice_num( _gpio );
+	const uint channel_num = pwm_gpio_to_channel( _gpio );
 
 	if ( enabled ) {
 		pwm_set_chan_level( slice_num, channel_num, _level );
@@ -192,8 +187,8 @@ void pwm::set_channel_enabled( bool enabled, bool state ) {
 //----------------------------------------------------------------
 
 void pwm::set_enabled() {
-	uint slice_num = pwm_gpio_to_slice_num( _gpio );
-	uint channel_num = pwm_gpio_to_channel( _gpio );
+	const uint slice_num = pwm_gpio_to_slice_num( _gpio );
+	const uint channel_num = pwm_gpio_to_channel( _gpio );
 	pwm_set_chan_level( slice_num, channel_num, _level );
 	pwm_set_enabled( slice_num, true );
 
@@ -203,8 +198,8 @@ void pwm::set_enabled() {
 //----------------------------------------------------------------
 
 void pwm::set_enabled( bool enabled, bool state ) {
-	uint slice_num = pwm_gpio_to_slice_num( _gpio );
-	uint channel_num = pwm_gpio_to_channel( _gpio );
+	const uint slice_num = pwm_gpio_to_slice_num( _gpio );
+	const uint channel_num = pwm_gpio_to_channel( _gpio );
 
 	if ( enabled ) {
 		pwm_set_chan_level( slice_num, channel_num, _level );

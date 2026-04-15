@@ -12,10 +12,14 @@
 
 #include "pwm.h"
 #include "wire_spi.h"
+#include "display_7735.h"
+#include "buzzer.h"
+#include "buzzer_melody_data.h"
+
 #include "oled.h"
 #include "oled_fn.h"
 #include "rotary_encoder.h"
-#include "display_7735.h"
+
 #include "mcp23008.h"
 #include "memory_24lc02b.h"
 
@@ -41,13 +45,6 @@
 constexpr uint UART_TX_GPIO { 12 };
 constexpr uint UART_RX_GPIO { 13 };
 
-// OLED
-
-constexpr uint I2C0_SDA_GPIO { 4 };
-constexpr uint I2C0_SCL_GPIO { 5 };
-
-constexpr uint OLED_RESET_GPIO { 7 };
-
 // TFT ST7735
 
 constexpr uint SPI0_SCLK_GPIO { 18 };
@@ -58,6 +55,16 @@ constexpr uint ST7735_CS_GPIO { 17 };
 constexpr uint ST7735_RESET_GPIO { 6 };
 constexpr uint ST7735_DC_GPIO { 3 };
 constexpr uint ST7735_BACKLIGHT_GPIO { 2 };
+
+// Buzzer
+constexpr uint BUZZER_GPIO { 27 };
+
+// OLED
+
+constexpr uint I2C0_SDA_GPIO { 4 };
+constexpr uint I2C0_SCL_GPIO { 5 };
+
+constexpr uint OLED_RESET_GPIO { 7 };
 
 //----------------------------------------------------------------
 
@@ -304,6 +311,12 @@ int main() {
 		delete expander;
 		expander = nullptr;
 	}
+
+	//--------------------
+	// buzzer
+	buzzer_ptr music = new buzzer( BUZZER_GPIO );
+	music->play_note( 440.0f, 250, 100 );
+	//music->play_melody( test_melody );
 
 	//--------------------
 	// encoder

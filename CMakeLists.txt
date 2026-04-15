@@ -44,16 +44,20 @@ add_subdirectory(pico_plus)
 add_subdirectory(gpio_plus)
 add_subdirectory(pwm_plus)
 add_subdirectory(pico_wire)
+add_subdirectory(gfx)
 
-add_subdirectory(rotary_encoder)
+# pico explorer board
 add_subdirectory(display_7735)
+add_subdirectory(buzzer)
 
+# cfpt stuff
+add_subdirectory(display_1309)
+add_subdirectory(rotary_encoder)
+
+# pic i2c board
 add_subdirectory(mcp23008)
 add_subdirectory(mcp41xxx)
 add_subdirectory(memory_24lc02b)
-
-add_subdirectory(gfx)
-add_subdirectory(display_1309)
 
 #add_compile_options(-fexec-charset=ISO-8859-1)
 target_compile_options(${PROJECT_NAME} PRIVATE -fexec-charset=ISO-8859-1)
@@ -76,12 +80,13 @@ target_link_libraries(${PROJECT_NAME}
 	gpio_plus_lib
 	pwm_plus_lib
 	pico_wire_lib
-	rotary_encoder_lib
+	gfx_lib
 	display_7735_lib
+	buzzer_lib
+	display_1309_lib
+	rotary_encoder_lib
 	mcp23008_lib
 	memory_24lc02b_lib
-	gfx_lib
-	display_1309_lib
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -91,6 +96,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 pico_add_extra_outputs(${PROJECT_NAME})
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-	COMMAND arm-none-eabi-size $<TARGET_FILE:${PROJECT_NAME}>
-	COMMENT "Binary size:"
+	COMMAND arm-none-eabi-size --format=sysv $<TARGET_FILE:${PROJECT_NAME}>
+	COMMENT "Binary sizes:"
 )
