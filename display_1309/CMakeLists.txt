@@ -3,11 +3,11 @@ cmake_minimum_required(VERSION 3.30)
 project(display_1309_lib CXX C ASM)
 
 add_library(${PROJECT_NAME} STATIC
-	oled.cpp
-	oled_fn.cpp
-	oled_oledkit_fn.cpp
-	cfpt_mono_6x8.cpp
-	cfpt_logo.cpp
+	oled.cxx
+	oled_fn.cxx
+	oled_oledkit_fn.cxx
+	cfpt_mono_6x8.cxx
+	cfpt_logo.cxx
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

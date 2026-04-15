@@ -32,16 +32,16 @@
 */
 //----------------------------------------------------------------
 
-constexpr uint8_t SSD1309_ADDRESS = 0x3c;
+constexpr uint8_t SSD1309_ADDRESS { 0x3c };
 
-constexpr uint16_t SSD1309_WIDTH = 128;
-constexpr uint16_t SSD1309_HEIGHT = 64;
+constexpr uint16_t SSD1309_WIDTH { 128 };
+constexpr uint16_t SSD1309_HEIGHT { 64 };
 
 //----------------------------------------------------------------
 //
 
 class OLED;
-using oled_ref = OLED*;
+using oled_ptr = OLED*;
 
 //----------------------------------------------------------------
 // classe
@@ -50,11 +50,23 @@ class OLED {
 
 private:
 
-	OLED();
+	wire_ptr _wire { nullptr };
+	uint _reset_gpio { 255 };
+
+	uint16_t _width { 0 };
+	uint16_t _height { 0 };
+
+	uint8_t _line { 0 };
+	uint8_t _column { 0 };
+	const uint8_t* _font { nullptr };
 
 public:
 
-	OLED( wire_ref wire, uint reset_gpio );
+	static oled_ptr make( uint8_t i2c_num, uint reset_gpio );
+	static oled_ptr make( uint8_t i2c_num, uint8_t address, uint reset_gpio );
+
+	OLED() = delete;
+	OLED( wire_ptr wire, uint reset_gpio );
 	~OLED();
 
 private:
@@ -64,7 +76,7 @@ private:
 
 public:
 
-	wire_ref get_wire() const { return _wire; }
+	wire_ptr get_wire() const { return _wire; }
 
 	uint16_t get_width() const { return _width; }
 	uint16_t get_height() const { return _height; }
@@ -106,18 +118,6 @@ public:
 	void erase( uint8_t line, uint8_t column );
 
 	void reset();
-
-private:
-
-	wire_ref _wire;
-	uint _reset_gpio;
-
-	uint16_t _width;
-	uint16_t _height;
-
-	uint8_t _line;
-	uint8_t _column;
-	const uint8_t* _font;
 
 };
 

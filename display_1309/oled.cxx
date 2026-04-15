@@ -16,6 +16,8 @@
 #include "cfpt_mono_6x8.h"
 #include "cfpt_logo.h"
 
+#include "wire_i2c.h"
+
 #include <cmath>
 #include "math_plus.h"
 #include "pico/printf.h"
@@ -28,85 +30,90 @@
 //----------------------------------------------------------------
 // writes
 
-constexpr uint8_t WRITE_COMMAND = 0x00;
-constexpr uint8_t WRITE_DATA = 0x40;
+constexpr uint8_t WRITE_COMMAND { 0x00 };
+constexpr uint8_t WRITE_DATA { 0x40 };
 
 //----------------------------------------------------------------
 // commands
 
-constexpr uint8_t SET_CONTRAST = 0x81;
+constexpr uint8_t SET_CONTRAST { 0x81 };
 // 1 arg :
 // contrast 0..255
 
-constexpr uint8_t DISPLAY_ON = 0xa4; // on following memory
-constexpr uint8_t DISPLAY_ON_NO_RAM = 0xa5; // on ignoring memory
+constexpr uint8_t DISPLAY_ON { 0xa4 }; // on following memory
+constexpr uint8_t DISPLAY_ON_NO_RAM { 0xa5 }; // on ignoring memory
 
-constexpr uint8_t DISPLAY_ACTIVE_HIGH = 0xa6;
-constexpr uint8_t DISPLAY_ACTIVE_LOW = 0xa7;
+constexpr uint8_t DISPLAY_ACTIVE_HIGH { 0xa6 };
+constexpr uint8_t DISPLAY_ACTIVE_LOW { 0xa7};
 
-constexpr uint8_t SET_DISPLAY_OFF = 0xae; // sleep
-constexpr uint8_t SET_DISPLAY_ON = 0xaf;
+constexpr uint8_t SET_DISPLAY_OFF { 0xae }; // sleep
+constexpr uint8_t SET_DISPLAY_ON { 0xaf };
 
-constexpr uint8_t DISPLAY_NOP = 0xe3;
+constexpr uint8_t DISPLAY_NOP { 0xe3 };
 
-constexpr uint8_t SET_LINE_ADDRESS = 0xb0;
-constexpr uint8_t SET_HIGH_COLUMN_ADDRESS = 0x10;
-constexpr uint8_t SET_LOW_COLUMN_ADDRESS = 0x00;
+constexpr uint8_t SET_LINE_ADDRESS { 0xb0 };
+constexpr uint8_t SET_HIGH_COLUMN_ADDRESS { 0x10 };
+constexpr uint8_t SET_LOW_COLUMN_ADDRESS { 0x00 };
 
-constexpr uint8_t SET_MEMORY_ADDRESSING_MODE = 0x20;
+constexpr uint8_t SET_MEMORY_ADDRESSING_MODE { 0x20 };
 // 1 arg :
-constexpr uint8_t SET_MEMORY_ADDRESSING_MODE_HORIZONTAL = 0x00;
-constexpr uint8_t SET_MEMORY_ADDRESSING_MODE_VERTICAL = 0x01;
-constexpr uint8_t SET_MEMORY_ADDRESSING_MODE_PAGE = 0x02;
+constexpr uint8_t SET_MEMORY_ADDRESSING_MODE_HORIZONTAL { 0x00 };
+constexpr uint8_t SET_MEMORY_ADDRESSING_MODE_VERTICAL { 0x01 };
+constexpr uint8_t SET_MEMORY_ADDRESSING_MODE_PAGE { 0x02 };
 
-constexpr uint8_t SET_COLUMN_ADDRESS = 0x21;
-constexpr uint8_t SET_PAGE_ADDRESS = 0x22;
+constexpr uint8_t SET_COLUMN_ADDRESS { 0x2 };
+constexpr uint8_t SET_PAGE_ADDRESS { 0x22 };
 
-constexpr uint8_t SET_START_LINE = 0x40;
+constexpr uint8_t SET_START_LINE { 0x40 };
 
-constexpr uint8_t SET_MULTIPLEX_RATIO = 0xa8;
+constexpr uint8_t SET_MULTIPLEX_RATIO { 0xa8 };
 // 1 arg :
 // mux - 1 : 0x0f..0x3f
 
 // orientation
-constexpr uint8_t SET_LEFT_RIGHT = 0xa0;
-constexpr uint8_t SET_RIGHT_LEFT = 0xa1;
-constexpr uint8_t SET_TOP_BOTTOM = 0xc0;
-constexpr uint8_t SET_BOTTOM_TOP = 0xc8;
+constexpr uint8_t SET_LEFT_RIGHT { 0xa0 };
+constexpr uint8_t SET_RIGHT_LEFT { 0xa1 };
+constexpr uint8_t SET_TOP_BOTTOM { 0xc0 };
+constexpr uint8_t SET_BOTTOM_TOP { 0xc8 };
 
-constexpr uint8_t SET_VERTICAL_OFFSET = 0xd3;
+constexpr uint8_t SET_VERTICAL_OFFSET { 0xd3 };
 // 1 arg :
 // 0x00..0x3f
 
-constexpr uint8_t SET_DISPLAY_CLOCK = 0xd5;
-constexpr uint8_t SET_PRECHARGE_PERIOD = 0xd9;
-constexpr uint8_t SET_COM_PINS = 0xda;
-constexpr uint8_t SET_VCOMH_DESELECT_LEVEL = 0xdb;
+constexpr uint8_t SET_DISPLAY_CLOCK { 0xd5 };
+constexpr uint8_t SET_PRECHARGE_PERIOD { 0xd9 };
+constexpr uint8_t SET_COM_PINS { 0xda };
+constexpr uint8_t SET_VCOMH_DESELECT_LEVEL { 0xdb };
 
-constexpr uint8_t SET_COMMAND_LOCK = 0xfd;
+constexpr uint8_t SET_COMMAND_LOCK { 0xfd };
 
 //----------------------------------------------------------------
 
-OLED::OLED():
-	_wire( nullptr ),
-	_reset_gpio( 0 ),
-	_width( SSD1309_WIDTH ),
-	_height( SSD1309_HEIGHT ),
-	_line( 0 ),
-	_column( 0 ),
-	_font( &cfpt_mono_6x8[0][0] ) {
+oled_ptr OLED::make( uint8_t i2c_num, uint reset_gpio ) {
+	wire_ptr wire = new wire_i2c( i2c_num, SSD1309_ADDRESS );
+	oled_ptr oled = new OLED( wire, reset_gpio );
+
+	return oled;
 }
 
 //----------------------------------------------------------------
 
-OLED::OLED( wire_ref wire, uint reset_gpio ):
-	_wire( wire ),
-	_reset_gpio( reset_gpio ),
-	_width( SSD1309_WIDTH ),
-	_height( SSD1309_HEIGHT ),
-	_line( 0 ),
-	_column( 0 ),
-	_font( &cfpt_mono_6x8[0][0] ) {
+oled_ptr OLED::make( uint8_t i2c_num, uint8_t address, uint reset_gpio ) {
+	wire_ptr wire = new wire_i2c( i2c_num, address );
+	oled_ptr oled = new OLED( wire, reset_gpio );
+
+	return oled;
+}
+
+//----------------------------------------------------------------
+
+OLED::OLED( wire_ptr wire, uint reset_gpio ):
+	_wire { wire },
+	_reset_gpio { reset_gpio },
+	_width { SSD1309_WIDTH },
+	_height { SSD1309_HEIGHT },
+	_font { &cfpt_mono_6x8[0][0] } {
+
 	this->init();
 }
 
@@ -251,18 +258,17 @@ void OLED::set_lico( uint8_t line, uint8_t column ) {
 void OLED::print( const char* text ) {
 	if ( _font == nullptr ) return;
 
-	size_t text_length = strlen( text );
+	const size_t text_length = strlen( text );
 	if ( text_length == 0 ) return;
 
-	uint16_t width = text_length * 6;
-	uint8_t buffer[ width + 1 ];
-	memset( buffer, 0, width + 1 );
+	const uint16_t width = text_length * 6;
+	uint8_t buffer[ width + 1 ] {};
 
 	uint16_t x = 0;
 	buffer[ x ] = WRITE_DATA;
 	x += 1;
 
-	for ( uint8_t character_index = 0; character_index < text_length; ++ character_index ) {
+	for ( uint8_t character_index = 0 ; character_index < text_length ; ++ character_index ) {
 		char character = text[ character_index ];
 
 		uint16_t index = character * 5;
@@ -375,6 +381,7 @@ void OLED::printf( const char* format, ... ) {
 void OLED::vprintf( const char* format, va_list args ) {
 	char text[22];
 	vsnprintf( text, 22, format, args );
+	text[ 21 ] = 0;
 	this->print( text );
 }
 
@@ -418,12 +425,11 @@ void OLED::print_glyph( const uint8_t glyph[6] ) {
 //----------------------------------------------------------------
 
 void OLED::draw_bitmap( int16_t x, int16_t y, uint16_t width, uint16_t height, const uint8_t* bitmap, size_t length ) {
-	uint8_t buffer[129];
-	memset( buffer, 0x00, 129 );
+	uint8_t buffer[129] {};
 	buffer[0] = WRITE_DATA;
 
 	_wire->start_communication();
-	for ( uint8_t line = 0; line < 8; ++ line ) {
+	for ( uint8_t line = 0 ; line < 8 ; ++ line ) {
 		_wire->write_bytes( WRITE_COMMAND, SET_LINE_ADDRESS + line );
 		_wire->write_bytes( WRITE_COMMAND, SET_LOW_COLUMN_ADDRESS + 0 );
 		_wire->write_bytes( WRITE_COMMAND, SET_HIGH_COLUMN_ADDRESS + 0 );
@@ -455,12 +461,11 @@ void OLED::draw_bitmap( int16_t x, int16_t y, uint16_t width, uint16_t height, s
 //----------------------------------------------------------------
 
 void OLED::erase() {
-	uint8_t buffer[129];
-	memset( buffer, 0x00, 129 );
+	uint8_t buffer[129] {};
 	buffer[0] = WRITE_DATA;
 
 	_wire->start_communication();
-	for ( uint8_t line = 0; line < this->get_line_count(); ++ line ) {
+	for ( uint8_t line = 0 ; line < this->get_line_count() ; ++ line ) {
 		_wire->write_bytes( WRITE_COMMAND, SET_LINE_ADDRESS + line );
 		_wire->write_bytes( WRITE_COMMAND, SET_LOW_COLUMN_ADDRESS + 0 );
 		_wire->write_bytes( WRITE_COMMAND, SET_HIGH_COLUMN_ADDRESS + 0 );
@@ -471,8 +476,7 @@ void OLED::erase() {
 //----------------------------------------------------------------
 
 void OLED::erase( uint8_t line ) {
-	uint8_t buffer[129];
-	memset( buffer, 0x00, 129 );
+	uint8_t buffer[129] {};
 	buffer[0] = WRITE_DATA;
 
 	_wire->start_communication();
@@ -486,9 +490,8 @@ void OLED::erase( uint8_t line ) {
 //----------------------------------------------------------------
 
 void OLED::erase( uint8_t line, uint8_t column ) {
-	uint8_t buffer[7];
+	uint8_t buffer[7] {};
 	buffer[0] = WRITE_DATA;
-	memset( buffer + 1, 0x00, 6 );
 
 	this->set_lico( line, column );
 	_wire->start_communication();
