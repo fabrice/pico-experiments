@@ -59,7 +59,7 @@ public:
 	static gfx_font_ptr make_gfx_font_from_adafruit( const adafruit_gfx_font_data_ptr adafont );
 
 	static void print_gfx_font_files( gfx_font_ptr font, const char* font_name );
-	static void print_gfx_font_array( gfx_font_ptr font, const char* font_name );
+	static void print_gfx_font_array( gfx_font_ptr font, const char* font_name, bool lsb_first = true );
 	static void print_gfx_font_asciiart( gfx_font_ptr font, const char* font_name );
 
 	gfx_font();

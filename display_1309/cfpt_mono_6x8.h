@@ -3,9 +3,7 @@
 // Raspberry Pico
 // Target : PicoSDK C/C++
 //
-// écran OLED école
-// SSD1309
-// proof of concept
+// cfpt_mono_6x8
 //
 //----------------------------------------------------------------
 

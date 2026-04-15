@@ -24,5 +24,6 @@
 
 extern const gfx_font_data cfpt_mono_6x8_font_data;
 extern const uint8_t cfpt_mono_6x8_array[256][6];
+extern const uint8_t _font_5x7[96*5];
 
 //----------------------------------------------------------------
