@@ -18,7 +18,7 @@
 //----------------------------------------------------------------
 // hardware/i2c
 
-using i2c_ref = i2c_inst_t*;
+using i2c_ptr = i2c_inst_t*;
 
 //----------------------------------------------------------------
 
@@ -29,21 +29,21 @@ inline int i2c_write_bytes_blocking( i2c_inst_t* i2c, uint8_t addr, uint8_t byte
 //----------------------------------------------------------------
 
 inline int i2c_write_bytes_blocking( i2c_inst_t* i2c, uint8_t addr, uint8_t byte1, uint8_t byte2 ) {
-	uint8_t buffer[] = { byte1, byte2 };
+	uint8_t buffer[] { byte1, byte2 };
 	return i2c_write_blocking( i2c, addr, buffer, sizeof(buffer), false );
 }
 
 //----------------------------------------------------------------
 
 inline int i2c_write_bytes_blocking( i2c_inst_t* i2c, uint8_t addr, uint8_t byte1, uint8_t byte2, uint8_t byte3 ) {
-	uint8_t buffer[] = { byte1, byte2, byte3 };
+	uint8_t buffer[] { byte1, byte2, byte3 };
 	return i2c_write_blocking( i2c, addr, buffer, sizeof(buffer), false );
 }
 
 //----------------------------------------------------------------
 
 inline int i2c_write_bytes_blocking( i2c_inst_t* i2c, uint8_t addr, uint8_t byte1, uint8_t byte2, uint8_t byte3, uint8_t byte4 ) {
-	uint8_t buffer[] = { byte1, byte2, byte3, byte4 };
+	uint8_t buffer[] { byte1, byte2, byte3, byte4 };
 	return i2c_write_blocking( i2c, addr, buffer, sizeof(buffer), false );
 }
 
