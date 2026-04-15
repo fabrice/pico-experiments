@@ -90,8 +90,8 @@ constexpr uint8_t SET_COMMAND_LOCK { 0xfd };
 //----------------------------------------------------------------
 
 oled_ptr OLED::make( uint8_t i2c_num, uint reset_gpio ) {
-	wire_ptr wire = new wire_i2c( i2c_num, SSD1309_ADDRESS );
-	oled_ptr oled = new OLED( wire, reset_gpio );
+	auto wire = new wire_i2c( i2c_num, SSD1309_ADDRESS );
+	auto oled = new OLED( wire, reset_gpio );
 
 	return oled;
 }
@@ -99,8 +99,8 @@ oled_ptr OLED::make( uint8_t i2c_num, uint reset_gpio ) {
 //----------------------------------------------------------------
 
 oled_ptr OLED::make( uint8_t i2c_num, uint8_t address, uint reset_gpio ) {
-	wire_ptr wire = new wire_i2c( i2c_num, address );
-	oled_ptr oled = new OLED( wire, reset_gpio );
+	auto wire = new wire_i2c( i2c_num, address );
+	auto oled = new OLED( wire, reset_gpio );
 
 	return oled;
 }

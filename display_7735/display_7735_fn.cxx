@@ -31,7 +31,7 @@ constexpr uint ST7735_BACKLIGHT_GPIO { 2 };
 //----------------------------------------------------------------
 
 display_7735_ptr display_7735_init( uint8_t spi_num, uint reset_gpio ) {
-	wire_spi_ptr display_wire_spi = new wire_spi( spi_num, ST7735_CS_GPIO );
+	auto display_wire_spi = new wire_spi( spi_num, ST7735_CS_GPIO );
 	display_wire_spi->io_init( SPI0_SCLK_GPIO, SPI0_MISO_GPIO, SPI0_MOSI_GPIO, 8e6 );
 	return new display_7735( display_wire_spi, reset_gpio, ST7735_DC_GPIO, ST7735_BACKLIGHT_GPIO );
 }

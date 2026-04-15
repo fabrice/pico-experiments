@@ -24,7 +24,7 @@ constexpr uint32_t EE24LC02B_WRITE_CYCLE = 5; // ms
 //----------------------------------------------------------------
 
 memory_24lc02b_ptr memory_24lc02b::make( uint i2c_num, uint8_t address ) {
-	wire_i2c_ptr wire = new wire_i2c( i2c_num, address );
+	auto wire = new wire_i2c( i2c_num, address );
 	return new memory_24lc02b( wire );
 }
 

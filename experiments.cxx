@@ -127,7 +127,7 @@ int main() {
 
 	//--------------------
 	// oled
-	wire_i2c_ptr display_wire_i2c = new wire_i2c( 0, SSD1309_ADDRESS );
+	auto display_wire_i2c = new wire_i2c( 0, SSD1309_ADDRESS );
 	display_wire_i2c->io_init( I2C0_SDA_GPIO, I2C0_SCL_GPIO, 1.5e6 );
 	oled_ptr display_oled { nullptr };
 	if ( ENABLE_OLED_1309 ) display_oled = new OLED( display_wire_i2c, OLED_RESET_GPIO );
@@ -135,7 +135,7 @@ int main() {
 
 	//--------------------
 	// display_7735
-	wire_spi_ptr display_wire_spi = new wire_spi( 0, ST7735_CS_GPIO );
+	auto display_wire_spi = new wire_spi( 0, ST7735_CS_GPIO );
 	display_wire_spi->io_init( SPI0_SCLK_GPIO, SPI0_MISO_GPIO, SPI0_MOSI_GPIO, 8e6 );
 	display_7735_ptr display_tft { nullptr };
 	if ( ENABLE_TFT_7735 ) display_tft = new display_7735( display_wire_spi, ST7735_RESET_GPIO, ST7735_DC_GPIO, ST7735_BACKLIGHT_GPIO );
@@ -174,7 +174,7 @@ int main() {
 
 	sleep_ms( 1000 );
 
-	gfx_canvas_ptr canvas = new gfx_canvas( display_tft->get_width(), display_tft->get_height(), 24 );
+	auto canvas = new gfx_canvas( display_tft->get_width(), display_tft->get_height(), 24 );
 	if ( is_not_null( display_tft ) ) {
 		canvas->set_foreground_color( gfx_color_rgb( 200_u8, 0_u8, 0_u8 ) );
 		canvas->draw_point( 6, 6 );
@@ -224,7 +224,7 @@ int main() {
 
 	//--------------------
 	// expander
-	wire_i2c_ptr expander_wire = new wire_i2c( 0, MCP23008_ADDRESS );
+	auto expander_wire = new wire_i2c( 0, MCP23008_ADDRESS );
 	mcp23008_ref expander { nullptr };
 	if ( ENABLE_EXPANDER_MCP23008 ) expander = new mcp23008( expander_wire, 0xff, 0x00 );
 	if ( is_not_null( expander ) ) expander->gpio_put_all( 0x00 );
@@ -268,7 +268,7 @@ int main() {
 
 	//--------------------
 	// PWM
-	pwm_ptr backlight = new pwm( ST7735_BACKLIGHT_GPIO, 120.0f, 0.5f );
+	auto backlight = new pwm( ST7735_BACKLIGHT_GPIO, 120.0f, 0.5f );
 	backlight->set_enabled();
 	for ( int level = -50 ; level <= 0 ; ++ level ) {
 		backlight->set_duty_db( (float)level );
@@ -307,7 +307,7 @@ int main() {
 
 	//--------------------
 	// encoder
-	rotary_encoder_ptr encoder = new rotary_encoder( 10, 11, 14 );
+	auto encoder = new rotary_encoder( 10, 11, 14 );
 
 	//--------------------
 	// forever
