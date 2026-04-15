@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.30)
 project(rotary_encoder_lib CXX C ASM)
 
 add_library(${PROJECT_NAME} STATIC
-	rotary_encoder.cpp
-	rotary_encoder_fn.cpp
+	rotary_encoder.cxx
+	rotary_encoder_fn.cxx
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

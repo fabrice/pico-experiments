@@ -30,7 +30,7 @@
 //----------------------------------------------------------------
 
 class rotary_encoder;
-using rotary_encoder_ref = rotary_encoder*;
+using rotary_encoder_ptr = rotary_encoder*;
 
 //----------------------------------------------------------------
 
@@ -38,19 +38,16 @@ class rotary_encoder {
 
 private:
 
-	uint _a_gpio;
-	uint _b_gpio;
-	uint _s_gpio;
+	uint _a_gpio { 255 };
+	uint _b_gpio { 255 };
+	uint _s_gpio { 255 };
 
-	int32_t _rotations;
-	uint32_t _clicks;
-
-private:
-
-	rotary_encoder();
+	int32_t _rotations { 0 };
+	uint32_t _clicks { 0 };
 
 public:
 
+	rotary_encoder() = delete;
 	rotary_encoder( uint a_gpio, uint b_gpio, uint s_gpio );
 	~rotary_encoder();
 

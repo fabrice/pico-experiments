@@ -17,19 +17,19 @@
 
 //----------------------------------------------------------------
 
-constexpr uint ENCODER_A_GPIO = 7;
-constexpr uint ENCODER_B_GPIO = 8;
-constexpr uint ENCODER_S_GPIO = 9;
+constexpr uint ENCODER_A_GPIO { 7 };
+constexpr uint ENCODER_B_GPIO { 8 };
+constexpr uint ENCODER_S_GPIO { 9 };
 
 //----------------------------------------------------------------
 
-rotary_encoder_ref encoder_init( uint a_gpio, uint b_gpio, uint s_gpio ) {
+rotary_encoder_ptr encoder_init( uint a_gpio, uint b_gpio, uint s_gpio ) {
 	return new rotary_encoder( a_gpio, b_gpio, s_gpio );
 }
 
 //----------------------------------------------------------------
 
-bool encoder_get_a( rotary_encoder_ref encoder ) {
+bool encoder_get_a( const rotary_encoder_ptr encoder ) {
 	if ( encoder == nullptr ) return false;
 
 	return encoder->get_a();
@@ -37,7 +37,7 @@ bool encoder_get_a( rotary_encoder_ref encoder ) {
 
 //----------------------------------------------------------------
 
-bool encoder_get_b( rotary_encoder_ref encoder ) {
+bool encoder_get_b( const rotary_encoder_ptr encoder ) {
 	if ( encoder == nullptr ) return false;
 
 	return encoder->get_b();
@@ -45,7 +45,7 @@ bool encoder_get_b( rotary_encoder_ref encoder ) {
 
 //----------------------------------------------------------------
 
-bool encoder_get_s( rotary_encoder_ref encoder ) {
+bool encoder_get_s( const rotary_encoder_ptr encoder ) {
 	if ( encoder == nullptr ) return false;
 
 	return encoder->get_s();
@@ -53,7 +53,7 @@ bool encoder_get_s( rotary_encoder_ref encoder ) {
 
 //----------------------------------------------------------------
 
-bool encoder_is_a_equal_b( rotary_encoder_ref encoder ) {
+bool encoder_is_a_equal_b( const rotary_encoder_ptr encoder ) {
 	if ( encoder == nullptr ) return false;
 
 	return encoder->is_a_equal_b();
@@ -61,7 +61,7 @@ bool encoder_is_a_equal_b( rotary_encoder_ref encoder ) {
 
 //----------------------------------------------------------------
 
-bool encoder_is_a_notequal_b( rotary_encoder_ref encoder ) {
+bool encoder_is_a_notequal_b( const rotary_encoder_ptr encoder ) {
 	if ( encoder == nullptr ) return false;
 
 	return encoder->is_a_notequal_b();
@@ -69,7 +69,7 @@ bool encoder_is_a_notequal_b( rotary_encoder_ref encoder ) {
 
 //----------------------------------------------------------------
 
-int32_t encoder_get_rotations( rotary_encoder_ref encoder ) {
+int32_t encoder_get_rotations( const rotary_encoder_ptr encoder ) {
 	if ( encoder == nullptr ) return 0;
 
 	return encoder->get_rotations();
@@ -77,7 +77,7 @@ int32_t encoder_get_rotations( rotary_encoder_ref encoder ) {
 
 //----------------------------------------------------------------
 
-int8_t encoder_use_rotation( rotary_encoder_ref encoder ) {
+int8_t encoder_use_rotation( rotary_encoder_ptr encoder ) {
 	if ( encoder == nullptr ) return 0;
 
 	return encoder->use_rotation();
@@ -85,7 +85,7 @@ int8_t encoder_use_rotation( rotary_encoder_ref encoder ) {
 
 //----------------------------------------------------------------
 
-int8_t encoder_get_direction( rotary_encoder_ref encoder ) {
+int8_t encoder_get_direction( const rotary_encoder_ptr encoder ) {
 	if ( encoder == nullptr ) return 0;
 
 	return encoder->get_direction();
@@ -93,7 +93,7 @@ int8_t encoder_get_direction( rotary_encoder_ref encoder ) {
 
 //----------------------------------------------------------------
 
-uint32_t encoder_get_clicks( rotary_encoder_ref encoder ) {
+uint32_t encoder_get_clicks( const rotary_encoder_ptr encoder ) {
 	if ( encoder == nullptr ) return 0;
 
 	return encoder->get_clicks();
@@ -101,7 +101,7 @@ uint32_t encoder_get_clicks( rotary_encoder_ref encoder ) {
 
 //----------------------------------------------------------------
 
-bool encoder_use_click( rotary_encoder_ref encoder ) {
+bool encoder_use_click( rotary_encoder_ptr encoder ) {
 	if ( encoder == nullptr ) return false;
 
 	return encoder->use_click();
@@ -109,7 +109,7 @@ bool encoder_use_click( rotary_encoder_ref encoder ) {
 
 //----------------------------------------------------------------
 
-void encoder_set_callback_a( rotary_encoder_ref encoder, gpio_irq_callback_t callback ) {
+void encoder_set_callback_a( rotary_encoder_ptr encoder, gpio_irq_callback_t callback ) {
 	if ( encoder == nullptr ) return;
 
 	gpio_irq_vtable_set_callback( encoder->get_a_gpio(), callback );
@@ -117,7 +117,7 @@ void encoder_set_callback_a( rotary_encoder_ref encoder, gpio_irq_callback_t cal
 
 //----------------------------------------------------------------
 
-void encoder_set_callback_s( rotary_encoder_ref encoder, gpio_irq_callback_t callback ) {
+void encoder_set_callback_s( rotary_encoder_ptr encoder, gpio_irq_callback_t callback ) {
 	if ( encoder == nullptr ) return;
 
 	gpio_irq_vtable_set_callback( encoder->get_s_gpio(), callback );
@@ -125,7 +125,7 @@ void encoder_set_callback_s( rotary_encoder_ref encoder, gpio_irq_callback_t cal
 
 //----------------------------------------------------------------
 
-void encoder_deinit( rotary_encoder_ref& encoder ) {
+void encoder_deinit( rotary_encoder_ptr& encoder ) {
 	if ( encoder == nullptr ) return;
 
 	delete encoder;

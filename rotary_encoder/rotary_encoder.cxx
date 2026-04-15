@@ -19,29 +19,13 @@
 
 //----------------------------------------------------------------
 
-constexpr uint ENCODER_A_GPIO = 7;
-constexpr uint ENCODER_B_GPIO = 8;
-constexpr uint ENCODER_S_GPIO = 9;
-
-//----------------------------------------------------------------
-
-rotary_encoder::rotary_encoder():
-	_a_gpio( ENCODER_A_GPIO ),
-	_b_gpio( ENCODER_B_GPIO ),
-	_s_gpio( ENCODER_S_GPIO ),
-	_rotations( 0 ),
-	_clicks( 0 ) {
-	this->io_init();
-}
-
-//----------------------------------------------------------------
-
 rotary_encoder::rotary_encoder( uint a_gpio, uint b_gpio, uint s_gpio ):
-	_a_gpio( a_gpio ),
-	_b_gpio( b_gpio ),
-	_s_gpio( s_gpio ),
-	_rotations( 0 ),
-	_clicks( 0 ) {
+	_a_gpio { a_gpio },
+	_b_gpio { b_gpio },
+	_s_gpio { s_gpio },
+	_rotations { 0 },
+	_clicks { 0 } {
+
 	this->io_init();
 }
 
@@ -55,17 +39,17 @@ rotary_encoder::~rotary_encoder() {
 
 void rotary_encoder::io_init() {
 	gpio_init( _a_gpio );
-    gpio_set_dir( _a_gpio, GPIO_IN );
+	gpio_set_dir( _a_gpio, GPIO_IN );
 	gpio_disable_pulls( _a_gpio );
 	gpio_set_input_hysteresis_enabled( _a_gpio, true );
 
 	gpio_init( _b_gpio );
-    gpio_set_dir( _b_gpio, GPIO_IN );
+	gpio_set_dir( _b_gpio, GPIO_IN );
 	gpio_disable_pulls( _b_gpio );
 	gpio_set_input_hysteresis_enabled( _b_gpio, true );
 
 	gpio_init( _s_gpio );
-    gpio_set_dir( _s_gpio, GPIO_IN );
+	gpio_set_dir( _s_gpio, GPIO_IN );
 	gpio_disable_pulls( _s_gpio );
 	gpio_set_input_hysteresis_enabled( _s_gpio, true );
 
@@ -81,7 +65,7 @@ void rotary_encoder::interrupts_init() {
 
 	gpio_set_irq_enabled( _a_gpio, GPIO_IRQ_EDGE_RISE | GPIO_IRQ_EDGE_FALL, true );
 	gpio_set_irq_enabled( _s_gpio, GPIO_IRQ_EDGE_FALL, true );
-    irq_set_enabled( IO_IRQ_BANK0, true );
+	irq_set_enabled( IO_IRQ_BANK0, true );
 }
 
 //----------------------------------------------------------------
