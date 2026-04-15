@@ -6,8 +6,6 @@
 //----------------------------------------------------------------
 
 #pragma once
-#ifndef _PICO_EXPLORER_H
-#define _PICO_EXPLORER_H
 
 //----------------------------------------------------------------
 
@@ -42,51 +40,53 @@
 //----------------------------------------------------------------
 
 // Buttons
-const uint BUTTON_UP_GPIO = 10;
-const uint BUTTON_RIGHT_GPIO = 11;
-const uint BUTTON_DOWN_GPIO = 14;
-const uint BUTTON_LEFT_GPIO = 15;
+constexpr uint BUTTON_UP_GPIO { 10 };
+constexpr uint BUTTON_RIGHT_GPIO { 11 };
+constexpr uint BUTTON_DOWN_GPIO { 14 };
+constexpr uint BUTTON_LEFT_GPIO { 15 };
 
 // LEDs
-const uint LEDS_GPIO = 1;
+constexpr uint LEDS_GPIO { 1 };
 
 // Display
-const uint DISPLAY_CS_GPIO = 17;
-const uint DISPLAY_DC_GPIO = 3;
-const uint DISPLAY_RES_GPIO = 6;
-const uint DISPLAY_BKL_GPIO = 2;
+constexpr uint DISPLAY_CS_GPIO { 17 };
+constexpr uint DISPLAY_DC_GPIO { 3 };
+constexpr uint DISPLAY_RES_GPIO { 6 };
+constexpr uint DISPLAY_BKL_GPIO { 2 };
 
 // Buzzer
-const uint BUZZER_GPIO = 27;
+constexpr uint BUZZER_GPIO { 27 };
 
 // DHT11
-const uint DHT_GPIO = 0;
+constexpr uint DHT_GPIO { 0 };
 
 // Relay
-const uint RELAY_GPIO = 28;
+constexpr uint RELAY_GPIO { 28 };
 
 // UART0
-const uint UART_TX_GPIO = 12;
-const uint UART_RX_GPIO = 13;
-
-// SPI0
-const uint SPI_MISO_GPIO = 16;
-const uint SPI_MOSI_GPIO = 19;
-const uint SPI_SCLK_GPIO = 18;
+constexpr uint UART_TX_GPIO { 12 };
+constexpr uint UART_RX_GPIO { 13 };
 
 // I2C0
-const uint I2C_SDA_GPIO = 4;
-const uint I2C_SCL_GPIO = 5;
+constexpr uint I2C0_SDA_GPIO { 4 };
+constexpr uint I2C0_SCL_GPIO { 5 };
+
+// SPI0
+constexpr uint SPI0_MISO_GPIO { 16 };
+constexpr uint SPI0_MOSI_GPIO { 19 };
+constexpr uint SPI_SCLK_GPIO { 18 };
 
 // Servos
-const uint SERVO_1_GPIO = 7;
-const uint SERVO_2_GPIO = 8;
-const uint SERVO_3_GPIO = 9;
-const uint SERVO_4_GPIO = 20;
+constexpr uint SERVO_1_GPIO { 7 };
+constexpr uint SERVO_2_GPIO { 8 };
+constexpr uint SERVO_3_GPIO { 9 };
+constexpr uint SERVO_4_GPIO { 20 };
 
 
 //----------------------------------------------------------------
+// MicroChip PKSERIAL-I2C1
 
-#endif
+constexpr uint mcp9800_ADDRESS { 0x49 };
+constexpr uint mcp3221_ADDRESS { 0x4d };
 
 //----------------------------------------------------------------

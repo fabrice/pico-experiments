@@ -36,7 +36,7 @@ pico_sdk_init()
 # Add executable. Default name is the project name, version 0.1
 
 add_executable(${PROJECT_NAME}
-	experiments.cpp
+	experiments.cxx
 )
 
 add_subdirectory(std_plus)
@@ -75,17 +75,17 @@ target_link_libraries(${PROJECT_NAME}
 	pico_plus_lib
 	gpio_plus_lib
 	pwm_plus_lib
+	pico_wire_lib
 	rotary_encoder_lib
 	display_7735_lib
 	mcp23008_lib
 	memory_24lc02b_lib
 	gfx_lib
 	display_1309_lib
-	pico_wire_lib
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}
+	${CMAKE_CURRENT_LIST_DIR}
 )
 
 pico_add_extra_outputs(${PROJECT_NAME})
