@@ -15,4 +15,6 @@ struct arduino_gfx_font_data {
   const uint8_t** data { nullptr };
 };
 
+using arduino_gfx_font_data_ptr = arduino_gfx_font_data*;
+
 //----------------------------------------------------------------

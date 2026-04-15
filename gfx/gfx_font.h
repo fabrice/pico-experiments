@@ -53,10 +53,10 @@ public:
 	static gfx_font_ptr make_gfx_font_from_glyphmap( const uint8_t* glyphmap, uint8_t first_glyph, uint8_t last_glyph, gfx_xy_t width, gfx_xy_t height, bool lsb_first = true, bool invert = false );
 
 	[[nodiscard]]
-	static gfx_font_ptr make_gfx_font_from_arduino( const arduino_gfx_font_data* arduinofont );
+	static gfx_font_ptr make_gfx_font_from_arduino( const arduino_gfx_font_data_ptr arduinofont );
 
 	[[nodiscard]]
-	static gfx_font_ptr make_gfx_font_from_adafruit( const adafruit_gfx_font_data* adafont );
+	static gfx_font_ptr make_gfx_font_from_adafruit( const adafruit_gfx_font_data_ptr adafont );
 
 	static void print_gfx_font_files( gfx_font_ptr font, const char* font_name );
 	static void print_gfx_font_array( gfx_font_ptr font, const char* font_name );

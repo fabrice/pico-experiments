@@ -103,7 +103,7 @@ gfx_font_ptr gfx_font::make_gfx_font_from_glyphmap( const uint8_t* glyphmap, uin
 
 //----------------------------------------------------------------
 
-gfx_font_ptr gfx_font::make_gfx_font_from_arduino( const arduino_gfx_font_data* arduinofont ) {
+gfx_font_ptr gfx_font::make_gfx_font_from_arduino( const arduino_gfx_font_data_ptr arduinofont ) {
 	if ( arduinofont == nullptr ) return nullptr;
 
 	auto font = new gfx_font( arduinofont->width + 1 );
@@ -131,13 +131,13 @@ gfx_font_ptr gfx_font::make_gfx_font_from_arduino( const arduino_gfx_font_data* 
 
 //----------------------------------------------------------------
 
-gfx_font_ptr gfx_font::make_gfx_font_from_adafruit( const adafruit_gfx_font_data* adafont ) {
+gfx_font_ptr gfx_font::make_gfx_font_from_adafruit( const adafruit_gfx_font_data_ptr adafont ) {
 	if ( adafont == nullptr ) return nullptr;
 
 	auto font = new gfx_font( adafont->yAdvance );
 
 	for ( uint16_t character = adafont->first ; character <= adafont->last ; ++ character ) {
-		const adafruit_gfx_glyph_data* adaglyph = &adafont->glyph[ character - adafont->first ];
+		const adafruit_gfx_glyph_data_ptr adaglyph = &adafont->glyph[ character - adafont->first ];
 		const uint8_t* bitmap = &adafont->bitmap[ adaglyph->bitmapOffset ];
 
 		gfx_glyph glyph = gfx_glyph( character, adaglyph->xOffset, (int16_t)adafont->yAdvance + (int16_t)adaglyph->yOffset, adaglyph->width, adaglyph->height, adaglyph->xAdvance );
