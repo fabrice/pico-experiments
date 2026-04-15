@@ -3,8 +3,9 @@ cmake_minimum_required(VERSION 3.30)
 project(display_7735_lib CXX C ASM)
 
 add_library(${PROJECT_NAME} STATIC
-	display_7735.cpp
-	cfpt_mono_6x8.cpp
+	display_7735.cxx
+	display_7735_fn.cxx
+	cfpt_mono_6x8.cxx
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

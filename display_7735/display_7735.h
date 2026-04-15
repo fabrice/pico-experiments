@@ -18,25 +18,47 @@
 
 #include "wire.h"
 
+#include <cstdint>
 #include <cstring>
 
 //----------------------------------------------------------------
 
 class display_7735;
-using display_7735_ref = display_7735*;
+using display_7735_ptr = display_7735*;
 
 //----------------------------------------------------------------
 
-constexpr uint8_t ST7735_TFTWIDTH = 128;
-constexpr uint8_t ST7735_TFTHEIGHT = 160;
+constexpr uint8_t ST7735_TFTWIDTH { 128 };
+constexpr uint8_t ST7735_TFTHEIGHT { 160 };
 
 //----------------------------------------------------------------
 
 class display_7735 {
 
+private:
+
+	wire_ptr _wire { nullptr };
+	uint _reset_gpio { 255 };
+	uint _dc_gpio { 255 };
+	uint _backlight_gpio { 255 };
+	uint8_t _offset { 0 };
+	uint16_t _width { ST7735_TFTWIDTH };
+	uint16_t _height { ST7735_TFTHEIGHT };
+	uint8_t _brightness { 0x40 };
+	uint16_t _foreground_color { 0xffff };
+	uint16_t _background_color { 0x0000 };
+	uint8_t _line { 0 };
+	uint8_t _column { 0 };
+	const uint8_t* _font { nullptr };
+	uint8_t _color_mode { 0x00 };
+
+private:
+
+	display_7735() = delete;
+
 public:
 
-	display_7735( wire_ref wire, uint reset_gpio, uint dc_gpio, uint backlight_gpio, uint8_t offset = 0, bool bgr = false );
+	display_7735( wire_ptr wire, uint reset_gpio, uint dc_gpio, uint backlight_gpio, uint8_t offset = 0, bool bgr = false );
 	~display_7735();
 
 private:
@@ -82,6 +104,8 @@ public:
 	void print_right( const char* text, uint8_t line );
 	void print_aligned( const char* text, uint8_t line, char alignement );
 	void print( const char* text );
+	void print( char character );
+	void print_glyph( const uint8_t glyph[6] );
 
 	void printf( const char* format, ... );
 	void vprintf( const char* format, va_list arg );
@@ -99,23 +123,6 @@ public:
 
 	static uint16_t rgb_to_565( uint8_t r, uint8_t g, uint8_t b );
 	void set_rotation( uint8_t m );
-
-private:
-
-	wire_ref _wire;
-	uint _reset_gpio;
-	uint _dc_gpio;
-	uint _backlight_gpio;
-	uint8_t _offset;
-	uint16_t _width;
-	uint16_t _height;
-	uint8_t _brightness;
-	uint16_t _foreground_color;
-	uint16_t _background_color;
-	uint8_t _line;
-	uint8_t _column;
-	uint8_t _color_mode;
-	const uint8_t* _font;
 
 };
 
