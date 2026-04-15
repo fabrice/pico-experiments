@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.30)
 project(mcp23008_lib CXX C ASM)
 
 add_library(${PROJECT_NAME} STATIC
-	mcp23008.cpp
+	mcp23008.cxx
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

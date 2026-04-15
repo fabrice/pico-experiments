@@ -25,7 +25,7 @@ using mcp23008_ref = mcp23008*;
 
 //----------------------------------------------------------------
 
-constexpr uint8_t MCP23008_ADDRESS = 0x20;
+constexpr uint8_t MCP23008_ADDRESS { 0x20 };
 
 //----------------------------------------------------------------
 
@@ -33,16 +33,16 @@ class mcp23008 {
 
 private:
 
-	wire_ref _wire;
-	uint8_t _address;
+	wire_ptr _wire { nullptr };
+	uint8_t _address { MCP23008_ADDRESS };
 
-	uint8_t _gpio_dir;
-	uint8_t _gpio_pull_up;
+	uint8_t _gpio_dir { 0b00000000 };
+	uint8_t _gpio_pull_up { 0b00000000 };
 
 public:
 
-	mcp23008();
-	mcp23008( wire_ref wire, uint8_t gpio_dir, uint8_t gpio_pull_up );
+	mcp23008() = delete;
+	mcp23008( wire_ptr wire, uint8_t gpio_dir, uint8_t gpio_pull_up );
 
 private:
 
