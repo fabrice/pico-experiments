@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.30)
 project(std_plus_lib CXX C ASM)
 
 add_library(${PROJECT_NAME} STATIC
-	v_reference_count.cpp
+	v_reference_count.cxx
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
