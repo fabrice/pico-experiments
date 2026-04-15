@@ -2,9 +2,8 @@
 //
 // Raspberry Pico
 // Target : PicoSDK C/C++
-// CFPT Électronique
 //
-// gfx_color_bit
+// gfx_colors
 //
 //----------------------------------------------------------------
 
@@ -12,12 +11,12 @@
 
 //----------------------------------------------------------------
 
-#include "pico/stdlib.h"
-
 #include "gfx_types.h"
 
-//----------------------------------------------------------------
-
-using gfx_color_bit = bool;
+#include "gfx_color_bit.h"
+#include "gfx_color_rgb.h"
+#include "gfx_color_argb.h"
+#include "gfx_color_gray.h"
+#include "gfx_color_hsb.h"
 
 //----------------------------------------------------------------

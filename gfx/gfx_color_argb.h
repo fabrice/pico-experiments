@@ -38,20 +38,22 @@ public:
 
 private:
 
-	uint8_t _alpha;
-	uint8_t _red;
-	uint8_t _green;
-	uint8_t _blue;
+	uint8_t _alpha { 0 };
+	uint8_t _red { 0 };
+	uint8_t _green { 0 };
+	uint8_t _blue { 0 };
 
 public:
 
-	gfx_color_argb(): _alpha( 0 ), _red( 0 ), _green( 0 ), _blue( 0 ) {}
-	gfx_color_argb( const gfx_color_argb& that ): _alpha( that._alpha ), _red( that._red ), _green( that._green ), _blue( that._blue ) {}
-	gfx_color_argb( const gfx_color_rgb& that ): _alpha( 0 ), _red( that.get_red() ), _green( that.get_green() ), _blue( that.get_blue() ) {}
-	gfx_color_argb( bool lit ): _alpha( 0 ), _red( lit ? 255 : 0 ), _green( lit ? 255 : 0 ), _blue( lit ? 255 : 0 ) {}
-	gfx_color_argb( uint8_t alpha, uint8_t red, uint8_t green, uint8_t blue ): _alpha( alpha ), _red( red ), _green( green ), _blue( blue ) {}
+	gfx_color_argb() = default;
+	gfx_color_argb( const gfx_color_argb& that ): _alpha { that._alpha }, _red { that._red }, _green { that._green }, _blue { that._blue } {}
+	gfx_color_argb( const gfx_color_rgb& that ): _alpha { 0 }, _red { that.get_red() }, _green { that.get_green() }, _blue { that.get_blue() } {}
+	gfx_color_argb( bool lit ): _alpha { 0 }, _red( lit ? 255 : 0 ), _green( lit ? 255 : 0 ), _blue( lit ? 255 : 0 ) {}
+	gfx_color_argb( uint8_t alpha, uint8_t red, uint8_t green, uint8_t blue ): _alpha { alpha }, _red { red }, _green { green }, _blue { blue } {}
 
 	gfx_color_argb( float alpha, float red, float green, float blue );
+
+	~gfx_color_argb() = default;
 
 	inline uint8_t get_alpha() const { return _alpha; }
 	inline uint8_t get_red() const { return _red; }
@@ -72,7 +74,7 @@ public:
 	inline uint32_t to_8888() const { return pack( _alpha, _red, _green, _blue ); };
 
 	[[nodiscard]]
-	gfx_color_rgb to_rgb() const;
+	gfx_color_rgb to_rgb() const { return gfx_color_rgb( _red, _green, _blue ); }
 
 };
 

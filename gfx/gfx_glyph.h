@@ -13,9 +13,7 @@
 //----------------------------------------------------------------
 
 #include "gfx_types.h"
-#include "gfx_point.h"
-#include "gfx_dimension.h"
-#include "gfx_rectangle.h"
+#include "gfx_geometry.h"
 #include "gfx_color_bit.h"
 
 #include "fonts/gfx_font_data.h"
@@ -35,14 +33,14 @@ class gfx_glyph {
 
 private:
 
-	char _character;
-	gfx_rectangle _box;
-	gfx_dxy_t _x_advance;
-	gfx_bytemap_data _bytemap;
+	char _character { 0 };
+	gfx_rectangle _box { 0, 0, 0, 0 };
+	gfx_dxy_t _x_advance { 0 };
+	gfx_bytemap_data _bytemap { size_t(0) };
 
 public:
 
-	gfx_glyph();
+	gfx_glyph() = default;
 	
 	gfx_glyph( char character, gfx_xy_t left, gfx_xy_t top, gfx_wh_t width, gfx_wh_t height, gfx_dxy_t x_advance );
 	gfx_glyph( const gfx_glyph_data& glyph_data );
@@ -54,7 +52,6 @@ public:
 public:
 
 	void minimize();
-	void maximize();
 
 private:
 
@@ -88,6 +85,8 @@ public:
 	inline gfx_dxy_t get_x_advance() const { return _x_advance; }
 
 	gfx_glyph& operator=( const gfx_glyph& that );
+
+	std::strong_ordering operator<=>( const gfx_glyph& that ) const;
 
 	void set_bytemap( const gfx_bytemap_data& bytemap );
 	void set_bitmap_xy( const uint8_t* bitmap, size_t length );

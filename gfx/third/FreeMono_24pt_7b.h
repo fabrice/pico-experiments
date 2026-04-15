@@ -13,7 +13,7 @@
 //----------------------------------------------------------------
 
 __in_flash()
-const uint8_t FreeMono24pt7bBitmaps[] = {
+const uint8_t FreeMono24pt7bBitmaps[] {
     0x73, 0x9C, 0xE7, 0x39, 0xCE, 0x73, 0x9C, 0xE7, 0x10, 0x84, 0x21, 0x08,
     0x00, 0x00, 0x00, 0x03, 0xBF, 0xFF, 0xB8, 0xFE, 0x7F, 0x7C, 0x3E, 0x7C,
     0x3E, 0x7C, 0x3E, 0x7C, 0x3E, 0x7C, 0x3E, 0x7C, 0x3E, 0x7C, 0x3E, 0x3C,
@@ -490,7 +490,7 @@ const uint8_t FreeMono24pt7bBitmaps[] = {
 //----------------------------------------------------------------
 
 __in_flash()
-const adafruit_gfx_glyph_data FreeMono24pt7bGlyphs[] = {
+const adafruit_gfx_glyph_data FreeMono24pt7bGlyphs[] {
     {0, 0, 0, 28, 0, 1},        // 0x20 ' '
     {0, 5, 30, 28, 11, -28},    // 0x21 '!'
     {19, 16, 14, 28, 6, -28},   // 0x22 '"'
@@ -590,8 +590,11 @@ const adafruit_gfx_glyph_data FreeMono24pt7bGlyphs[] = {
 //----------------------------------------------------------------
 
 __in_flash()
-const adafruit_gfx_font_data FreeMono24pt7b = {(uint8_t *)FreeMono24pt7bBitmaps,
-                                        (adafruit_gfx_glyph_data *)FreeMono24pt7bGlyphs, 0x20,
-                                        0x7E, 47};
+const adafruit_gfx_font_data FreeMono24pt7b {
+	(uint8_t *)FreeMono24pt7bBitmaps,
+	(adafruit_gfx_glyph_data *)FreeMono24pt7bGlyphs,
+	0x20, 0x7E,
+	47
+};
 
 //----------------------------------------------------------------

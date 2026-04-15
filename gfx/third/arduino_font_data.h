@@ -10,9 +10,9 @@
 //----------------------------------------------------------------
 
 struct arduino_gfx_font_data {
-  int width;
-  int height;
-  const uint8_t** data;
+  int width { 0 };
+  int height { 0 };
+  const uint8_t** data { nullptr };
 };
 
 //----------------------------------------------------------------

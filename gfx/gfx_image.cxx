@@ -16,11 +16,6 @@
 
 //----------------------------------------------------------------
 
-gfx_image::~gfx_image() {
-}
-
-//----------------------------------------------------------------
-
 gfx_bytemap_data gfx_image::make_yx_bytemap() const {
 	gfx_wh_t dybytes = (this->get_dimension().get_height() + 7) / 8;
 	gfx_bytemap_data bytemap( this->get_dimension().get_width() * dybytes, 0 );

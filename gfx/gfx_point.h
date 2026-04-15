@@ -21,29 +21,24 @@
 
 //----------------------------------------------------------------
 
+class gfx_point;
+class gfx_rectangle;
+
+//----------------------------------------------------------------
+
 class gfx_point {
 
 private:
 
-	gfx_xy_t _x;
-	gfx_xy_t _y;
+	gfx_xy_t _x { 0 };
+	gfx_xy_t _y { 0 };
 
 public:
 
-	gfx_point():
-		_x( 0 ),
-		_y( 0 ) {
-	}
-
-	gfx_point( const gfx_point& that ):
-		_x( that._x ),
-		_y( that._y ) {
-	}
-
-	gfx_point( gfx_xy_t x, gfx_xy_t y ):
-		_x( x ),
-		_y( y ) {
-	}
+	constexpr gfx_point() = default;
+	constexpr gfx_point( const gfx_point& that ): _x { that._x }, _y { that._y } {}
+	constexpr gfx_point( gfx_xy_t x, gfx_xy_t y ): _x { x }, _y { y } {}
+	constexpr ~gfx_point() = default;
 
 	inline gfx_xy_t get_x() const { return _x; }
 	inline void set_x( gfx_xy_t x ) { _x = x; }
@@ -63,6 +58,15 @@ public:
 	void set_polar( float r, float phi );
 
 	inline gfx_point& operator=( const gfx_point& that ) { _x = that._x; _y = that._y; return *this; }
+
+	gfx_rectangle operator+( const gfx_point& that ) const;
+	gfx_rectangle operator+( const gfx_rectangle& that ) const;
+
+	std::partial_ordering operator<=>( const gfx_point& that ) const;
+	inline bool operator<( const gfx_point& that ) const { return is_lt( (*this) <=> that ); }
+	inline bool operator<=( const gfx_point& that ) const { return is_lteq( (*this) <=> that ); }
+	inline bool operator>=( const gfx_point& that ) const { return is_gteq( (*this) <=> that ); }
+	inline bool operator>( const gfx_point& that ) const { return is_gt( (*this) <=> that ); }
 
 	inline bool is_null() const { return (_x == 0) && (_y == 0); }
 

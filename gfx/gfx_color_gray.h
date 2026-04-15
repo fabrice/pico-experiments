@@ -31,17 +31,19 @@ public:
 
 private:
 
-	uint8_t _gray;
+	uint8_t _gray { 0 };
 
 public:
 
-	gfx_color_gray(): _gray( 0 ) {}
-	gfx_color_gray( const gfx_color_gray& that ): _gray( that._gray ) {}
+	gfx_color_gray() = default;
+	gfx_color_gray( const gfx_color_gray& that ): _gray { that._gray } {}
 	gfx_color_gray( bool lit ): _gray( lit ? 255 : 0 ) {}
-	gfx_color_gray( uint8_t gray ): _gray( gray ) {}
+	gfx_color_gray( uint8_t gray ): _gray { gray } {}
 
 	gfx_color_gray( uint8_t gray, uint8_t max );
 	gfx_color_gray( float gray );
+
+	~gfx_color_gray() = default;
 
 	inline uint8_t get_gray() const { return _gray; }
 

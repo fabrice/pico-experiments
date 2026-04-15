@@ -13,7 +13,7 @@
 //----------------------------------------------------------------
 
 __in_flash()
-const uint8_t FreeMono9pt7bBitmaps[] = {
+const uint8_t FreeMono9pt7bBitmaps[] {
     0xAA, 0xA8, 0x0C, 0xED, 0x24, 0x92, 0x48, 0x24, 0x48, 0x91, 0x2F, 0xE4,
     0x89, 0x7F, 0x28, 0x51, 0x22, 0x40, 0x08, 0x3E, 0x62, 0x40, 0x30, 0x0E,
     0x01, 0x81, 0xC3, 0xBE, 0x08, 0x08, 0x71, 0x12, 0x23, 0x80, 0x23, 0xB8,
@@ -89,7 +89,7 @@ const uint8_t FreeMono9pt7bBitmaps[] = {
 //----------------------------------------------------------------
 
 __in_flash()
-const adafruit_gfx_glyph_data FreeMono9pt7bGlyphs[] = {
+const adafruit_gfx_glyph_data FreeMono9pt7bGlyphs[] {
     {0, 0, 0, 11, 0, 1},      // 0x20 ' '
     {0, 2, 11, 11, 4, -10},   // 0x21 '!'
     {3, 6, 5, 11, 2, -10},    // 0x22 '"'
@@ -189,8 +189,11 @@ const adafruit_gfx_glyph_data FreeMono9pt7bGlyphs[] = {
 //----------------------------------------------------------------
 
 __in_flash()
-const adafruit_gfx_font_data FreeMono9pt7b = {(uint8_t *)FreeMono9pt7bBitmaps,
-                                       (adafruit_gfx_glyph_data *)FreeMono9pt7bGlyphs, 0x20,
-                                       0x7E, 18};
+const adafruit_gfx_font_data FreeMono9pt7b {
+	(uint8_t *)FreeMono9pt7bBitmaps,
+	(adafruit_gfx_glyph_data *)FreeMono9pt7bGlyphs,
+	0x20, 0x7E,
+	18
+};
 
 // Approx. 1516 bytes

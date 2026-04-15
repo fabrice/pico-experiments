@@ -15,10 +15,8 @@
 #include "pico/stdlib.h"
 
 #include "gfx_types.h"
-#include "gfx_point.h"
-#include "gfx_dimension.h"
-#include "gfx_rectangle.h"
-#include "gfx_color_rgb.h"
+#include "gfx_geometry.h"
+#include "gfx_colors.h"
 #include "gfx_image.h"
 #include "gfx_font.h"
 
@@ -27,7 +25,7 @@
 //----------------------------------------------------------------
 
 class gfx_canvas;
-using gfx_canvas_ref = gfx_canvas*;
+using gfx_canvas_ptr = gfx_canvas*;
 
 //----------------------------------------------------------------
 
@@ -35,27 +33,24 @@ class gfx_canvas {
 
 private:
 
-	gfx_dimension _dimension;
+	gfx_dimension _dimension { 0, 0 };
 
-	gfx_point _spot;
-	gfx_point _lico;
+	gfx_point _spot { 0, 0 };
+	gfx_point _lico { 0, 0 };
 
-	gfx_color_rgb _foreground_color;
-	gfx_color_rgb _background_color;
+	gfx_color_rgb _foreground_color { gfx_color_rgb::BLACK };
+	gfx_color_rgb _background_color { gfx_color_rgb::WHITE };
 
-	gfx_font_ref _font;
+	gfx_font_ptr _font { nullptr };
 
-	gfx_image_ref _image;
-
-private:
-
-	gfx_canvas();
+	gfx_image_ref _image { nullptr };
 
 public:
 
+	gfx_canvas() = delete;
 	gfx_canvas( gfx_wh_t width, gfx_wh_t height );
 	gfx_canvas( gfx_wh_t width, gfx_wh_t height, uint8_t bits );
-	gfx_canvas( gfx_dimension& dimension );
+	gfx_canvas( const gfx_dimension& dimension );
 	~gfx_canvas();
 
 	inline gfx_wh_t get_width() const { return _dimension.get_width(); }
@@ -80,7 +75,7 @@ public:
 	gfx_color_rgb get_background_color() { return _background_color; }
 	void set_background_color( gfx_color_rgb color ) { _background_color = color; }
 
-	void set_font( gfx_font_ref font );
+	void set_font( gfx_font_ptr font );
 
 	void print( std::string text );
 	void print_center( std::string text );
@@ -101,11 +96,11 @@ public:
 
 	void fill_rectangle( gfx_xy_t x1, gfx_xy_t y1, gfx_xy_t x2, gfx_xy_t y2 );
 
-	void draw_circle( gfx_xy_t r );
-	void draw_circle( gfx_xy_t x, gfx_xy_t y, gfx_xy_t r );
-	void draw_circle( gfx_point center, gfx_xy_t r );
-	void draw_circle( gfx_xy_t x, gfx_xy_t y, gfx_xy_t r, uint8_t quadrans );
-	void fill_circle( gfx_xy_t x, gfx_xy_t y, gfx_xy_t r, uint8_t quadrans );
+	void draw_circle( gfx_xy_t r ) const;
+	void draw_circle( gfx_xy_t x, gfx_xy_t y, gfx_xy_t r ) const;
+	void draw_circle( gfx_point center, gfx_xy_t r ) const;
+	void draw_circle( gfx_xy_t x, gfx_xy_t y, gfx_xy_t r, uint8_t quadrants ) const;
+	void fill_circle( gfx_xy_t x, gfx_xy_t y, gfx_xy_t r, uint8_t quadrants );
 
 	void erase();
 

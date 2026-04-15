@@ -27,21 +27,21 @@ using gfx_glyph_data_map = std::map< char, gfx_glyph_data >;
 //----------------------------------------------------------------
 
 struct gfx_font_data {
-	gfx_dxy_t x_advance;
-	gfx_dxy_t y_advance;
-	gfx_glyph_data_map glyphs;
+	gfx_dxy_t x_advance { 0 };
+	gfx_dxy_t y_advance { 0 };
+	gfx_glyph_data_map glyphs {};
 };
 
 //----------------------------------------------------------------
 
 struct gfx_glyph_data {
-	char character;
-	gfx_xy_t x;
-	gfx_xy_t y;
-	gfx_wh_t width;
-	gfx_wh_t height;
-	gfx_dxy_t x_advance;
-	gfx_bytemap_data bytemap;
+	char character { 0 };
+	gfx_xy_t x { 0 };
+	gfx_xy_t y { 0 };
+	gfx_wh_t width { 0 };
+	gfx_wh_t height { 0 };
+	gfx_dxy_t x_advance { 0 };
+	gfx_bytemap_data bytemap {};
 };
 
 //----------------------------------------------------------------

@@ -27,17 +27,14 @@ class gfx_rectangle {
 
 private:
 
-	gfx_point _top_left;
-	gfx_point _bottom_right;
+	gfx_point _top_left { 0, 0 };
+	gfx_point _bottom_right { 0, 0 };
 
 public:
 
-	gfx_rectangle():
-		_top_left(),
-		_bottom_right() {
-	}
+	constexpr gfx_rectangle() = default;
 
-	gfx_rectangle( const gfx_rectangle& that ):
+	constexpr gfx_rectangle( const gfx_rectangle& that ):
 		_top_left( that._top_left ),
 		_bottom_right( that._bottom_right ) {
 	}
@@ -59,6 +56,8 @@ public:
 		_bottom_right( top_left.get_x() + dimension.get_width(), top_left.get_y() + dimension.get_height() ) {
 		this->normalize();
 	}
+
+	constexpr ~gfx_rectangle() = default;
 
 private:
 
@@ -94,46 +93,31 @@ public:
 	bool is_null() const;
 	bool is_empty() const;
 
-	void constrain( const gfx_rectangle& that ) {
-		gfx_xy_t left = std::max( this->get_left(), that.get_left() );
-		gfx_xy_t top = std::max( this->get_top(), that.get_top() );
-		gfx_xy_t right = std::min( this->get_right(), that.get_right() );
-		gfx_xy_t bottom = std::min( this->get_bottom(), that.get_bottom() );
+	gfx_rectangle& operator+=( const gfx_rectangle& that );
+	gfx_rectangle& operator+=( const gfx_point& that );
 
-		if ( (left < right) && (top < bottom) ) {
-			_top_left = gfx_point( left, top );
-			_bottom_right = gfx_point( right, bottom );
-		}
-		else {
-			_top_left = gfx_point( 0, 0 );
-			_bottom_right = gfx_point( 0, 0 );
-		}
-	}
+	gfx_rectangle operator+( const gfx_rectangle& that ) const;
+	gfx_rectangle operator+( const gfx_point& that ) const;
 
-	[[nodiscard]]
-	gfx_rectangle intersect( const gfx_rectangle& that ) const {
-		gfx_xy_t left = std::max( this->get_left(), that.get_left() );
-		gfx_xy_t top = std::max( this->get_top(), that.get_top() );
-		gfx_xy_t right = std::min( this->get_right(), that.get_right() );
-		gfx_xy_t bottom = std::min( this->get_bottom(), that.get_bottom() );
+	std::partial_ordering operator<=>( const gfx_rectangle& that ) const;
+	inline bool operator<( const gfx_rectangle& that ) const { return is_lt( (*this) <=> that ); }
+	inline bool operator<=( const gfx_rectangle& that ) const { return is_lteq( (*this) <=> that ); }
+	inline bool operator>=( const gfx_rectangle& that ) const { return is_gteq( (*this) <=> that ); }
+	inline bool operator>( const gfx_rectangle& that ) const { return is_gt( (*this) <=> that ); }
 
-		if ( (left < right) && (top < bottom) ) {
-			return gfx_rectangle( left, top, right, bottom );
-		}
-		else {
-			return gfx_rectangle();
-		}
-	}
+	std::weak_ordering operator<=>( const gfx_point& that ) const;
+	inline bool operator<( const gfx_point& that ) const { return is_lt( (*this) <=> that ); }
+	inline bool operator<=( const gfx_point& that ) const { return is_lteq( (*this) <=> that ); }
+	inline bool operator>=( const gfx_point& that ) const { return is_gteq( (*this) <=> that ); }
+	inline bool operator>( const gfx_point& that ) const { return is_gt( (*this) <=> that ); }
+
+	gfx_rectangle& constrain( const gfx_rectangle& that );
 
 	[[nodiscard]]
-	gfx_rectangle join( const gfx_rectangle& that ) const {
-		gfx_xy_t left = std::min( this->get_left(), that.get_left() );
-		gfx_xy_t top = std::min( this->get_top(), that.get_top() );
-		gfx_xy_t right = std::max( this->get_right(), that.get_right() );
-		gfx_xy_t bottom = std::max( this->get_bottom(), that.get_bottom() );
+	gfx_rectangle intersect( const gfx_rectangle& that ) const;
 
-		return gfx_rectangle( left, top, right, bottom );
-	}
+	[[nodiscard]]
+	gfx_rectangle join( const gfx_rectangle& that ) const;
 
 };
 

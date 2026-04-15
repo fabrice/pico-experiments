@@ -6,8 +6,6 @@
 //----------------------------------------------------------------
 
 #pragma once
-#ifndef _GFX_DISPLAY_H
-//#define _GFX_DISPLAY_H
 
 //----------------------------------------------------------------
 
@@ -24,18 +22,16 @@
 //
 
 class gfx_display;
-typedef gfx_display* gfx_display_ref;
-
+using gfx_display_ref = gfx_display*;
 
 //----------------------------------------------------------------
 // color modes
 
-constexpr uint8_t GFX_COLOR_MODE_222 = 6;
-constexpr uint8_t GFX_COLOR_MODE_232 = 7;
-constexpr uint8_t GFX_COLOR_MODE_555 = 15;
-constexpr uint8_t GFX_COLOR_MODE_565 = 16;
-constexpr uint8_t GFX_COLOR_MODE_888 = 24;
-
+constexpr uint8_t GFX_COLOR_MODE_222 { 6 };
+constexpr uint8_t GFX_COLOR_MODE_232 { 7 };
+constexpr uint8_t GFX_COLOR_MODE_555 { 15 };
+constexpr uint8_t GFX_COLOR_MODE_565 { 16 };
+constexpr uint8_t GFX_COLOR_MODE_888 { 24 };
 
 //----------------------------------------------------------------
 // classe
@@ -43,24 +39,27 @@ constexpr uint8_t GFX_COLOR_MODE_888 = 24;
 class gfx_display {
 
 private:
-	uint16_t width;
-	uint16_t height;
+	uint16_t _width { 0 };
+	uint16_t _height { 0 };
 
-	gfx_point cursor;
+	gfx_point _spot { 0, 0 };
+	gfx_point _lico { 0, 0 };
 
 private:
-	gfx_display(): width( 0 ), height( 0 ), cursor() {}
+
+	gfx_display() = delete;
 
 public:
-	gfx_display( uint16_t width, uint16_t height, uint8_t pixel_size ): width( width ), height( height ), cursor() {}
-	virtual ~gfx_display() {}
 
-	uint16_t get_width() const { return this->width; }
-	uint16_t get_height() const { return this->height; }
+	gfx_display( uint16_t width, uint16_t height, uint8_t pixel_size ): _width { width }, _height { height } {}
+	virtual ~gfx_display() = default;
 
-	gfx_point get_cursor() const { return this->cursor; }
-	void set_cursor( gfx_point& cursor ) { this->cursor = cursor; }
-	void set_cursor( gfx_xy_t x, gfx_xy_t y ) { this->cursor = gfx_point( x, y ); }
+	inline uint16_t get_width() const final { return _width; }
+	inline uint16_t get_height() const final { return _height; }
+
+	inline gfx_point get_spot() const final { return _spot; }
+	inline void set_spot( gfx_point& spot ) final { _spot = spot; }
+	inline void set_spot( gfx_xy_t x, gfx_xy_t y ) final { _spot = gfx_point( x, y ); }
 
 	virtual void set_on( bool on ) = 0;
 	virtual void set_brightness( uint8_t brightness ) = 0;
@@ -72,9 +71,5 @@ public:
 	virtual void erase( gfx_xy_t x, gfx_xy_t y, uint16_t width, uint16_t height ) = 0;
 
 };
-
-//----------------------------------------------------------------
-
-#endif
 
 //----------------------------------------------------------------

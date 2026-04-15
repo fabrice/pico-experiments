@@ -5,7 +5,7 @@
 
 #include "arduino_font_data.h"
 
-const struct arduino_gfx_font_data arduino_font_4x6 = {
+const struct arduino_gfx_font_data arduino_font_4x6 {
   4,
   6,
   (const uint8_t*[]){

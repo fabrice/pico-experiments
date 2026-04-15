@@ -35,16 +35,17 @@ class gfx_color_hsb {
 
 private:
 
-	float _hue;
-	float _sat;
-	float _bri;
+	float _hue { 0.0f };
+	float _sat { 0.0f };
+	float _bri { 0.0f };
 
 public:
 
-	gfx_color_hsb(): _hue( 0 ), _sat( 0 ), _bri( 0 ) {}
+	gfx_color_hsb() = default;
 	gfx_color_hsb( const gfx_color_hsb& that );
 	gfx_color_hsb( uint16_t hue, uint8_t sat, uint8_t bri );
-	gfx_color_hsb( float hue, float sat, float bri ): _hue( hue ), _sat( sat ), _bri( bri ) {}
+	gfx_color_hsb( float hue, float sat, float bri ): _hue { hue }, _sat { sat }, _bri { bri } {}
+	~gfx_color_hsb() = default;
 
 	inline uint16_t get_hue() const { return (uint16_t)std::fmod( std::floor( _hue ), 360.0f ); }
 	inline uint8_t get_sat() const { return (uint8_t)std::floor( _sat * 255.0f ); }

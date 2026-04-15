@@ -47,19 +47,21 @@ public:
 
 private:
 
-	uint8_t _red;
-	uint8_t _green;
-	uint8_t _blue;
+	uint8_t _red { 0 };
+	uint8_t _green { 0 };
+	uint8_t _blue { 0 };
 
 public:
 
-	gfx_color_rgb(): _red( 0 ), _green( 0 ), _blue( 0 ) {}
-	gfx_color_rgb( const gfx_color_rgb& that ): _red( that._red ), _green( that._green ), _blue( that._blue ) {}
-	gfx_color_rgb( bool lit ): _red( lit ? 255 : 0 ), _green( lit ? 255 : 0 ), _blue( lit ? 255 : 0 ) {}
-	gfx_color_rgb( uint8_t red, uint8_t green, uint8_t blue ): _red( red ), _green( green ), _blue( blue ) {}
+	gfx_color_rgb() = default;
+	gfx_color_rgb( const gfx_color_rgb& that ): _red { that._red }, _green { that._green }, _blue { that._blue } {}
+	gfx_color_rgb( bool lit ): _red { lit ? 255_u8 : 0_u8 }, _green { lit ? 255_u8 : 0_u8 }, _blue { lit ? 255_u8 : 0_u8 } {}
+	gfx_color_rgb( uint8_t red, uint8_t green, uint8_t blue ): _red { red }, _green { green }, _blue { blue } {}
 
 	gfx_color_rgb( uint8_t red, uint8_t green, uint8_t blue, uint8_t max );
 	gfx_color_rgb( float red, float green, float blue );
+
+	~gfx_color_rgb() = default;
 
 	inline uint8_t get_red() const { return _red; }
 	inline uint8_t get_green() const { return _green; }
