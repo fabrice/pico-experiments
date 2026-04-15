@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.30)
 project(gpio_plus_lib CXX C ASM)
 
 add_library(${PROJECT_NAME} STATIC
-	gpio_irq_vtable.cpp
+	gpio_irq_vtable.cxx
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
