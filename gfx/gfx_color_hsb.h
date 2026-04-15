@@ -33,6 +33,18 @@ class gfx_color_hsb;
 
 class gfx_color_hsb {
 
+public:
+
+	static const gfx_color_hsb BLACK;
+	static const gfx_color_hsb WHITE;
+
+	static const gfx_color_hsb RED;
+	static const gfx_color_hsb YELLOW;
+	static const gfx_color_hsb GREEN;
+	static const gfx_color_hsb CYAN;
+	static const gfx_color_hsb BLUE;
+	static const gfx_color_hsb MAGENTA;
+
 private:
 
 	float _hue { 0.0f };

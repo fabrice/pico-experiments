@@ -19,6 +19,18 @@
 
 //----------------------------------------------------------------
 
+const gfx_color_hsb gfx_color_hsb::BLACK { 0, 0x00_u8, 0x00_u8 };
+const gfx_color_hsb gfx_color_hsb::WHITE { 0, 0x00_u8, 0xff_u8 };
+
+const gfx_color_hsb gfx_color_hsb::RED { 0, 0xff_u8, 0xff_u8 };
+const gfx_color_hsb gfx_color_hsb::YELLOW { 60, 0xff_u8, 0xff_u8 };
+const gfx_color_hsb gfx_color_hsb::GREEN { 120, 0xff_u8, 0xff_u8 };
+const gfx_color_hsb gfx_color_hsb::CYAN { 180, 0xff_u8, 0xff_u8 };
+const gfx_color_hsb gfx_color_hsb::BLUE { 240, 0xff_u8, 0xff_u8 };
+const gfx_color_hsb gfx_color_hsb::MAGENTA { 300, 0xff_u8, 0xff_u8 };
+
+//----------------------------------------------------------------
+
 gfx_color_hsb::gfx_color_hsb( uint16_t hue, uint8_t sat, uint8_t bri ):
 	_hue { static_cast< float >( hue ) },
 	_sat { static_cast< float >( sat ) / 255.0f },

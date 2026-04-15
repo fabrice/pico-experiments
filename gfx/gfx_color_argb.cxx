@@ -18,9 +18,9 @@
 
 //----------------------------------------------------------------
 
-const gfx_color_argb gfx_color_argb::BLACK = gfx_color_argb( 0x00_u8, 0x00_u8, 0x00_u8, 0x00_u8 );
-const gfx_color_argb gfx_color_argb::WHITE = gfx_color_argb( 0x00_u8, 0xff_u8, 0xff_u8, 0xff_u8 );
-const gfx_color_argb gfx_color_argb::CLEAR = gfx_color_argb( 0xff_u8, 0xff_u8, 0xff_u8, 0xff_u8 );
+const gfx_color_argb gfx_color_argb::BLACK { 0x00_u8, 0x00_u8, 0x00_u8, 0x00_u8 };
+const gfx_color_argb gfx_color_argb::WHITE { 0x00_u8, 0xff_u8, 0xff_u8, 0xff_u8 };
+const gfx_color_argb gfx_color_argb::CLEAR { 0xff_u8, 0xff_u8, 0xff_u8, 0xff_u8 };
 
 //----------------------------------------------------------------
 
