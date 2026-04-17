@@ -21,8 +21,7 @@
 
 //----------------------------------------------------------------
 
-class wire_spi;
-using wire_spi_ptr = wire_spi*;
+
 
 using spi_ptr = spi_inst_t*;
 

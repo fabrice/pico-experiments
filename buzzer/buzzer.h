@@ -19,9 +19,6 @@
 
 //----------------------------------------------------------------
 
-class buzzer;
-using buzzer_ptr = buzzer*;
-
 struct buzzer_note_data;
 using buzzer_melody_data = std::vector< buzzer_note_data >;
 
@@ -63,13 +60,13 @@ public:
 
 private:
 
-	pwm_ptr _pwm { nullptr };
+	pwm* _pwm { nullptr };
 
 public:
 
 	buzzer() = delete;
 	buzzer( uint gpio );
-	buzzer( pwm_ptr pwm );
+	buzzer( pwm* pwm );
 
 	~buzzer();
 

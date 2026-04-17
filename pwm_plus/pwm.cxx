@@ -64,7 +64,7 @@ pwm::pwm( uint gpio, float frequency, float duty ):
 
 //----------------------------------------------------------------
 
-pwm::pwm( uint gpio, pwm_slice_ptr slice ):
+pwm::pwm( uint gpio, pwm_slice* slice ):
 	_gpio { gpio },
 	_slice { slice } {
 

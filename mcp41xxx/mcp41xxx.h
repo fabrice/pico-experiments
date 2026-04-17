@@ -19,16 +19,11 @@
 
 //----------------------------------------------------------------
 
-class mcp41xxx;
-using mcp41xxx_ptr = mcp41xxx*;
-
-//----------------------------------------------------------------
-
 class mcp41xxx {
 
 private:
 
-	wire_ptr _wire { nullptr };
+	wire* _wire { nullptr };
 
 	uint8_t _step_p01 { 0x80 };
 	uint8_t _step_p10 { 0x80 };
@@ -37,7 +32,7 @@ private:
 public:
 
 	mcp41xxx() = delete;
-	mcp41xxx( wire_ptr wire );
+	mcp41xxx( wire* wire );
 	~mcp41xxx();
 
 	void set_step( uint pot, uint8_t step );

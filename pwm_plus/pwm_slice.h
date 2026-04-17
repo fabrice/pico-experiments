@@ -23,11 +23,6 @@
 
 //----------------------------------------------------------------
 
-class pwm_slice;
-using pwm_slice_ptr = pwm_slice*;
-
-//----------------------------------------------------------------
-
 class pwm_slice : public virtual v_reference_count {
 
 private:

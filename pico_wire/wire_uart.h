@@ -19,8 +19,7 @@
 
 //----------------------------------------------------------------
 
-class wire_uart;
-using wire_uart_ptr = wire_uart*;
+
 
 using uart_ptr = uart_inst_t*;
 

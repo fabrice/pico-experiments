@@ -21,7 +21,7 @@ buzzer::buzzer( uint gpio ):
 
 //----------------------------------------------------------------
 
-buzzer::buzzer( pwm_ptr pwm ):
+buzzer::buzzer( pwm* pwm ):
 	_pwm { pwm } {
 }
 

@@ -29,7 +29,7 @@ constexpr uint8_t MCP41_SHUTDOWN_POT11 { MCP41_SHUTDOWN | MCP41_POT11 };
 
 //----------------------------------------------------------------
 
-mcp41xxx::mcp41xxx( wire_ptr wire ):
+mcp41xxx::mcp41xxx( wire* wire ):
 	_wire { wire },
 	_step_p01 { 0x80 },
 	_step_p10 { 0x80 } {

@@ -20,14 +20,14 @@
 
 //----------------------------------------------------------------
 
-static oled_ptr oled = nullptr;
+static OLED* oled = nullptr;
 
 //----------------------------------------------------------------
 
 void OLEDKitInit( void* oled ) {
 	if ( oled != nullptr ) return;
 
-	::oled = (oled_ptr)oled;
+	::oled = (OLED*)oled;
 }
 
 //----------------------------------------------------------------

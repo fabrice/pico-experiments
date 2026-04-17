@@ -23,11 +23,6 @@
 
 //----------------------------------------------------------------
 
-class display_7735;
-using display_7735_ptr = display_7735*;
-
-//----------------------------------------------------------------
-
 constexpr uint8_t ST7735_TFTWIDTH { 128 };
 constexpr uint8_t ST7735_TFTHEIGHT { 160 };
 
@@ -37,7 +32,7 @@ class display_7735 {
 
 private:
 
-	wire_ptr _wire { nullptr };
+	wire* _wire { nullptr };
 	uint _reset_gpio { 255 };
 	uint _dc_gpio { 255 };
 	uint _backlight_gpio { 255 };
@@ -58,7 +53,7 @@ private:
 
 public:
 
-	display_7735( wire_ptr wire, uint reset_gpio, uint dc_gpio, uint backlight_gpio, uint8_t offset = 0, bool bgr = false );
+	display_7735( wire* wire, uint reset_gpio, uint dc_gpio, uint backlight_gpio, uint8_t offset = 0, bool bgr = false );
 	~display_7735();
 
 private:

@@ -136,7 +136,7 @@ int main() {
 	// oled
 	auto display_wire_i2c = new wire_i2c( 0, SSD1309_ADDRESS );
 	display_wire_i2c->io_init( I2C0_SDA_GPIO, I2C0_SCL_GPIO, 1.5e6 );
-	oled_ptr display_oled { nullptr };
+	OLED* display_oled { nullptr };
 	if ( ENABLE_OLED_1309 ) display_oled = new OLED( display_wire_i2c, OLED_RESET_GPIO );
 	if ( is_not_null( display_oled ) ) display_oled->draw_logo();
 
@@ -144,7 +144,7 @@ int main() {
 	// display_7735
 	auto display_wire_spi = new wire_spi( 0, ST7735_CS_GPIO );
 	display_wire_spi->io_init( SPI0_SCLK_GPIO, SPI0_MISO_GPIO, SPI0_MOSI_GPIO, 8e6 );
-	display_7735_ptr display_tft { nullptr };
+	display_7735* display_tft { nullptr };
 	if ( ENABLE_TFT_7735 ) display_tft = new display_7735( display_wire_spi, ST7735_RESET_GPIO, ST7735_DC_GPIO, ST7735_BACKLIGHT_GPIO );
 	if ( is_not_null( display_tft ) ) display_tft->set_foreground_color( 28, 186, 111 );
 	if ( is_not_null( display_tft ) ) display_tft->set_background_color( 0, 0, 0 );
@@ -210,7 +210,7 @@ int main() {
 	}
 	//--------------------
 	// font
-	gfx_font_ptr bitfont = gfx_font::make_gfx_font_from_glyphmap( &cfpt_mono_6x8_array[0][0], 0, 255, 6, 8, true, true );
+	gfx_font* bitfont = gfx_font::make_gfx_font_from_glyphmap( &cfpt_mono_6x8_array[0][0], 0, 255, 6, 8, true, true );
 	gfx_font::print_gfx_font_asciiart( bitfont, "cfpt_6_8" );
 	gfx_font::print_gfx_font_files( bitfont, "cfpt_6_8" );
 	gfx_font::print_gfx_font_array( bitfont, "cfpt_6_8" );
@@ -232,7 +232,7 @@ int main() {
 	//--------------------
 	// expander
 	auto expander_wire = new wire_i2c( 0, MCP23008_ADDRESS );
-	mcp23008_ref expander { nullptr };
+	mcp23008* expander { nullptr };
 	if ( ENABLE_EXPANDER_MCP23008 ) expander = new mcp23008( expander_wire, 0xff, 0x00 );
 	if ( is_not_null( expander ) ) expander->gpio_put_all( 0x00 );
 	if ( is_not_null( expander ) ) expander->gpio_set_dir( 0, GPIO_OUT );
@@ -314,7 +314,7 @@ int main() {
 
 	//--------------------
 	// buzzer
-	buzzer_ptr music = new buzzer( BUZZER_GPIO );
+	buzzer* music = new buzzer( BUZZER_GPIO );
 	music->play_note( 440.0f, 250, 100 );
 	//music->play_melody( test_melody );
 

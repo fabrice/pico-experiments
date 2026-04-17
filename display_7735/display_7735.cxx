@@ -81,7 +81,7 @@ constexpr uint8_t DELAY_FLAG { 0x80 };
 
 //----------------------------------------------------------------
 
-display_7735::display_7735( wire_ptr wire, uint reset_gpio, uint dc_gpio, uint backlight_gpio, uint8_t offset, bool bgr ):
+display_7735::display_7735( wire* wire, uint reset_gpio, uint dc_gpio, uint backlight_gpio, uint8_t offset, bool bgr ):
 	_wire( wire ),
 	_reset_gpio( reset_gpio ),
 	_dc_gpio( dc_gpio ),
@@ -328,7 +328,7 @@ void display_7735::draw_block( int16_t x, int16_t y, uint16_t w, uint16_t h, uin
 	while (rows < h) {
 		int block_rows = std::min(max_rows, (int)(h - rows));
 		size_t buf_len = (size_t)w * block_rows * 2;
-		uint8_t *buf = new uint8_t[buf_len];
+		uint8_t* buf = new uint8_t[buf_len];
 
 		for ( size_t i = 0 ; i < buf_len ; i += 2 ) {
 			buf[i] = hi;

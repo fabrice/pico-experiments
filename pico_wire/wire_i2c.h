@@ -21,8 +21,7 @@
 
 //----------------------------------------------------------------
 
-class wire_i2c;
-using wire_i2c_ptr = wire_i2c*;
+
 
 using i2c_ptr = i2c_inst_t*;
 

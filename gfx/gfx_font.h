@@ -32,9 +32,6 @@
 
 //----------------------------------------------------------------
 
-class gfx_font;
-using gfx_font_ptr = gfx_font*;
-
 using gfx_font_glyph_map = std::map< char, gfx_glyph >;
 
 //----------------------------------------------------------------
@@ -50,17 +47,17 @@ public:
 public:
 
 	[[nodiscard]]
-	static gfx_font_ptr make_gfx_font_from_glyphmap( const uint8_t* glyphmap, uint8_t first_glyph, uint8_t last_glyph, gfx_xy_t width, gfx_xy_t height, bool lsb_first = true, bool invert = false );
+	static gfx_font* make_gfx_font_from_glyphmap( const uint8_t* glyphmap, uint8_t first_glyph, uint8_t last_glyph, gfx_xy_t width, gfx_xy_t height, bool lsb_first = true, bool invert = false );
 
 	[[nodiscard]]
-	static gfx_font_ptr make_gfx_font_from_arduino( const arduino_gfx_font_data_ptr arduinofont );
+	static gfx_font* make_gfx_font_from_arduino( const arduino_gfx_font_data* arduinofont );
 
 	[[nodiscard]]
-	static gfx_font_ptr make_gfx_font_from_adafruit( const adafruit_gfx_font_data_ptr adafont );
+	static gfx_font* make_gfx_font_from_adafruit( const adafruit_gfx_font_data* adafont );
 
-	static void print_gfx_font_files( gfx_font_ptr font, const char* font_name );
-	static void print_gfx_font_array( gfx_font_ptr font, const char* font_name, bool lsb_first = true );
-	static void print_gfx_font_asciiart( gfx_font_ptr font, const char* font_name );
+	static void print_gfx_font_files( const gfx_font* font, const char* font_name );
+	static void print_gfx_font_array( const gfx_font* font, const char* font_name, bool lsb_first = true, bool invert = false );
+	static void print_gfx_font_asciiart( const gfx_font* font, const char* font_name );
 
 	gfx_font();
 	gfx_font( gfx_dxy_t y_advance );

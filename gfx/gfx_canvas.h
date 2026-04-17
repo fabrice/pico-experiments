@@ -24,11 +24,6 @@
 
 //----------------------------------------------------------------
 
-class gfx_canvas;
-using gfx_canvas_ptr = gfx_canvas*;
-
-//----------------------------------------------------------------
-
 class gfx_canvas {
 
 private:
@@ -41,9 +36,9 @@ private:
 	gfx_color_rgb _foreground_color { gfx_color_rgb::BLACK };
 	gfx_color_rgb _background_color { gfx_color_rgb::WHITE };
 
-	gfx_font_ptr _font { nullptr };
+	gfx_font* _font { nullptr };
 
-	gfx_image_ref _image { nullptr };
+	gfx_image* _image { nullptr };
 
 public:
 

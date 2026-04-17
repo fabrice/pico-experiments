@@ -78,7 +78,7 @@ gfx_wh_t gfx_font::get_text_width( std::string text ) const {
 
 //----------------------------------------------------------------
 
-gfx_font_ptr gfx_font::make_gfx_font_from_glyphmap( const uint8_t* glyphmap, uint8_t first_glyph, uint8_t last_glyph, gfx_xy_t width, gfx_xy_t height, bool lsb_first, bool invert ) {
+gfx_font* gfx_font::make_gfx_font_from_glyphmap( const uint8_t* glyphmap, uint8_t first_glyph, uint8_t last_glyph, gfx_xy_t width, gfx_xy_t height, bool lsb_first, bool invert ) {
 	if ( glyphmap == nullptr ) return nullptr;
 
 	size_t bit_count = width * height;
@@ -103,7 +103,7 @@ gfx_font_ptr gfx_font::make_gfx_font_from_glyphmap( const uint8_t* glyphmap, uin
 
 //----------------------------------------------------------------
 
-gfx_font_ptr gfx_font::make_gfx_font_from_arduino( const arduino_gfx_font_data_ptr arduinofont ) {
+gfx_font* gfx_font::make_gfx_font_from_arduino( const arduino_gfx_font_data* arduinofont ) {
 	if ( arduinofont == nullptr ) return nullptr;
 
 	auto font = new gfx_font( arduinofont->width + 1 );
@@ -131,13 +131,13 @@ gfx_font_ptr gfx_font::make_gfx_font_from_arduino( const arduino_gfx_font_data_p
 
 //----------------------------------------------------------------
 
-gfx_font_ptr gfx_font::make_gfx_font_from_adafruit( const adafruit_gfx_font_data_ptr adafont ) {
+gfx_font* gfx_font::make_gfx_font_from_adafruit( const adafruit_gfx_font_data* adafont ) {
 	if ( adafont == nullptr ) return nullptr;
 
 	auto font = new gfx_font( adafont->yAdvance );
 
 	for ( uint16_t character = adafont->first ; character <= adafont->last ; ++ character ) {
-		const adafruit_gfx_glyph_data_ptr adaglyph = &adafont->glyph[ character - adafont->first ];
+		const adafruit_gfx_glyph_data* adaglyph = &adafont->glyph[ character - adafont->first ];
 		const uint8_t* bitmap = &adafont->bitmap[ adaglyph->bitmapOffset ];
 
 		gfx_glyph glyph = gfx_glyph( character, adaglyph->xOffset, (int16_t)adafont->yAdvance + (int16_t)adaglyph->yOffset, adaglyph->width, adaglyph->height, adaglyph->xAdvance );
@@ -153,7 +153,7 @@ gfx_font_ptr gfx_font::make_gfx_font_from_adafruit( const adafruit_gfx_font_data
 
 //----------------------------------------------------------------
 
-void gfx_font::print_gfx_font_files( gfx_font_ptr font, const char* font_name ) {
+void gfx_font::print_gfx_font_files( const gfx_font* font, const char* font_name ) {
 	if ( font == nullptr ) return;
 
 	printf( "//----------------------------------------------------------------\n\n" );
@@ -231,7 +231,7 @@ void gfx_font::print_gfx_font_files( gfx_font_ptr font, const char* font_name ) 
  * @param font_name font name to print
  * @param lsb_first is the lsb the top bit ?
  */
-void gfx_font::print_gfx_font_array( gfx_font_ptr font, const char* font_name, bool lsb_first ) {
+void gfx_font::print_gfx_font_array( const gfx_font* font, const char* font_name, bool lsb_first, bool invert ) {
 	const auto character_count = font->get_glyph_map().size();
 	if ( character_count == 0 ) return;
 
@@ -254,7 +254,7 @@ void gfx_font::print_gfx_font_array( gfx_font_ptr font, const char* font_name, b
 
 //----------------------------------------------------------------
 
-void gfx_font::print_gfx_font_asciiart( gfx_font_ptr font, const char* font_name ) {
+void gfx_font::print_gfx_font_asciiart( const gfx_font* font, const char* font_name ) {
 	uint bit_count = 0;
 	for ( const auto& [ character, glyph ] : font->get_glyph_map() ) {
 		bit_count += glyph.get_dimension().get_area();

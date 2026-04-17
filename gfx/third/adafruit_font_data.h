@@ -17,8 +17,6 @@ struct adafruit_gfx_glyph_data {
 	int8_t yOffset { 0 };        ///< Y dist from cursor pos to UL corner
 };
 
-using adafruit_gfx_glyph_data_ptr = adafruit_gfx_glyph_data*;
-
 //----------------------------------------------------------------
 
 struct adafruit_gfx_font_data {
@@ -28,7 +26,5 @@ struct adafruit_gfx_font_data {
 	uint16_t last { 0 };    ///< ASCII extents (last char)
 	uint8_t yAdvance { 0 }; ///< Newline distance (y axis)
 };
-
-using adafruit_gfx_font_data_ptr = adafruit_gfx_font_data*;
 
 //----------------------------------------------------------------

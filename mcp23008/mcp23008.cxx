@@ -30,7 +30,7 @@ constexpr uint8_t MCP23008_OLAT { 0x0a };
 
 //----------------------------------------------------------------
 
-mcp23008::mcp23008( wire_ptr wire, uint8_t gpio_dir, uint8_t gpio_pull_up ):
+mcp23008::mcp23008( wire* wire, uint8_t gpio_dir, uint8_t gpio_pull_up ):
 	_wire { wire },
 	_address { MCP23008_ADDRESS },
 	_gpio_dir { gpio_dir },

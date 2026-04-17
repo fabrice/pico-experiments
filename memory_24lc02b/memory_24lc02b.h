@@ -20,11 +20,6 @@
 
 //----------------------------------------------------------------
 
-class memory_24lc02b;
-using memory_24lc02b_ptr = memory_24lc02b*;
-
-//----------------------------------------------------------------
-
 constexpr uint8_t EE24LC02B_ADDRESS { 0x50 };
 
 constexpr uint16_t EE24LC02B_MEMORY_SIZE { 256 };
@@ -38,15 +33,15 @@ class memory_24lc02b {
 
 private:
 
-	wire_ptr _wire { nullptr };
+	wire* _wire { nullptr };
 	uint8_t _address { EE24LC02B_ADDRESS };
 
 public:
 
-	static memory_24lc02b_ptr make( uint i2c_num, uint8_t address );
+	static memory_24lc02b* make( uint i2c_num, uint8_t address );
 
 	memory_24lc02b() = delete;
-	memory_24lc02b( wire_ptr wire );
+	memory_24lc02b( wire* wire );
 
 public:
 

@@ -19,12 +19,6 @@
 #include <cstdint>
 
 //----------------------------------------------------------------
-//
-
-class gfx_display;
-using gfx_display_ref = gfx_display*;
-
-//----------------------------------------------------------------
 // color modes
 
 constexpr uint8_t GFX_COLOR_MODE_222 { 6 };
