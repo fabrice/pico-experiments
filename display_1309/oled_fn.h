@@ -22,7 +22,7 @@
 class OLED;
 
 //----------------------------------------------------------------
-// fonctions
+// functions
 
 OLED* oled_init( uint8_t i2c_num, uint8_t address, uint reset_gpio );
 
@@ -55,7 +55,13 @@ void oled_print( OLED* oled, char character, uint8_t line, uint8_t column );
 
 void oled_print_glyph( OLED* oled, const uint8_t glyph[6] );
 
-void oled_draw_yx_bytemap( OLED* oled, int16_t x, int16_t y, int16_t width, int16_t height, const uint8_t* yx_bytemap, uint16_t length );
+/**
+ * oled_draw_yx_bytemap
+ * \param oled display instance
+ * \param yx_bytemap byte array, vertical, lsb first
+ * \param length must be 1024 bytes
+ */
+void oled_draw_yx_bytemap( OLED* oled, const uint8_t* yx_bytemap, uint16_t length );
 
 void oled_erase( OLED* oled );
 void oled_erase_line( OLED* oled, uint8_t line );

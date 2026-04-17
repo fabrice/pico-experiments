@@ -79,7 +79,7 @@ void OLEDKitPrintInfo() {
 void OLEDKitPrintImage( const uint8_t* image ) {
 	if ( oled == nullptr ) return;
 
-	oled->draw_bitmap( 0, 0, SSD1309_WIDTH, SSD1309_HEIGHT, image, SSD1309_WIDTH * SSD1309_HEIGHT / 8 );
+	oled->draw_yx_bytemap( image, SSD1309_WIDTH * SSD1309_HEIGHT / 8 );
 }
 
 //----------------------------------------------------------------
@@ -127,7 +127,7 @@ void AfficherGlyph( const uint8_t glyph[6] ) {
 void AfficheImage( const uint8_t* image ) {
 	if ( oled == nullptr ) return;
 
-	oled->draw_bitmap( 0, 0, SSD1309_WIDTH, SSD1309_HEIGHT, image, SSD1309_WIDTH * SSD1309_HEIGHT / 8 );
+	oled->draw_yx_bytemap( image, SSD1309_WIDTH * SSD1309_HEIGHT / 8 );
 }
 
 //----------------------------------------------------------------

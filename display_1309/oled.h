@@ -53,6 +53,7 @@ private:
 	uint8_t _line { 0 };
 	uint8_t _column { 0 };
 	const uint8_t* _font { nullptr };
+	const std::array< std::array< uint8_t, 5 >, 256 >* _font_array;
 
 public:
 
@@ -86,16 +87,16 @@ public:
 	void set_brightness( uint8_t brightness );
 	void set_brightness_db( float brightness_db );
 
-	void draw_logo();
-
 	void set_lico( uint8_t line, uint8_t column );
+
+	void draw_logo();
 
 	void print( const char* text );
 	void print( const char* text, uint8_t line, uint8_t column );
 	void print_left( const char* text, uint8_t line );
 	void print_center( const char* text, uint8_t line );
 	void print_right( const char* text, uint8_t line );
-	void print_aligned( const char* text, uint8_t line, char alignement );
+	void print_aligned( const char* text, uint8_t line, char alignment );
 
 	void printf( const char* format, ... );
 	void vprintf( const char* format, va_list arg );
@@ -103,9 +104,11 @@ public:
 	void print( char character );
 	void print( char character, uint8_t line, uint8_t column );
 	void print_glyph( const uint8_t glyph[6] );
+	void print_glyph( const std::array< uint8_t, 6 > glyph );
 
-	void draw_bitmap( int16_t x, int16_t y, uint16_t width, uint16_t height, const uint8_t* bitmap, size_t length );
-	void draw_bitmap( int16_t x, int16_t y, uint16_t width, uint16_t height, std::vector< bool > bitmap );
+	void draw_yx_bytemap( const std::array< uint8_t, 1024 >& yx_bytemap );
+	void draw_yx_bytemap( const uint8_t* yx_bytemap, size_t length );
+	void draw_xy_bitmap( const uint8_t* xy_bytemap, size_t length );
 
 	void erase();
 	void erase( uint8_t line );

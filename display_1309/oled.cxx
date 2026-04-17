@@ -24,6 +24,7 @@
 #include <cstdio>
 #include <cstring>
 #include <algorithm>
+#include <array>
 #include <vector>
 
 
@@ -112,7 +113,8 @@ OLED::OLED( wire* wire, uint reset_gpio ):
 	_reset_gpio { reset_gpio },
 	_width { SSD1309_WIDTH },
 	_height { SSD1309_HEIGHT },
-	_font { &cfpt_mono_6x8[0][0] } {
+	_font { &cfpt_mono_6x8[0][0] },
+	_font_array( &cfpt_mono_6x8_array ) {
 
 	this->init();
 }
@@ -235,7 +237,7 @@ void OLED::set_brightness_db( float brightness_db ) {
 //----------------------------------------------------------------
 
 void OLED::draw_logo() {
-	this->draw_bitmap( 0, 0, 128, 64, cfpt_logo_128_64, cfpt_logo_128_64_length );
+	this->draw_yx_bytemap( cfpt_logo_128_64, cfpt_logo_128_64_length );
 }
 
 //----------------------------------------------------------------
@@ -272,7 +274,7 @@ void OLED::print( const char* text ) {
 		char character = text[ character_index ];
 
 		uint16_t index = character * 5;
-		memcpy( &buffer[ x ], &_font[ index ], 5 );
+		std::copy_n( &_font[ index ], 5, &buffer[ x ] );
 		x += 5;
 		buffer[ x ] = 0x00;
 		x += 1;
@@ -281,7 +283,8 @@ void OLED::print( const char* text ) {
 	}
 
 	_wire->start_communication();
-	_wire->write_bytes( buffer, sizeof( buffer ) );
+	_wire->write_bytes( WRITE_DATA );
+	_wire->write_bytes( buffer + 1, sizeof( buffer ) - 1 );
 	_wire->finish_communication();
 }
 
@@ -340,7 +343,7 @@ void OLED::print_right( const char* text, uint8_t line ) {
 
 //----------------------------------------------------------------
 
-void OLED::print_aligned( const char* text, uint8_t line, char alignement ) {
+void OLED::print_aligned( const char* text, uint8_t line, char alignment ) {
 	if ( _font == nullptr ) return;
 
 	size_t text_length = strlen( text );
@@ -349,7 +352,7 @@ void OLED::print_aligned( const char* text, uint8_t line, char alignement ) {
 	uint8_t column_count = this->get_column_count();
 	uint8_t column = 0;
 
-	switch ( alignement ) {
+	switch ( alignment ) {
 	case '<':
 		if ( text_length < column_count ) column = 0;
 		break;
@@ -393,7 +396,7 @@ void OLED::print( char character ) {
 	uint8_t buffer[7];
 	buffer[0] = WRITE_DATA;
 	uint16_t index = character * 5;
-	memcpy( buffer + 1, &_font[ index ], 5 );
+	std::copy_n( &_font[ index ], 5, buffer );
 	buffer[6] = 0x00;
 
 	_wire->start_communication();
@@ -413,9 +416,11 @@ void OLED::print( char character, uint8_t line, uint8_t column ) {
 //----------------------------------------------------------------
 
 void OLED::print_glyph( const uint8_t glyph[6] ) {
+	if ( glyph == nullptr ) return;
+
 	uint8_t buffer[7];
 	buffer[0] = WRITE_DATA;
-	memcpy( buffer + 1, glyph, 6 );
+	std::copy_n( glyph, 6, buffer + 1 );
 
 	_wire->start_communication();
 	_wire->write_bytes( buffer, 7 );
@@ -424,7 +429,40 @@ void OLED::print_glyph( const uint8_t glyph[6] ) {
 
 //----------------------------------------------------------------
 
-void OLED::draw_bitmap( int16_t x, int16_t y, uint16_t width, uint16_t height, const uint8_t* bitmap, size_t length ) {
+void OLED::print_glyph( const std::array< uint8_t, 6 > glyph ) {
+	const uint8_t length = glyph.size() + 1;
+	uint8_t buffer[ length ];
+	buffer[0] = WRITE_DATA;
+	std::copy_n( glyph.begin(), glyph.size(), buffer + 1 );
+
+	_wire->start_communication();
+	_wire->write_bytes( buffer, length );
+	_wire->finish_communication();
+}
+
+//----------------------------------------------------------------
+
+void OLED::draw_yx_bytemap( const std::array< uint8_t, 1024 >& yx_bytemap ) {
+	if ( yx_bytemap.size() != ((_width * _height + 7) / 8) ) return;
+
+	_wire->start_communication();
+	for ( uint8_t line = 0 ; line < 8 ; ++ line ) {
+		_wire->write_bytes( WRITE_COMMAND, SET_LINE_ADDRESS + line );
+		_wire->write_bytes( WRITE_COMMAND, SET_LOW_COLUMN_ADDRESS + 0 );
+		_wire->write_bytes( WRITE_COMMAND, SET_HIGH_COLUMN_ADDRESS + 0 );
+
+		_wire->write_bytes( WRITE_DATA );
+		_wire->write_bytes( &yx_bytemap[ line * 128 ], std::min( this->get_width(), static_cast< uint16_t >( 128 ) ) );
+	}
+	_wire->finish_communication();
+}
+
+//----------------------------------------------------------------
+
+void OLED::draw_yx_bytemap( const uint8_t* yx_bytemap, size_t length ) {
+	if ( yx_bytemap == nullptr ) return;
+	if ( length != ((_width * _height + 7) / 8) ) return;
+
 	uint8_t buffer[129] {};
 	buffer[0] = WRITE_DATA;
 
@@ -434,7 +472,7 @@ void OLED::draw_bitmap( int16_t x, int16_t y, uint16_t width, uint16_t height, c
 		_wire->write_bytes( WRITE_COMMAND, SET_LOW_COLUMN_ADDRESS + 0 );
 		_wire->write_bytes( WRITE_COMMAND, SET_HIGH_COLUMN_ADDRESS + 0 );
 
-		memcpy( buffer + 1, bitmap + line * 128, 128 );
+		std::copy_n( yx_bytemap + line * 128, 128, buffer + 1 );
 		_wire->write_bytes( buffer, std::min( 1 + this->get_width(), 129 ) );
 	}
 	_wire->finish_communication();
@@ -442,20 +480,22 @@ void OLED::draw_bitmap( int16_t x, int16_t y, uint16_t width, uint16_t height, c
 
 //----------------------------------------------------------------
 
-void OLED::draw_bitmap( int16_t x, int16_t y, uint16_t width, uint16_t height, std::vector< bool > bitmap ) {
-	size_t length = (width * height + 7) / 8;
+void OLED::draw_xy_bitmap( const uint8_t* xy_bytemap, size_t length ) {
+	if ( xy_bytemap == nullptr ) return;
+	if ( length != ((_width * _height + 7) / 8) ) return;
+
 	std::vector< uint8_t > bytes( length, 0x00 );
-	for ( int16_t y = 0 ; y < height ; y += 8 ) {
-		for ( int16_t x = 0 ; x < width ; ++ x ) {
+	for ( int16_t y = 0 ; y < _height ; y += 8 ) {
+		for ( int16_t x = 0 ; x < _width ; ++ x ) {
 			uint8_t byte = 0;
 			for ( uint8_t bit = 0 ; bit < 8 ; ++ bit ) {
-				byte |= bitmap[ x + (y + bit) * width ] << bit;
+				byte |= xy_bytemap[ x + (y + bit) * _width ] << bit;
 			}
-			bytes[ x + y / 8 * height ] = byte;
+			bytes[ x + y / 8 * _height ] = byte;
 		}
 	}
 
-	this->draw_bitmap( x, y, width, height, bytes.data(), length );
+	this->draw_yx_bytemap( bytes.data(), length );
 }
 
 //----------------------------------------------------------------

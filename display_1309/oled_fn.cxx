@@ -182,10 +182,10 @@ void oled_print_glyph( OLED* oled, const uint8_t glyph[6] ) {
 
 //----------------------------------------------------------------
 
-void oled_draw_yx_bytemap( OLED* oled, int16_t x, int16_t y, int16_t width, int16_t height, const uint8_t* yx_bytemap, uint16_t length ) {
+void oled_draw_yx_bytemap( OLED* oled, const uint8_t* yx_bytemap, uint16_t length ) {
 	if ( oled == nullptr ) return;
 
-	oled->draw_bitmap( x, y, width, height, bitmap, length );
+	oled->draw_yx_bytemap( yx_bytemap, length );
 }
 
 //----------------------------------------------------------------
