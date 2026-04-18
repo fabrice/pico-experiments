@@ -155,6 +155,7 @@ void OLED::display_init() {
 
 	_wire->write_bytes( WRITE_COMMAND, SET_DISPLAY_OFF );
 
+	_wire->write_bytes( WRITE_COMMAND, SET_START_LINE + 0 );
 	_wire->write_bytes( WRITE_COMMAND, SET_LINE_ADDRESS + 0 );
 	_wire->write_bytes( WRITE_COMMAND, SET_LOW_COLUMN_ADDRESS + 0 );
 	_wire->write_bytes( WRITE_COMMAND, SET_HIGH_COLUMN_ADDRESS + 0 );
@@ -246,12 +247,12 @@ void OLED::set_lico( uint8_t line, uint8_t column ) {
 	_line = line < this->get_line_count() ? line : (uint8_t)this->get_line_count() - 1;
 	_column = _column < this->get_column_count() ? column : (uint8_t)this->get_column_count() - 1;
 
-	uint16_t y = _column * 6 + get_columns_offset();
+	uint16_t x = _column * 6 + this->get_columns_offset();
 
 	_wire->start_communication();
-	_wire->write_bytes( WRITE_COMMAND, SET_LINE_ADDRESS + _line );
-	_wire->write_bytes( WRITE_COMMAND, SET_LOW_COLUMN_ADDRESS + ( (y >> 0) & 0x0f ) );
-	_wire->write_bytes( WRITE_COMMAND, SET_HIGH_COLUMN_ADDRESS + ( (y >> 4) & 0x0f ) );
+	_wire->write_bytes( WRITE_COMMAND, SET_LINE_ADDRESS + (_line & 0x0f) );
+	_wire->write_bytes( WRITE_COMMAND, SET_LOW_COLUMN_ADDRESS + ( (x >> 0) & 0x0f ) );
+	_wire->write_bytes( WRITE_COMMAND, SET_HIGH_COLUMN_ADDRESS + ( (x >> 4) & 0x0f ) );
 	_wire->finish_communication();
 }
 
@@ -265,11 +266,9 @@ void OLED::print( const char* text ) {
 
 	const uint16_t width = text_length * 6;
 	uint8_t buffer[ width + 1 ] {};
+	buffer[ 0 ] = WRITE_DATA;
 
-	uint16_t x = 0;
-	buffer[ x ] = WRITE_DATA;
-	x += 1;
-
+	uint16_t x = 1;
 	for ( uint8_t character_index = 0 ; character_index < text_length ; ++ character_index ) {
 		char character = text[ character_index ];
 
@@ -283,8 +282,7 @@ void OLED::print( const char* text ) {
 	}
 
 	_wire->start_communication();
-	_wire->write_bytes( WRITE_DATA );
-	_wire->write_bytes( buffer + 1, sizeof( buffer ) - 1 );
+	_wire->write_bytes( buffer, sizeof( buffer ) );
 	_wire->finish_communication();
 }
 
@@ -382,7 +380,7 @@ void OLED::printf( const char* format, ... ) {
 //----------------------------------------------------------------
 
 void OLED::vprintf( const char* format, va_list args ) {
-	char text[22];
+	char text[22] {};
 	vsnprintf( text, 22, format, args );
 	text[ 21 ] = 0;
 	this->print( text );
@@ -393,10 +391,10 @@ void OLED::vprintf( const char* format, va_list args ) {
 void OLED::print( char character ) {
 	if ( _font == nullptr ) return;
 
-	uint8_t buffer[7];
+	uint8_t buffer[7] {};
 	buffer[0] = WRITE_DATA;
 	uint16_t index = character * 5;
-	std::copy_n( &_font[ index ], 5, buffer );
+	std::copy_n( &_font[ index ], 5, buffer + 1 );
 	buffer[6] = 0x00;
 
 	_wire->start_communication();
@@ -445,14 +443,17 @@ void OLED::print_glyph( const std::array< uint8_t, 6 > glyph ) {
 void OLED::draw_yx_bytemap( const std::array< uint8_t, 1024 >& yx_bytemap ) {
 	if ( yx_bytemap.size() != ((_width * _height + 7) / 8) ) return;
 
+	uint8_t buffer[129] {};
+	buffer[0] = WRITE_DATA;
+
 	_wire->start_communication();
 	for ( uint8_t line = 0 ; line < 8 ; ++ line ) {
 		_wire->write_bytes( WRITE_COMMAND, SET_LINE_ADDRESS + line );
 		_wire->write_bytes( WRITE_COMMAND, SET_LOW_COLUMN_ADDRESS + 0 );
 		_wire->write_bytes( WRITE_COMMAND, SET_HIGH_COLUMN_ADDRESS + 0 );
 
-		_wire->write_bytes( WRITE_DATA );
-		_wire->write_bytes( &yx_bytemap[ line * 128 ], std::min( this->get_width(), static_cast< uint16_t >( 128 ) ) );
+		std::copy_n( &yx_bytemap[ line * 128 ], std::min< uint16_t >( this->get_width(), 128 ), buffer + 1 );
+		_wire->write_bytes( buffer, std::min< uint16_t >( 1 + this->get_width(), 129 ) );
 	}
 	_wire->finish_communication();
 }
