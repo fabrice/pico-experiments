@@ -7,6 +7,10 @@
 // gfx_color_rgb
 //
 //----------------------------------------------------------------
+
+#pragma once
+
+//----------------------------------------------------------------
 // includes
 
 #include "gfx_color_rgb.h"
@@ -16,40 +20,39 @@
 
 #include <cstring>
 #include <cmath>
-#include <bit>
 #include <algorithm>
 #include <string>
 
 //----------------------------------------------------------------
 
-const gfx_color_rgb gfx_color_rgb::BLACK { 0x00_u8, 0x00_u8, 0x00_u8 };
-const gfx_color_rgb gfx_color_rgb::WHITE { 0xff_u8, 0xff_u8, 0xff_u8 };
+template< typename color_t >
+const gfx_color_rgb< color_t > gfx_color_rgb< color_t >::BLACK { gfx::component_cast< bool, color_t >( false ), gfx::component_cast< bool, color_t >( false ), gfx::component_cast< bool, color_t >( false ) };
 
-const gfx_color_rgb gfx_color_rgb::RED { 0xff_u8, 0x00_u8, 0x00_u8 };
-const gfx_color_rgb gfx_color_rgb::YELLOW { 0xff_u8, 0xff_u8, 0x00_u8 };
-const gfx_color_rgb gfx_color_rgb::GREEN { 0x00_u8, 0xff_u8, 0x00_u8 };
-const gfx_color_rgb gfx_color_rgb::CYAN { 0x00_u8, 0xff_u8, 0xff_u8 };
-const gfx_color_rgb gfx_color_rgb::BLUE { 0x00_u8, 0x00_u8, 0xff_u8 };
-const gfx_color_rgb gfx_color_rgb::MAGENTA { 0xff_u8, 0x00_u8, 0xff_u8 };
+template< typename color_t >
+const gfx_color_rgb< color_t > gfx_color_rgb< color_t >::WHITE { gfx::component_cast< bool, color_t >( true ), gfx::component_cast< bool, color_t >( true ), gfx::component_cast< bool, color_t >( true ) };
+
+template< typename color_t >
+const gfx_color_rgb< color_t > gfx_color_rgb< color_t >::RED { gfx::component_cast< bool, color_t >( true ), gfx::component_cast< bool, color_t >( false ), gfx::component_cast< bool, color_t >( false ) };
+
+template< typename color_t >
+const gfx_color_rgb< color_t > gfx_color_rgb< color_t >::YELLOW { gfx::component_cast< bool, color_t >( true ), gfx::component_cast< bool, color_t >( true ), gfx::component_cast< bool, color_t >( false ) };
+
+template< typename color_t >
+const gfx_color_rgb< color_t > gfx_color_rgb< color_t >::GREEN { gfx::component_cast< bool, color_t >( false ), gfx::component_cast< bool, color_t >( true ), gfx::component_cast< bool, color_t >( false ) };
+
+template< typename color_t >
+const gfx_color_rgb< color_t > gfx_color_rgb< color_t >::CYAN { gfx::component_cast< bool, color_t >( false ), gfx::component_cast< bool, color_t >( true ), gfx::component_cast< bool, color_t >( true ) };
+
+template< typename color_t >
+const gfx_color_rgb< color_t > gfx_color_rgb< color_t >::BLUE { gfx::component_cast< bool, color_t >( false ), gfx::component_cast< bool, color_t >( false ), gfx::component_cast< bool, color_t >( true ) };
+
+template< typename color_t >
+const gfx_color_rgb< color_t > gfx_color_rgb< color_t >::MAGENTA { gfx::component_cast< bool, color_t >( true ), gfx::component_cast< bool, color_t >( false ), gfx::component_cast< bool, color_t >( true ) };
 
 //----------------------------------------------------------------
 
-gfx_color_rgb::gfx_color_rgb( uint8_t red, uint8_t green, uint8_t blue, uint8_t max ):
-	_red { red },
-	_green { green },
-	_blue { blue } {
-	if ( max < 1 ) max = 1;
-	if ( max < 255 ) {
-		float ratio = 255.0 / (float)max;
-		_red = (uint8_t)((float)red * ratio);
-		_green = (uint8_t)((float)green * ratio);
-		_blue = (uint8_t)((float)blue * ratio);
-	}
-}
-
-//----------------------------------------------------------------
-
-gfx_color_rgb::gfx_color_rgb( float red, float green, float blue )
+template< typename color_t >
+gfx_color_rgb< color_t >::gfx_color_rgb( float red, float green, float blue )
 		requires (!std::is_floating_point_v< color_t >):
 		_red { gfx::component_cast< float, color_t >( red ) },
 		_green { gfx::component_cast< float, color_t >( green ) },
@@ -58,13 +61,15 @@ gfx_color_rgb::gfx_color_rgb( float red, float green, float blue )
 
 //----------------------------------------------------------------
 
-uint8_t gfx_color_rgb::get_bri() const {
+template< typename color_t >
+color_t gfx_color_rgb< color_t >::get_bri() const {
 	return std::max( std::max( _red, _green ), _blue );
 }
 
 //----------------------------------------------------------------
 
-gfx_color_rgb& gfx_color_rgb::operator=( const gfx_color_rgb& that ) {
+template< typename color_t >
+gfx_color_rgb< color_t >& gfx_color_rgb< color_t >::operator=( const gfx_color_rgb< color_t >& that ) {
 	_red = that._red;
 	_green = that._green;
 	_blue = that._blue;
@@ -74,57 +79,78 @@ gfx_color_rgb& gfx_color_rgb::operator=( const gfx_color_rgb& that ) {
 
 //----------------------------------------------------------------
 
-gfx_color_bit gfx_color_rgb::to_black_and_white() const {
-	return std::max( std::max( _red, _green ), _blue ) >= 128;
+template< typename color_t >
+gfx_color_bit gfx_color_rgb< color_t >::to_black_and_white() const {
+	return gfx::component_cast< color_t, bool >( this->get_bri() );
 }
 
 //----------------------------------------------------------------
 
-uint8_t gfx_color_rgb::to_111() const {
-	return (((_red >> 7) & 0x01) << 2) | (((_green >> 7) & 0x01) << 1) | (((_blue >> 7) & 0x01) << 0);
+template< typename color_t >
+uint8_t gfx_color_rgb< color_t >::to_111() const {
+	return
+		(static_cast< uint8_t >(gfx::component_cast< color_t, bool >( _red )) << 2) |
+		(static_cast< uint8_t >(gfx::component_cast< color_t, bool >( _green )) << 1) |
+		(static_cast< uint8_t >(gfx::component_cast< color_t, bool >( _blue )) << 0);
 }
 
 //----------------------------------------------------------------
 
-uint8_t gfx_color_rgb::to_222() const {
-	return (((_red >> 6) & 0b0011) << 4) | (((_green >> 6) & 0b0011) << 2) | (((_blue >> 6) & 0b0011) << 0);
+template< typename color_t >
+uint8_t gfx_color_rgb< color_t >::to_222() const {
+	return
+		(((gfx::component_cast< color_t, uint8_t >( _red ) >> 6) & 0b0011) << 4) |
+		(((gfx::component_cast< color_t, uint8_t >( _green ) >> 6) & 0b0011) << 2) |
+		(((gfx::component_cast< color_t, uint8_t >( _blue ) >> 6) & 0b0011) << 0);
 }
 
 //----------------------------------------------------------------
 
-uint8_t gfx_color_rgb::to_332() const {
-	return (((_red >> 5) & 0b0111) << 5) | (((_green >> 5) & 0b0111) << 2) | (((_blue >> 6) & 0b0011) << 0);
+template< typename color_t >
+uint8_t gfx_color_rgb< color_t >::to_332() const {
+	return
+		(((gfx::component_cast< color_t, uint8_t >( _red ) >> 5) & 0b0111) << 5) |
+		(((gfx::component_cast< color_t, uint8_t >( _green ) >> 5) & 0b0111) << 2) |
+		(((gfx::component_cast< color_t, uint8_t >( _blue ) >> 6) & 0b0011) << 0);
 }
 
 //----------------------------------------------------------------
 
-uint16_t gfx_color_rgb::to_555() const {
-	return ((uint16_t)((_red >> 3) & 0x1f) << 10) | ((uint16_t)((_green >> 3) & 0x1f) << 5) | ((uint16_t)((_blue >> 3) & 0x1f) << 0);
+template< typename color_t >
+uint16_t gfx_color_rgb< color_t >::to_555() const {
+	return
+		(static_cast<uint16_t>((gfx::component_cast< color_t, uint8_t >( _red ) >> 3) & 0b11111) << 10) |
+		(static_cast<uint16_t>((gfx::component_cast< color_t, uint8_t >( _green ) >> 3) & 0b11111) << 5) |
+		(static_cast<uint16_t>((gfx::component_cast< color_t, uint8_t >( _blue ) >> 3) & 0b11111) << 0);
 }
 
 //----------------------------------------------------------------
 
-uint16_t gfx_color_rgb::to_565() const {
-	return ((uint16_t)((_red >> 3) & 0x1f) << 11) | ((uint16_t)((_green >> 2) & 0x3f) << 5) | ((uint16_t)((_blue >> 3) & 0x1f) << 0);
+template< typename color_t >
+uint16_t gfx_color_rgb< color_t >::to_565() const {
+	return
+		(static_cast<uint16_t>((gfx::component_cast< color_t, uint8_t >( _red ) >> 3) & 0b11111) << 11) |
+		(static_cast<uint16_t>((gfx::component_cast< color_t, uint8_t >( _green ) >> 2) & 0b111111) << 5) |
+		(static_cast<uint16_t>((gfx::component_cast< color_t, uint8_t >( _blue ) >> 3) & 0b11111) << 0);
 }
 
 //----------------------------------------------------------------
 
-std::string gfx_color_rgb::to_web() const {
-	char webcolor[10];
-	snprintf( webcolor, sizeof(webcolor), "#%2x%2x%2x", (int)_red, (int)_green, (int)_blue );
+template< typename color_t >
+std::string_view gfx_color_rgb< color_t >::to_web() const {
+	char webcolor[10] {};
+	snprintf( webcolor, sizeof(webcolor), "#%2x%2x%2x", (int)gfx::component_cast< color_t, uint8_t >( _red ), (int)gfx::component_cast< color_t, uint8_t >( _green ), (int)gfx::component_cast< color_t, uint8_t >( _blue ) );
 	webcolor[ 9 ] = 0;
 
-	return std::string( webcolor );
+	return std::string_view( webcolor );
 }
 
 //----------------------------------------------------------------
 
-gfx_color_hsb gfx_color_rgb::to_hsb() const {
-	gfx_color_hsb hsb;
-
-	float cmax = std::max( std::max( _red, _green ), _blue );
-	float cmin = std::min( std::min( _red, _green ), _blue );
+template< typename color_t >
+gfx_color_hsb gfx_color_rgb< color_t >::to_hsb() const {
+	float cmax = std::max( std::max( gfx::component_cast< color_t, float >( _red ), gfx::component_cast< color_t, float >( _green ) ), gfx::component_cast< color_t, float >( _blue ) );
+	float cmin = std::min( std::min( gfx::component_cast< color_t, float >( _red ), gfx::component_cast< color_t, float >( _green ) ), gfx::component_cast< color_t, float >( _blue ) );
 	float delta = cmax - cmin;
 
 	float hue = 0.0f;

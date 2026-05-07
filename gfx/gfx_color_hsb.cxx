@@ -16,7 +16,6 @@
 #include <cmath>
 #include "math_plus.h"
 
-
 //----------------------------------------------------------------
 
 const gfx_color_hsb gfx_color_hsb::BLACK { 0, 0x00_u8, 0x00_u8 };
@@ -64,7 +63,7 @@ uint8_t gfx_color_hsb::get_chroma() const {
 
 //----------------------------------------------------------------
 
-gfx_color_rgb gfx_color_hsb::to_rgb() const {
+gfx_color_rgb< uint8_t > gfx_color_hsb::to_rgb() const {
 	float chroma = _sat * _bri;
 	float h = _hue / 60.0f;
 	float x = chroma * (1.0f - std::abs( std::fmod( h , 2.0f ) - 1.0f ));

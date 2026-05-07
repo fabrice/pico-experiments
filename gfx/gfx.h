@@ -12,12 +12,9 @@
 //----------------------------------------------------------------
 
 #include "gfx_types.h"
-#include "gfx_point.h"
-#include "gfx_dimension.h"
-#include "gfx_rectangle.h"
+#include "gfx_geometry.h"
 
-#include "gfx_color_rgb.h"
-#include "gfx_color_hsb.h"
+#include "gfx_colors.h"
 
 #include "gfx_canvas.h"
 #include "gfx_image.h"

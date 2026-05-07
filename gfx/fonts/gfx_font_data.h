@@ -14,6 +14,8 @@
 
 #include "gfx_types.h"
 
+#include "gfx_bytemap_data.h"
+
 #include <cstdint>
 #include <vector>
 #include <map>

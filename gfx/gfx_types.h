@@ -22,11 +22,7 @@ using gfx_xy_t = int16_t;
 using gfx_dxy_t = int16_t;
 
 using gfx_wh_t = uint16_t;
-
-//----------------------------------------------------------------
-
-using gfx_bytemap_data = std::vector< uint8_t >;
-using gfx_bitmap_data = std::vector< bool >;
+using gfx_area_t = uint32_t;
 
 //----------------------------------------------------------------
 

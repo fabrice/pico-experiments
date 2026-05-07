@@ -19,6 +19,7 @@
 #include "gfx_types.h"
 #include "gfx_color_rgb.h"
 
+#include "cast_plus.h"
 #include "literals_plus.h"
 #include "math_plus.h"
 
@@ -26,7 +27,6 @@
 
 //----------------------------------------------------------------
 
-class gfx_color_rgb;
 class gfx_color_hsb;
 
 //----------------------------------------------------------------
@@ -47,7 +47,7 @@ public:
 
 private:
 
-	float _hue { 0.0f };
+	cxx::promote_type_max_size< float, 32 >::type _hue { 0.0f };
 	float _sat { 0.0f };
 	float _bri { 0.0f };
 
@@ -74,7 +74,7 @@ public:
 	inline uint32_t to_988() const { return pack( get_hue(), pack( get_sat(), get_bri() ) ); }
 
 	[[nodiscard]]
-	gfx_color_rgb to_rgb() const;
+	gfx_color_rgb< uint8_t > to_rgb() const;
 
 };
 

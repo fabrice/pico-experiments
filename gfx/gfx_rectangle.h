@@ -25,6 +25,10 @@
 
 class gfx_rectangle {
 
+public:
+
+	static const gfx_rectangle ZERO;
+
 private:
 
 	gfx_point _top_left { 0, 0 };
@@ -35,26 +39,31 @@ public:
 	constexpr gfx_rectangle() = default;
 
 	constexpr gfx_rectangle( const gfx_rectangle& that ):
-		_top_left( that._top_left ),
-		_bottom_right( that._bottom_right ) {
+			_top_left( that._top_left ),
+			_bottom_right( that._bottom_right ) {
 	}
 
 	gfx_rectangle( gfx_xy_t left, gfx_xy_t top, gfx_xy_t right, gfx_xy_t bottom ):
-		_top_left( left, top ),
-		_bottom_right( right, bottom ) {
+			_top_left( left, top ),
+			_bottom_right( right, bottom ) {
 		this->normalize();
 	}
 
 	gfx_rectangle( const gfx_point& top_left, const gfx_point& bottom_right ):
-		_top_left( top_left ),
-		_bottom_right( bottom_right ) {
+			_top_left( top_left ),
+			_bottom_right( bottom_right ) {
 		this->normalize();
 	}
 
 	gfx_rectangle( const gfx_point& top_left, const gfx_dimension& dimension ):
-		_top_left( top_left ),
-		_bottom_right( top_left.get_x() + dimension.get_width(), top_left.get_y() + dimension.get_height() ) {
+			_top_left( top_left ),
+			_bottom_right( top_left.get_x() + dimension.get_width(), top_left.get_y() + dimension.get_height() ) {
 		this->normalize();
+	}
+
+	explicit gfx_rectangle( const gfx_dimension dimension ):
+			_top_left { 0, 0 },
+			_bottom_right( 0 + dimension.get_width(), 0 + dimension.get_height() ) {
 	}
 
 	constexpr ~gfx_rectangle() = default;
@@ -84,40 +93,41 @@ public:
 	inline gfx_wh_t get_height() const { return this->get_bottom() - this->get_top(); }
 
 	inline gfx_dimension get_dimension() const { return gfx_dimension( this->get_width(), this->get_height() ); }
-	inline gfx_rectangle get_box() const { return *this; }
+	inline gfx_rectangle get_box() const { return (*this); }
 
-	inline uint32_t get_area() const { return this->get_dimension().get_area(); }
+	inline gfx_area_t get_area() const { return this->get_dimension().get_area(); }
 
 	gfx_wh_t get_diagonal() const;
 
-	bool is_null() const;
+	bool is_zero() const;
 	bool is_empty() const;
 
-	gfx_rectangle& operator+=( const gfx_rectangle& that );
-	gfx_rectangle& operator+=( const gfx_point& that );
+	gfx_rectangle& operator+=( const gfx_rectangle& rhs );
+	gfx_rectangle& operator+=( const gfx_point& rhs );
 
-	gfx_rectangle operator+( const gfx_rectangle& that ) const;
-	gfx_rectangle operator+( const gfx_point& that ) const;
+	gfx_rectangle operator+( const gfx_rectangle& rhs ) const;
+	gfx_rectangle operator+( const gfx_point& rhs ) const;
 
-	std::partial_ordering operator<=>( const gfx_rectangle& that ) const;
-	inline bool operator<( const gfx_rectangle& that ) const { return is_lt( (*this) <=> that ); }
-	inline bool operator<=( const gfx_rectangle& that ) const { return is_lteq( (*this) <=> that ); }
-	inline bool operator>=( const gfx_rectangle& that ) const { return is_gteq( (*this) <=> that ); }
-	inline bool operator>( const gfx_rectangle& that ) const { return is_gt( (*this) <=> that ); }
+	std::partial_ordering operator<=>( const gfx_rectangle& rhs ) const;
+	inline bool operator<( const gfx_rectangle& rhs ) const { return is_lt( (*this) <=> rhs ); }
+	inline bool operator<=( const gfx_rectangle& rhs ) const { return is_lteq( (*this) <=> rhs ); }
+	inline bool operator==( const gfx_rectangle& rhs ) const { return is_eq( (*this) <=> rhs ); }
+	inline bool operator>=( const gfx_rectangle& rhs ) const { return is_gteq( (*this) <=> rhs ); }
+	inline bool operator>( const gfx_rectangle& rhs ) const { return is_gt( (*this) <=> rhs ); }
 
-	std::weak_ordering operator<=>( const gfx_point& that ) const;
-	inline bool operator<( const gfx_point& that ) const { return is_lt( (*this) <=> that ); }
-	inline bool operator<=( const gfx_point& that ) const { return is_lteq( (*this) <=> that ); }
-	inline bool operator>=( const gfx_point& that ) const { return is_gteq( (*this) <=> that ); }
-	inline bool operator>( const gfx_point& that ) const { return is_gt( (*this) <=> that ); }
+	std::weak_ordering operator<=>( const gfx_point& rhs ) const;
+	inline bool operator<( const gfx_point& rhs ) const { return is_lt( (*this) <=> rhs ); }
+	inline bool operator<=( const gfx_point& rhs ) const { return is_lteq( (*this) <=> rhs ); }
+	inline bool operator==( const gfx_point& rhs ) const { return is_eq( (*this) <=> rhs ); }
+	inline bool operator>=( const gfx_point& rhs ) const { return is_gteq( (*this) <=> rhs ); }
+	inline bool operator>( const gfx_point& rhs ) const { return is_gt( (*this) <=> rhs ); }
+
+	// intersection
+	[[nodiscard]] gfx_rectangle operator&&( const gfx_rectangle& rhs ) const;
+	// union
+	[[nodiscard]] gfx_rectangle operator||( const gfx_rectangle& rhs ) const;
 
 	gfx_rectangle& constrain( const gfx_rectangle& that );
-
-	[[nodiscard]]
-	gfx_rectangle intersect( const gfx_rectangle& that ) const;
-
-	[[nodiscard]]
-	gfx_rectangle join( const gfx_rectangle& that ) const;
 
 };
 

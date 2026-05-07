@@ -11,7 +11,7 @@
 #include "gfx_types.h"
 #include "gfx_geometry.h"
 #include "gfx_color_rgb.h"
-#include "gfx_bytemap.h"
+#include "gfx_bytemap_data.h"
 
 #include "gfx_canvas.h"
 #include "gfx_bitmap.h"
@@ -39,51 +39,61 @@ gfx_bitmap::~gfx_bitmap() {
 //----------------------------------------------------------------
 
 gfx_color_bit gfx_bitmap::get_pixel_lit( gfx_xy_t x, gfx_xy_t y ) const {
-	x = constrain<gfx_xy_t>( x, 0, this->get_right() );
-	y = constrain<gfx_xy_t>( y, 0, this->get_bottom() );
+	if ( gfx_point( x, y ) > this->get_box() ) return false;
 
-	gfx_xy_t index = x + y * this->get_width();
-	return bytemap_get_bit( _bytemap, index );
+	const gfx_xy_t index = x + y * this->get_width();
+	return _bytemap.get_bit( index );
 }
 
 //----------------------------------------------------------------
 
-gfx_color_rgb gfx_bitmap::get_pixel( gfx_xy_t x, gfx_xy_t y ) const {
-	return this->get_pixel_lit( x, y ) ? gfx_color_rgb::WHITE : gfx_color_rgb::BLACK;
+gfx_color_rgb_8 gfx_bitmap::get_pixel( gfx_xy_t x, gfx_xy_t y ) const {
+	if ( gfx_point( x, y ) > this->get_box() ) return gfx_color_rgb_8::BLACK;
+
+	const gfx_xy_t index = x + y * this->get_width();
+	return _bytemap.get_bit( index ) ? gfx_color_rgb_8::WHITE : gfx_color_rgb_8::BLACK;
 }
 
 //----------------------------------------------------------------
 
 void gfx_bitmap::set_pixel( gfx_xy_t x, gfx_xy_t y, gfx_color_bit lit ) {
-	x = constrain<gfx_xy_t>( x, 0, this->get_right() );
-	y = constrain<gfx_xy_t>( y, 0, this->get_bottom() );
+	if ( gfx_point( x, y ) > this->get_box() ) return;
 
-	gfx_xy_t index = x + y * this->get_width();
-	bytemap_set_bit( _bytemap, index, lit );
+	const gfx_xy_t index = x + y * this->get_width();
+	_bytemap.set_bit( index, lit );
 }
 
 //----------------------------------------------------------------
 
 void gfx_bitmap::set_pixel( gfx_point point, gfx_color_bit lit ) {
-	this->set_pixel( point.get_x(), point.get_y(), lit );
+	if ( point > this->get_box() ) return;
+
+	const gfx_xy_t index = point.get_x() + point.get_y() * this->get_width();
+	_bytemap.set_bit( index, lit );
 }
 
 //----------------------------------------------------------------
 
-void gfx_bitmap::set_pixel( gfx_xy_t x, gfx_xy_t y, gfx_color_rgb color ) {
-	this->set_pixel( x, y, color.is_lit() );
+void gfx_bitmap::set_pixel( gfx_xy_t x, gfx_xy_t y, gfx_color_rgb_8 color ) {
+	if ( gfx_point( x, y ) > this->get_box() ) return;
+
+	const gfx_xy_t index = x + y * this->get_width();
+	_bytemap.set_bit( index, color.is_lit() );
 }
 
 //----------------------------------------------------------------
 
-void gfx_bitmap::set_pixel( gfx_point point, gfx_color_rgb color ) {
-	this->set_pixel( point, color.is_lit() );
+void gfx_bitmap::set_pixel( gfx_point point, gfx_color_rgb_8 color ) {
+	if ( point > this->get_box() ) return;
+
+	const gfx_xy_t index = point.get_x() + point.get_y() * this->get_width();
+	_bytemap.set_bit( index, color.is_lit() );
 }
 
 //----------------------------------------------------------------
 
 void gfx_bitmap::erase() {
-	std::ranges::fill( _bytemap, 0 );
+	_bytemap.fill( 0 );
 }
 
 //----------------------------------------------------------------

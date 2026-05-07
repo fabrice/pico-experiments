@@ -10,7 +10,7 @@
 
 #include "gfx_glyph.h"
 
-#include "gfx_bytemap.h"
+#include "gfx_bytemap_data.h"
 
 #include <cstring>
 #include <cstdio>
@@ -47,7 +47,7 @@ gfx_glyph::gfx_glyph( const gfx_glyph& that ):
 
 void gfx_glyph::minimize() {
 	if ( this->is_empty() ) {
-		this->set_box( gfx_rectangle() );
+		this->set_box( gfx_rectangle( 0, 0, 0, 0 ) );
 		return;
 	}
 
@@ -110,6 +110,9 @@ bool gfx_glyph::is_empty() const {
 	if ( this->get_width() == 0 ) return true;
 	if ( this->get_height() == 0 ) return true;
 
+	const bool empty = _bytemap.is_empty();
+	if ( empty ) return true;
+
 	for ( gfx_xy_t y = 0 ; y < this->get_height() ; ++ y ) {
 		for ( gfx_xy_t x = 0 ; x < this->get_width() ; ++ x ) {
 			if ( this->get_pixel_lit( x, y ) ) {
@@ -152,7 +155,7 @@ void gfx_glyph::remove_line( gfx_xy_t y ) {
 			for ( gfx_xy_t x = 0 ; x < this->get_width() ; ++ x ) {
 				if ( this->get_pixel_lit( x, sy ) ) {
 					const size_t index = x + dy * this->get_width();
-					bytemap_set_bit( bytemap, index );
+					_bytemap.set_bit( index );
 				}
 			}
 			++ dy;
@@ -192,7 +195,7 @@ void gfx_glyph::remove_column( gfx_xy_t x ) {
 			if ( sx != x ) {
 				if ( this->get_pixel_lit( sx, y ) ) {
 					const size_t index = dx + y * dwidth;
-					bytemap_set_bit( bytemap, index );
+					_bytemap.set_bit( index );
 				}
 				++ dx;
 			}
@@ -234,7 +237,7 @@ void gfx_glyph::set_bytemap( const gfx_bytemap_data& bytemap ) {
 	for ( gfx_xy_t y = 0 ; y < this->get_height() ; ++ y ) {
 		for ( gfx_xy_t x = 0 ; x < this->get_width() ; ++ x ) {
 			const uint index = x + y * this->get_width();
-			const bool bit = bytemap_get_bit( bytemap, index );
+			const bool bit = _bytemap.get_bit( index );
 			this->set_pixel_lit( x, y, bit );
 		}
 	}
@@ -276,14 +279,14 @@ void gfx_glyph::set_bitmap_yx( const uint8_t* bitmap, size_t length, bool lsb_fi
 
 gfx_color_bit gfx_glyph::get_pixel_lit( gfx_xy_t x, gfx_xy_t y ) const {
 	const size_t index = x + y * this->get_width();
-	return bytemap_get_bit( _bytemap, index );
+	return _bytemap.get_bit( index );
 }
 
 //----------------------------------------------------------------
 
 void gfx_glyph::set_pixel_lit( gfx_xy_t x, gfx_xy_t y, gfx_color_bit lit ) {
 	const size_t index = x + y * this->get_width();
-	bytemap_set_bit( _bytemap, index, lit );
+	_bytemap.set_bit( index, lit );
 }
 
 //----------------------------------------------------------------

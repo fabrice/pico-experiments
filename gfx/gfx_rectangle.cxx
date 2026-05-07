@@ -3,28 +3,34 @@
 // Raspberry Pico
 // Target : PicoSDK C/C++
 //
-// gfx_rectangle
+//! \file gfx_rectangle
 //
 //----------------------------------------------------------------
+
+#include "gfx_rectangle.h"
 
 #include "pico.h"
 
 #include "gfx_types.h"
-#include "gfx_rectangle.h"
+#include "gfx_dimension.h"
 
 #include <cmath>
 #include <algorithm>
 
 //----------------------------------------------------------------
 
-void gfx_rectangle::normalize() {
-	const gfx_xy_t left = this->get_left();
-	const gfx_xy_t top = this->get_top();
-	const gfx_xy_t right = this->get_right();
-	const gfx_xy_t bottom = this->get_bottom();
+const gfx_rectangle gfx_rectangle::ZERO { 0, 0, 0, 0 };
 
-	_top_left.set_xy( std::min( left, right ), std::min( top, bottom ) );
-	_bottom_right.set_xy( std::max( left, right ), std::max( top, bottom ) );
+//----------------------------------------------------------------
+
+void gfx_rectangle::normalize() {
+	const gfx_xy_t left = std::min( this->get_left(), this->get_right() );
+	const gfx_xy_t top = std::min( this->get_top(), this->get_bottom() );
+	const gfx_xy_t right = std::max( this->get_left(), this->get_right() );
+	const gfx_xy_t bottom = std::max( this->get_top(), this->get_bottom() );
+
+	_top_left.set_xy( left, top );
+	_bottom_right.set_xy( right, bottom );
 }
 
 //----------------------------------------------------------------
@@ -67,8 +73,8 @@ gfx_wh_t gfx_rectangle::get_diagonal() const {
 
 //----------------------------------------------------------------
 
-bool gfx_rectangle::is_null() const {
-	return _top_left.is_null() && _bottom_right.is_null();
+bool gfx_rectangle::is_zero() const {
+	return _top_left.is_zero() && _bottom_right.is_zero();
 }
 
 //----------------------------------------------------------------
@@ -79,100 +85,150 @@ bool gfx_rectangle::is_empty() const {
 
 //----------------------------------------------------------------
 
-gfx_rectangle& gfx_rectangle::operator+=( const gfx_rectangle& that ) {
-	const gfx_xy_t left = std::min( this->get_left(), that.get_left() );
-	const gfx_xy_t top = std::min( this->get_top(), that.get_top() );
-	const gfx_xy_t right = std::max( this->get_right(), that.get_right() );
-	const gfx_xy_t bottom = std::max( this->get_bottom(), that.get_bottom() );
+gfx_rectangle& gfx_rectangle::operator+=( const gfx_rectangle& rhs ) {
+	const gfx_xy_t left = std::min( this->get_left(), rhs.get_left() );
+	const gfx_xy_t top = std::min( this->get_top(), rhs.get_top() );
+	const gfx_xy_t right = std::max( this->get_right(), rhs.get_right() );
+	const gfx_xy_t bottom = std::max( this->get_bottom(), rhs.get_bottom() );
 
 	_top_left.set_xy( left, top );
 	_bottom_right.set_xy( right, bottom );
 
-	return *this;
+	return (*this);
 }
 
 //----------------------------------------------------------------
 
-gfx_rectangle& gfx_rectangle::operator+=( const gfx_point& that ) {
-	const gfx_xy_t left = std::min( this->get_left(), that.get_x() );
-	const gfx_xy_t top = std::min( this->get_top(), that.get_y() );
-	const gfx_xy_t right = std::max( this->get_right(), that.get_x() );
-	const gfx_xy_t bottom = std::max( this->get_bottom(), that.get_y() );
+gfx_rectangle& gfx_rectangle::operator+=( const gfx_point& rhs ) {
+	const gfx_xy_t left = std::min( this->get_left(), rhs.get_x() );
+	const gfx_xy_t top = std::min( this->get_top(), rhs.get_y() );
+	const gfx_xy_t right = std::max( this->get_right(), rhs.get_x() );
+	const gfx_xy_t bottom = std::max( this->get_bottom(), rhs.get_y() );
 
 	_top_left.set_xy( left, top );
 	_bottom_right.set_xy( right, bottom );
 
-	return *this;
+	return (*this);
 }
 
 //----------------------------------------------------------------
 
-gfx_rectangle gfx_rectangle::operator+( const gfx_rectangle& that ) const {
-	const gfx_xy_t left = std::min( this->get_left(), that.get_left() );
-	const gfx_xy_t top = std::min( this->get_top(), that.get_top() );
-	const gfx_xy_t right = std::max( this->get_right(), that.get_right() );
-	const gfx_xy_t bottom = std::max( this->get_bottom(), that.get_bottom() );
+gfx_rectangle gfx_rectangle::operator+( const gfx_rectangle& rhs ) const {
+	const gfx_xy_t left = std::min( this->get_left(), rhs.get_left() );
+	const gfx_xy_t top = std::min( this->get_top(), rhs.get_top() );
+	const gfx_xy_t right = std::max( this->get_right(), rhs.get_right() );
+	const gfx_xy_t bottom = std::max( this->get_bottom(), rhs.get_bottom() );
 
 	return gfx_rectangle( left, top, right, bottom );
 }
 
 //----------------------------------------------------------------
 
-gfx_rectangle gfx_rectangle::operator+( const gfx_point& that ) const {
-	const gfx_xy_t left = std::min( this->get_left(), that.get_x() );
-	const gfx_xy_t top = std::min( this->get_top(), that.get_y() );
-	const gfx_xy_t right = std::max( this->get_right(), that.get_x() );
-	const gfx_xy_t bottom = std::max( this->get_bottom(), that.get_y() );
+gfx_rectangle gfx_rectangle::operator+( const gfx_point& rhs ) const {
+	const gfx_xy_t left = std::min( this->get_left(), rhs.get_x() );
+	const gfx_xy_t top = std::min( this->get_top(), rhs.get_y() );
+	const gfx_xy_t right = std::max( this->get_right(), rhs.get_x() );
+	const gfx_xy_t bottom = std::max( this->get_bottom(), rhs.get_y() );
 
 	return gfx_rectangle( left, top, right, bottom );
 }
 
 //----------------------------------------------------------------
 
-std::partial_ordering gfx_rectangle::operator<=>( const gfx_rectangle& that ) const {
-	const auto left = this->get_left() <=> that.get_left();
-	const auto top = this->get_top() <=> that.get_top();
-	const auto right = this->get_right() <=> that.get_right();
-	const auto bottom = this->get_bottom() <=> that.get_bottom();
+/**
+ *	\brief < : inside, == : equal, > : outside, <> : neither
+ *	\param rhs a rectangle
+ *	\return inside, equal, ouside, neither
+ */
+std::partial_ordering gfx_rectangle::operator<=>( const gfx_rectangle& rhs ) const {
+	const auto left = this->get_left() <=> rhs.get_left();
+	const auto top = this->get_top() <=> rhs.get_top();
+	const auto right = this->get_right() <=> rhs.get_right();
+	const auto bottom = this->get_bottom() <=> rhs.get_bottom();
 
 	// ==
-	if ( (left == 0) && (top == 0) && (right == 0) && (bottom == 0) ) return std::partial_ordering::equivalent;
+	if ( is_eq( left ) && is_eq( top ) && is_eq( right ) && is_eq( bottom ) ) return std::partial_ordering::equivalent;
 	// <
-	if ( (left >= 0) && (top >= 0) && (right <= 0) && (bottom <= 0) ) return std::partial_ordering::less;
+	if ( is_gteq( left ) && is_gteq( top ) && is_lteq( right ) && is_lteq( bottom ) ) return std::partial_ordering::less;
 	// >
-	if ( (left <= 0) && (top <= 0) && (right >= 0) && (bottom >= 0) ) return std::partial_ordering::greater;
-
+	if ( is_lteq( left ) && is_lteq( top ) && is_gteq( right ) && is_gteq( bottom ) ) return std::partial_ordering::greater;
+	// <>
 	return std::partial_ordering::unordered;
 }
 
 //----------------------------------------------------------------
 
-std::weak_ordering gfx_rectangle::operator<=>( const gfx_point& that ) const {
-	const auto left = this->get_left() <=> that.get_x();
-	const auto top = this->get_top() <=> that.get_y();
-	const auto right = this->get_right() <=> that.get_x();
-	const auto bottom = this->get_bottom() <=> that.get_y();
+/**
+ *	\brief < : inside, == : equal, > : outside
+ *	\param rhs a point
+ *	\return inside, equal, ouside
+ */
+std::weak_ordering gfx_rectangle::operator<=>( const gfx_point& rhs ) const {
+	const auto left = this->get_left() <=> rhs.get_x();
+	const auto top = this->get_top() <=> rhs.get_y();
+	const auto right = this->get_right() <=> rhs.get_x();
+	const auto bottom = this->get_bottom() <=> rhs.get_y();
 
 	// ==
-	if ( (left == 0) && (top <= 0) && (right >= 0) && (bottom >= 0) ) return std::weak_ordering::equivalent;
-	if ( (left <= 0) && (top == 0) && (right >= 0) && (bottom >= 0) ) return std::weak_ordering::equivalent;
-	if ( (left <= 0) && (top <= 0) && (right == 0) && (bottom >= 0) ) return std::weak_ordering::equivalent;
-	if ( (left <= 0) && (top <= 0) && (right >= 0) && (bottom == 0) ) return std::weak_ordering::equivalent;
-	// <
-	if ( (left <= 0) && (top <= 0) && (right >= 0) && (bottom >= 0) ) return std::weak_ordering::less;
+	if ( is_eq( left ) && is_lteq( top ) && is_gteq( right ) && is_gteq( bottom ) ) return std::weak_ordering::equivalent;
+	if ( is_lteq( left ) && is_eq( top ) && is_gteq( right ) && is_gteq( bottom ) ) return std::weak_ordering::equivalent;
+	if ( is_lteq( left ) && is_lteq( top ) && is_eq( right ) && is_gteq( bottom ) ) return std::weak_ordering::equivalent;
+	if ( is_lteq( left ) && is_lteq( top ) && is_gteq( right ) && is_eq( bottom ) ) return std::weak_ordering::equivalent;
 	// >
-	if ( (left > 0) && (top > 0) && (right < 0) && (bottom < 0) ) return std::weak_ordering::greater;
+	if ( is_lteq( left ) && is_lteq( top ) && is_gteq( right ) && is_gteq( bottom ) ) return std::weak_ordering::greater;
+	// <
+	return std::weak_ordering::less;
+}
 
-	return std::weak_ordering::greater;
+//----------------------------------------------------------------
+
+/**
+ *	\brief intersection of two rectangles
+ *	\param rhs a rectangle
+ *	\return intersection rectangle
+ */
+gfx_rectangle gfx_rectangle::operator&&( const gfx_rectangle& rhs ) const {
+	const gfx_xy_t left = std::max( this->get_left(), rhs.get_left() );
+	const gfx_xy_t top = std::max( this->get_top(), rhs.get_top() );
+	const gfx_xy_t right = std::min( this->get_right(), rhs.get_right() );
+	const gfx_xy_t bottom = std::min( this->get_bottom(), rhs.get_bottom() );
+
+	if ( (left <= right) && (top <= bottom) ) {
+		return gfx_rectangle( left, top, right, bottom );
+	}
+	else {
+		return gfx_rectangle( 0, 0, 0, 0 );
+	}
+}
+
+//----------------------------------------------------------------
+
+/**
+ *	\brief union of two rectangles
+ *	\param rhs a rectangle
+ *	\return union rectangle
+ */
+gfx_rectangle gfx_rectangle::operator||( const gfx_rectangle& rhs ) const {
+	const gfx_xy_t left = std::min( this->get_left(), rhs.get_left() );
+	const gfx_xy_t top = std::min( this->get_top(), rhs.get_top() );
+	const gfx_xy_t right = std::max( this->get_right(), rhs.get_right() );
+	const gfx_xy_t bottom = std::max( this->get_bottom(), rhs.get_bottom() );
+
+	if ( (left <= right) && (top <= bottom) ) {
+		return gfx_rectangle( left, top, right, bottom );
+	}
+	else {
+		return gfx_rectangle( 0, 0, 0, 0 );
+	}
 }
 
 //----------------------------------------------------------------
 
 gfx_rectangle& gfx_rectangle::constrain( const gfx_rectangle& that ) {
-	const gfx_xy_t left = std::max( this->get_left(), that.get_left() );
-	const gfx_xy_t top = std::max( this->get_top(), that.get_top() );
-	const gfx_xy_t right = std::min( this->get_right(), that.get_right() );
-	const gfx_xy_t bottom = std::min( this->get_bottom(), that.get_bottom() );
+	const gfx_xy_t left = std::max( (*this).get_left(), that.get_left() );
+	const gfx_xy_t top = std::max( (*this).get_top(), that.get_top() );
+	const gfx_xy_t right = std::min( (*this).get_right(), that.get_right() );
+	const gfx_xy_t bottom = std::min( (*this).get_bottom(), that.get_bottom() );
 
 	if ( (left < right) && (top < bottom) ) {
 		_top_left = gfx_point( left, top );
@@ -183,34 +239,7 @@ gfx_rectangle& gfx_rectangle::constrain( const gfx_rectangle& that ) {
 		_bottom_right = gfx_point( 0, 0 );
 	}
 
-	return *this;
-}
-
-//----------------------------------------------------------------
-
-gfx_rectangle gfx_rectangle::intersect( const gfx_rectangle& that ) const {
-	const gfx_xy_t left = std::max( this->get_left(), that.get_left() );
-	const gfx_xy_t top = std::max( this->get_top(), that.get_top() );
-	const gfx_xy_t right = std::min( this->get_right(), that.get_right() );
-	const gfx_xy_t bottom = std::min( this->get_bottom(), that.get_bottom() );
-
-	if ( (left < right) && (top < bottom) ) {
-		return gfx_rectangle( left, top, right, bottom );
-	}
-	else {
-		return gfx_rectangle();
-	}
-}
-
-//----------------------------------------------------------------
-
-gfx_rectangle gfx_rectangle::join( const gfx_rectangle& that ) const {
-	const gfx_xy_t left = std::min( this->get_left(), that.get_left() );
-	const gfx_xy_t top = std::min( this->get_top(), that.get_top() );
-	const gfx_xy_t right = std::max( this->get_right(), that.get_right() );
-	const gfx_xy_t bottom = std::max( this->get_bottom(), that.get_bottom() );
-
-	return gfx_rectangle( left, top, right, bottom );
+	return (*this);
 }
 
 //----------------------------------------------------------------

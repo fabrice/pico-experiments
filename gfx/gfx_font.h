@@ -66,8 +66,12 @@ public:
 	virtual ~gfx_font() override;
 
 	inline gfx_dxy_t get_x_advance() const { return _x_advance; }
-	void set_x_advance_from_glyphs();
+	gfx_dxy_t get_x_advance_from_glyphs();
+	gfx_dxy_t get_x_advance_max() const;
 	inline gfx_dxy_t get_y_advance() const { return _y_advance; }
+
+	inline bool is_monospace() const { return _x_advance != 0; }
+	inline bool is_variable() const { return _x_advance == 0; }
 
 	inline const gfx_font_glyph_map& get_glyph_map() const { return _glyphs; }
 
@@ -92,7 +96,7 @@ public:
 		_glyphs[ character ] = glyph;
 	}
 
-	gfx_wh_t get_text_width( std::string text ) const;
+	gfx_wh_t get_text_width( const std::string_view& text ) const;
 
 };
 

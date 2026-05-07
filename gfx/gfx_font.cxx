@@ -44,35 +44,59 @@ gfx_font::~gfx_font() {
 
 //----------------------------------------------------------------
 
-void gfx_font::set_x_advance_from_glyphs() {
-	if ( _glyphs.size() > 0 ) {
-		bool equal = true;
+gfx_dxy_t gfx_font::get_x_advance_from_glyphs() {
+	if ( !_glyphs.empty() ) {
+		bool monospace = true;
 		gfx_dxy_t x_advance = _glyphs.begin()->second.get_x_advance();
 		for ( const auto& [ character, glyph ] : _glyphs ) {
 			if ( glyph.get_x_advance() != x_advance ) {
-				equal = false;
+				monospace = false;
+				x_advance = 0;
 				break;
 			}
 		}
-		_x_advance = equal ? x_advance : 0;
+
+		_x_advance = monospace ? x_advance : 0;
 	}
 	else {
 		_x_advance = 0;
 	}
+
+	return _x_advance;
 }
 
 //----------------------------------------------------------------
 
-gfx_wh_t gfx_font::get_text_width( std::string text ) const {
-	gfx_wh_t width = 0;
-	for ( const auto character : text ) {
-		if ( this->has_glyph( character ) ) {
-			const gfx_glyph& glyph = _glyphs.at( character );
-			width += glyph.get_x_advance();
+gfx_dxy_t gfx_font::get_x_advance_max() const {
+	if ( !_glyphs.empty() ) {
+		gfx_dxy_t x_advance = 0;
+		for ( const auto& [ character, glyph ] : _glyphs ) {
+			x_advance = std::max( x_advance, glyph.get_x_advance() );
 		}
+
+		return x_advance;
 	}
 
-	return width;
+	return 0;
+}
+
+//----------------------------------------------------------------
+
+gfx_wh_t gfx_font::get_text_width( const std::string_view& text ) const {
+	if ( this->is_monospace() ) {
+		return text.length() * this->get_x_advance();
+	}
+	else {
+		gfx_wh_t width = 0;
+		for ( const auto character : text ) {
+			if ( this->has_glyph( character ) ) {
+				const gfx_glyph& glyph = _glyphs.at( character );
+				width += glyph.get_x_advance();
+			}
+		}
+
+		return width;
+	}
 }
 
 //----------------------------------------------------------------
@@ -95,7 +119,7 @@ gfx_font* gfx_font::make_gfx_font_from_glyphmap( const uint8_t* glyphmap, uint8_
 		font->set_glyph( glyph );
 	}
 
-	font->set_x_advance_from_glyphs();
+	font->get_x_advance_from_glyphs();
 
 	return font;
 }
@@ -123,7 +147,7 @@ gfx_font* gfx_font::make_gfx_font_from_arduino( const arduino_gfx_font_data* ard
 		font->set_glyph( character, glyph );
 	}
 
-	font->set_x_advance_from_glyphs();
+	font->get_x_advance_from_glyphs();
 
 	return font;
 }
@@ -145,7 +169,7 @@ gfx_font* gfx_font::make_gfx_font_from_adafruit( const adafruit_gfx_font_data* a
 		font->set_glyph( character, glyph );
 	}
 
-	font->set_x_advance_from_glyphs();
+	font->get_x_advance_from_glyphs();
 
 	return font;
 }
@@ -168,19 +192,19 @@ void gfx_font::print_gfx_font_files( const gfx_font* font, const char* font_name
 
 	printf( "//----------------------------------------------------------------\n\n" );
 
-	printf( "// %s_font_data.cpp\n", font_name );
+	printf( "// %s_font_data.cxx\n", font_name );
 	printf( "const gfx_font_data %s_font_data {\n", font_name );
 	printf( ".x_advance = %d,\n", (int)font->get_x_advance() );
 	printf( ".y_advance = %d,\n", (int)font->get_y_advance() );
 	printf( ".glyphs = {\n" );
 
-	printf( "//           +-- character\n" );
-	printf( "//           |       +-- left\n" );
-	printf( "//           |       |       +-- top\n" );
-	printf( "//           |       |       |     +-- width\n" );
-	printf( "//           |       |       |     |     +-- height\n" );
-	printf( "//           |       |       |     |     |     +-- x_advance\n" );
-	printf( "//           |       |       |     |     |     |\n" );
+	printf( "//             +-- character\n" );
+	printf( "//             |       +-- left\n" );
+	printf( "//             |       |     +-- top\n" );
+	printf( "//             |       |     |     +-- width\n" );
+	printf( "//             |       |     |     |     +-- height\n" );
+	printf( "//             |       |     |     |     |     +-- x_advance\n" );
+	printf( "//             |       |     |     |     |     |\n" );
 	uint bitmap_offset = 0;
 	for ( const auto& [ character, glyph ] : font->get_glyph_map() ) {
 
@@ -192,8 +216,8 @@ void gfx_font::print_gfx_font_files( const gfx_font* font, const char* font_name
 			size_t bit_index = 0;
 			uint8_t hex = 0;
 			printf( " {" );
-			for ( uint y = 0 ; y < glyph.get_height() ; ++ y ) {
-				for ( uint x = 0 ; x < glyph.get_width() ; ++ x ) {
+			for ( gfx_xy_t y = 0 ; y < glyph.get_height() ; ++ y ) {
+				for ( gfx_xy_t x = 0 ; x < glyph.get_width() ; ++ x ) {
 					if ( bit_index % 8 == 0 ) hex = 0;
 					bool lit = glyph.get_pixel_lit( x, y );
 					hex = (hex << 1) | lit;
@@ -223,13 +247,13 @@ void gfx_font::print_gfx_font_files( const gfx_font* font, const char* font_name
 
 //----------------------------------------------------------------
 
-/**
- * print_gfx_font_array
- * @brief print a font array definition in C/C++ to be used by the display drivers
- * @param font source gfx_font to print as an array
- * @param font_name font name to print
- * @param lsb_first is the lsb the top bit ?
- */
+/*!
+	print_gfx_font_array
+	@brief print a font array definition in C/C++ to be used by the display drivers
+	@param font source gfx_font to print as an array
+	@param font_name font name to print
+	@param lsb_first is the lsb the top bit ?
+*/
 void gfx_font::print_gfx_font_array( const gfx_font* font, const char* font_name, bool lsb_first, bool invert ) {
 	const auto character_count = font->get_glyph_map().size();
 	if ( character_count == 0 ) return;
@@ -237,11 +261,12 @@ void gfx_font::print_gfx_font_array( const gfx_font* font, const char* font_name
 	printf( "const uint8_t %s_font_data[%u][5] {\n", font_name, (uint)character_count );
 
 	for ( const auto& [ character, glyph ] : font->get_glyph_map() ) {
-		printf( "\t{ " );
+		printf( "{ " );
 		for ( gfx_xy_t x = 0 ; x < std::min( glyph.get_width(), (gfx_wh_t)5 ) ; ++ x ) {
 			uint8_t byte = 0;
 			for ( gfx_xy_t y = 0 ; y < std::min( glyph.get_height(), (gfx_wh_t)8 ) ; ++ y ) {
-				const bool lit = glyph.get_pixel_lit( x, y );
+				bool lit = glyph.get_pixel_lit( x, y );
+				lit = invert ? !lit : lit;
 				if ( lit ) byte |= lsb_first ? (0b00000001 << y) : (0b10000000 >> y);
 			}
 			printf( "0x%02x , ", (uint)byte );

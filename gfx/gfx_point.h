@@ -28,6 +28,10 @@ class gfx_rectangle;
 
 class gfx_point {
 
+public:
+
+	static const gfx_point ZERO;
+
 private:
 
 	gfx_xy_t _x { 0 };
@@ -57,30 +61,30 @@ public:
 	void set_rphi( float r, float phi );
 	void set_polar( float r, float phi );
 
-	inline gfx_point& operator=( const gfx_point& that ) { _x = that._x; _y = that._y; return *this; }
+	inline gfx_point& operator=( const gfx_point& rhs ) { _x = rhs._x; _y = rhs._y; return (*this); }
 
-	gfx_rectangle operator+( const gfx_point& that ) const;
-	gfx_rectangle operator+( const gfx_rectangle& that ) const;
+	gfx_rectangle operator+( const gfx_point& rhs ) const;
+	gfx_rectangle operator+( const gfx_rectangle& rhs ) const;
 
-	std::partial_ordering operator<=>( const gfx_point& that ) const;
-	inline bool operator<( const gfx_point& that ) const { return is_lt( (*this) <=> that ); }
-	inline bool operator<=( const gfx_point& that ) const { return is_lteq( (*this) <=> that ); }
-	inline bool operator>=( const gfx_point& that ) const { return is_gteq( (*this) <=> that ); }
-	inline bool operator>( const gfx_point& that ) const { return is_gt( (*this) <=> that ); }
+	std::partial_ordering operator<=>( const gfx_point& rhs ) const;
+	inline bool operator<( const gfx_point& rhs ) const { return is_lt( (*this) <=> rhs ); }
+	inline bool operator<=( const gfx_point& rhs ) const { return is_lteq( (*this) <=> rhs ); }
+	inline bool operator==( const gfx_point& rhs ) const { return is_eq( (*this) <=> rhs ); }
+	inline bool operator>=( const gfx_point& rhs ) const { return is_gteq( (*this) <=> rhs ); }
+	inline bool operator>( const gfx_point& rhs ) const { return is_gt( (*this) <=> rhs ); }
 
-	inline bool is_null() const { return (_x == 0) && (_y == 0); }
+	std::weak_ordering operator<=>( const gfx_rectangle& rhs ) const;
+	inline bool operator<( const gfx_rectangle& rhs ) const { return is_lt( (*this) <=> rhs ); }
+	inline bool operator<=( const gfx_rectangle& rhs ) const { return is_lteq( (*this) <=> rhs ); }
+	inline bool operator==( const gfx_rectangle& rhs ) const { return is_eq( (*this) <=> rhs ); }
+	inline bool operator>=( const gfx_rectangle& rhs ) const { return is_gteq( (*this) <=> rhs ); }
+	inline bool operator>( const gfx_rectangle& rhs ) const { return is_gt( (*this) <=> rhs ); }
 
-	inline gfx_xy_t get_line( gfx_xy_t line_height ) const {
-		return _y / line_height;
-	}
+	inline bool is_zero() const { return (_x == 0) && (_y == 0); }
 
-	inline gfx_xy_t get_column( gfx_xy_t column_width ) const {
-		return _x / column_width;
-	}
-
-	gfx_point get_lico( gfx_xy_t line_height, gfx_xy_t column_width ) const {
-		return gfx_point( this->get_line( line_height ), this->get_column( column_width ) );
-	}
+	inline gfx_xy_t get_line( gfx_xy_t line_height ) const { return _y / line_height; }
+	inline gfx_xy_t get_column( gfx_xy_t column_width ) const { return _x / column_width; }
+	gfx_point get_lico( gfx_xy_t line_height, gfx_xy_t column_width ) const { return gfx_point( _x / column_width, _y / line_height ); }
 
 };
 

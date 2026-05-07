@@ -4,20 +4,18 @@
 // Target : PicoSDK C/C++
 // CFPT Électronique
 //
-// gfx_canvas
+//! @file gfx_canvas.cxx
 //
 //----------------------------------------------------------------
 
 #include "pico/stdlib.h"
 
 #include "gfx_types.h"
+#include "gfx_geometry.h"
 #include "gfx_canvas.h"
 #include "gfx_image.h"
 #include "gfx_bitmap.h"
 #include "gfx_pixmap.h"
-
-
-#include "math_plus.h"
 
 #include <algorithm>
 
@@ -62,39 +60,118 @@ gfx_canvas::~gfx_canvas() {
 
 //----------------------------------------------------------------
 
+void gfx_canvas::set_spot( const gfx_point& xy ) {
+	if ( xy > this->get_box() ) return;
+
+	if ( xy <= this->get_box() ) {
+		_spot = xy;
+	}
+	else {
+		_spot.set_xy( 0, 0 );
+	}
+}
+
+//----------------------------------------------------------------
+
 void gfx_canvas::set_spot( gfx_xy_t x, gfx_xy_t y ) {
-	_spot.set_xy( x, y );
+	if ( gfx_point( x, y ) <= this->get_box() ) {
+		_spot.set_xy( x, y );
+	}
+	else {
+		_spot.set_xy( 0, 0 );
+	}
 }
 
 //----------------------------------------------------------------
 
 void gfx_canvas::move_spot_by( gfx_dxy_t dx, gfx_dxy_t dy ) {
-	_spot.set_xy( _spot.get_x() + dx, _spot.get_y() + dy );
+	const gfx_point xy { static_cast< gfx_xy_t >( _spot.get_x() + dx ), static_cast< gfx_xy_t >( _spot.get_y() + dy ) };
+	if ( xy > this->get_box() ) return;
+
+	_spot = xy;
+}
+
+//----------------------------------------------------------------
+
+gfx_wh_t gfx_canvas::get_lico_width() const {
+	if ( _font == nullptr ) return 0;
+
+	if ( _font->is_monospace() ) {
+		const auto column_width = _font->get_x_advance();
+		const auto column_count = this->get_width() / column_width;
+
+		return column_count;
+	}
+	else {
+		const auto column_width = _font->get_x_advance_max();
+		const auto column_count = this->get_width() / column_width;
+
+		return column_count;
+	}
+}
+
+//----------------------------------------------------------------
+
+gfx_wh_t gfx_canvas::get_lico_height() const {
+	if ( _font == nullptr ) return 0;
+
+	const auto line_height = _font->get_y_advance();
+	const auto line_count = this->get_height() / line_height;
+
+	return line_count;
+}
+
+//----------------------------------------------------------------
+
+void gfx_canvas::set_lico( const gfx_point& xy ) {
+	this->set_lico( xy.get_x(), xy.get_y() );
 }
 
 //----------------------------------------------------------------
 
 void gfx_canvas::set_lico( gfx_xy_t line, gfx_xy_t column ) {
-	_lico.set_xy( line, column );
+	if ( _font != nullptr ) {
+		if ( line > this->get_lico_height() ) line = 0;
+		if ( column > this->get_lico_width() ) column = 0;
+
+		_lico.set_xy( line, column );
+
+		const auto x = column * this->get_width();
+		const auto x_offset = (this->get_width() - x) / 2;
+		const auto y = line * this->get_height();
+		const auto y_offset = (this->get_height() - y) / 2;
+		this->set_spot( x + x_offset, y + y_offset );
+	}
+	else {
+		_lico.set_xy( 0, 0 );
+	}
 }
 
 //----------------------------------------------------------------
 
 void gfx_canvas::move_lico_by( gfx_dxy_t dline, gfx_dxy_t dcolumn ) {
-	_lico.set_xy( _lico.get_x() + dline, _lico.get_y() + dcolumn );
+	if ( _font == nullptr ) return;
+
+	gfx_dxy_t line = _lico.get_y() + dline;
+	if ( line < 0 ) line = 0;
+	gfx_dxy_t column = _lico.get_x() + dcolumn;
+	if ( column < 0 ) column = 0;
+
+	this->set_lico( line, column );
 }
 
 //----------------------------------------------------------------
 
-void gfx_canvas::set_font( gfx_font_ptr font ) {
+void gfx_canvas::set_font( gfx_font* font ) {
 	if ( font != nullptr ) font->retain();
 	if ( _font != nullptr ) _font->release();
 	_font = font;
+	this->set_lico( _lico );
 }
 
 //----------------------------------------------------------------
 
-void gfx_canvas::print( std::string text ) {
+void gfx_canvas::print( std::string_view text ) {
 	if ( _font == nullptr ) return;
 
 	for ( auto character : text ) {
@@ -107,7 +184,7 @@ void gfx_canvas::print( std::string text ) {
 
 //----------------------------------------------------------------
 
-void gfx_canvas::print_center( std::string text ) {
+void gfx_canvas::print_center( std::string_view text ) {
 	if ( _font == nullptr ) return;
 
 	gfx_wh_t width = _font->get_text_width( text );
@@ -150,13 +227,6 @@ void gfx_canvas::draw_point( gfx_xy_t x, gfx_xy_t y ) {
 
 void gfx_canvas::draw_point( gfx_point point ) {
 	_image->set_pixel( point.get_x(), point.get_y(), _foreground_color );
-}
-
-//----------------------------------------------------------------
-
-void gfx_canvas::draw_line_to( gfx_xy_t x, gfx_xy_t y ) {
-	this->draw_line( _spot.get_x(), _spot.get_y(), x, y );
-	_spot.set_xy( x, y );
 }
 
 //----------------------------------------------------------------
@@ -219,6 +289,25 @@ void gfx_canvas::draw_vline( gfx_xy_t x, gfx_xy_t y1, gfx_xy_t y2 ) {
 	for ( gfx_xy_t y = std::min( y1, y2 ) ; y <= max_y ; ++ y ) {
 		this->draw_point( x, y );
 	}
+}
+
+//----------------------------------------------------------------
+
+void gfx_canvas::draw_line_to( gfx_xy_t x, gfx_xy_t y ) {
+	this->draw_line( _spot.get_x(), _spot.get_y(), x, y );
+	_spot.set_xy( x, y );
+}
+
+//----------------------------------------------------------------
+
+void gfx_canvas::draw_line_to_polar( float distance, float angle ) {
+	float dx = distance * std::cos( angle );
+	float dy = distance * std::sin( angle );
+
+	gfx_xy_t x = _spot.get_x() + static_cast< gfx_dxy_t >( dx );
+	gfx_xy_t y = _spot.get_y() + static_cast< gfx_dxy_t >( dy );
+
+	this->draw_line_to( x, y );
 }
 
 //----------------------------------------------------------------
@@ -301,7 +390,7 @@ void gfx_canvas::draw_circle( gfx_xy_t x, gfx_xy_t y, gfx_xy_t r ) const {
 
 //----------------------------------------------------------------
 
-void gfx_canvas::draw_circle( gfx_point center, gfx_xy_t r ) const {
+void gfx_canvas::draw_circle( const gfx_point& center, gfx_xy_t r ) const {
 	this->draw_circle( center.get_x(), center.get_y(), r );
 }
 
@@ -337,6 +426,41 @@ void gfx_canvas::draw_circle( gfx_xy_t x, gfx_xy_t y, gfx_xy_t r, uint8_t quadra
 			_image->set_pixel( x - iy, y - ix, _foreground_color );
 		}
 
+		if ( err < 0 ) {
+			err += 2 * ix + 1;
+			++ ix;
+		}
+		else {
+			err += 2 * (ix - iy) + 1;
+			++ ix;
+			-- iy;
+		}
+	}
+}
+
+//----------------------------------------------------------------
+
+void gfx_canvas::fill_circle( gfx_xy_t x, gfx_xy_t y, gfx_xy_t r ) {
+	gfx_xy_t ix = 0;
+	gfx_xy_t iy = r;
+	gfx_dxy_t err = 1 - r;
+
+	while ( ix < iy ) {
+		// quadrant 1
+		this->draw_hline( x, x + ix, y - iy );
+		this->draw_hline( x, x + iy, y - ix );
+
+		// quadrant 2
+		this->draw_hline( x, x + ix, y + iy );
+		this->draw_hline( x, x + iy, y + ix );
+
+		// quadrant 3
+		this->draw_hline( x - ix, x, y + iy );
+		this->draw_hline( x - iy, x, y + ix );
+
+		// quadrant 4
+		this->draw_hline( x - ix, x, y - iy );
+		this->draw_hline( x - iy, x, y - ix );
 
 		if ( err < 0 ) {
 			err += 2 * ix + 1;
@@ -382,7 +506,6 @@ void gfx_canvas::fill_circle( gfx_xy_t x, gfx_xy_t y, gfx_xy_t r, uint8_t quadra
 			this->draw_hline( x - iy, x, y - ix );
 		}
 
-
 		if ( err < 0 ) {
 			err += 2 * ix + 1;
 			++ ix;
@@ -393,6 +516,37 @@ void gfx_canvas::fill_circle( gfx_xy_t x, gfx_xy_t y, gfx_xy_t r, uint8_t quadra
 			-- iy;
 		}
 	}
+}
+
+//----------------------------------------------------------------
+
+void gfx_canvas::draw_round_rectangle( gfx_rectangle rectangle, gfx_xy_t radius ) {
+	if ( radius > rectangle.get_width() / 2 ) return;
+	if ( radius > rectangle.get_height() / 2 ) return;
+
+	this->draw_hline( rectangle.get_left() + radius, rectangle.get_right() - radius, rectangle.get_top() ); // top
+	this->draw_circle( rectangle.get_right() - radius, rectangle.get_top() + radius, radius, 0b0001 );
+	this->draw_vline( rectangle.get_left(), rectangle.get_top() + radius, rectangle.get_bottom() - radius ); // left
+	this->draw_circle( rectangle.get_right() - radius, rectangle.get_bottom() - radius, radius, 0b0010 );
+	this->draw_vline( rectangle.get_right(), rectangle.get_top() + radius, rectangle.get_bottom() - radius ); // right
+	this->draw_circle( rectangle.get_left() + radius, rectangle.get_bottom() - radius, radius, 0b0100 );
+	this->draw_hline( rectangle.get_left() + radius, rectangle.get_right() - radius, rectangle.get_bottom() ); // bottom
+	this->draw_circle( rectangle.get_left() + radius, rectangle.get_top() + radius, radius, 0b1000 );
+}
+
+//----------------------------------------------------------------
+
+void gfx_canvas::fill_round_rectangle( gfx_rectangle rectangle, gfx_xy_t radius ) {
+	if ( radius > rectangle.get_width() / 2 ) return;
+	if ( radius > rectangle.get_height() / 2 ) return;
+
+	this->fill_rectangle( rectangle.get_left() + radius, rectangle.get_top(), rectangle.get_right() - radius, rectangle.get_top() + radius );
+	this->fill_circle( rectangle.get_left() + radius, rectangle.get_top() + radius, radius, 0b1000 );
+	this->fill_circle( rectangle.get_right() - radius, rectangle.get_top() + radius, radius, 0b0001 );
+	this->fill_rectangle( rectangle.get_left(), rectangle.get_top() + radius, rectangle.get_right(), rectangle.get_bottom() - radius );
+	this->fill_rectangle( rectangle.get_left() + radius, rectangle.get_bottom() - radius, rectangle.get_right() - radius, rectangle.get_bottom() );
+	this->fill_circle( rectangle.get_left() + radius, rectangle.get_bottom() - radius, radius, 0b0100 );
+	this->fill_circle( rectangle.get_right() - radius, rectangle.get_bottom() - radius, radius, 0b0010 );
 }
 
 //----------------------------------------------------------------
