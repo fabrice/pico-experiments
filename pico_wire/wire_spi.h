@@ -21,9 +21,7 @@
 
 //----------------------------------------------------------------
 
-
-
-using spi_ptr = spi_inst_t*;
+using pico_spi_ptr = spi_inst_t*;
 
 //----------------------------------------------------------------
 
@@ -31,7 +29,7 @@ class wire_spi : public virtual wire {
 
 private:
 
-	spi_ptr _spi_instance { nullptr };
+	pico_spi_ptr _spi_instance { nullptr };
 	uint _chip_select_gpio { 255 };
 
 public:
@@ -39,7 +37,13 @@ public:
 	static wire_spi* make( uint spi_num, uint chip_select_gpio );
 
 	wire_spi() = delete;
+
+private:
+
 	wire_spi( uint spi_num, uint chip_select_gpio );
+
+public:
+
 	virtual ~wire_spi() override;
 
 	void io_init( uint sclk_gpio, uint miso_gpio, uint mosi_gpio, uint bitrate );

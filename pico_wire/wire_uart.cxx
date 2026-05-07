@@ -14,7 +14,7 @@
 //----------------------------------------------------------------
 
 wire_uart::wire_uart( uint uart_num ):
-	_uart_instance { nullptr } {
+		_uart_instance { nullptr } {
 
 	_uart_instance = uart_get_instance( uart_num );
 }

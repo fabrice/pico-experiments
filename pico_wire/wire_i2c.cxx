@@ -23,16 +23,25 @@ wire_i2c* wire_i2c::make( uint i2c_num, uint8_t address ) {
 //----------------------------------------------------------------
 
 wire_i2c::wire_i2c( uint i2c_num, uint8_t address ):
-	_i2c_instance { nullptr },
-	_address { address },
-	_transaction { false } {
+		_i2c_instance { nullptr },
+		_address { address },
+		_transaction { false } {
 
 	_i2c_instance = i2c_get_instance( i2c_num );
 }
 
 //----------------------------------------------------------------
 
+wire_i2c::wire_i2c( pico_i2c_ptr i2c_instance, uint8_t address ):
+		_i2c_instance { i2c_instance },
+		_address { address },
+		_transaction { false } {
+}
+
+//----------------------------------------------------------------
+
 wire_i2c::~wire_i2c() {
+	this->finish_transaction();
 	//i2c_deinit( _i2c_instance );
 }
 
@@ -71,7 +80,7 @@ int wire_i2c::read_bytes( uint8_t* bytes, size_t* length ) {
 
 //----------------------------------------------------------------
 
-void wire_i2c::continue_transaction() {
+void wire_i2c::follow_transaction() {
 	_transaction = false;
 }
 

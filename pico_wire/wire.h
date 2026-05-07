@@ -15,6 +15,8 @@
 
 #include "pico/stdlib.h"
 
+#include <vector>
+
 //----------------------------------------------------------------
 
 class wire {
@@ -34,6 +36,8 @@ public:
 
 	virtual int write_bytes( const uint8_t* bytes, size_t length ) = 0;
 
+	virtual int write_bytes( const std::vector< uint8_t > bytes );
+
 	virtual int write_bytes( uint8_t byte1 );
 	virtual int write_bytes( uint8_t byte1, uint8_t byte2 );
 	virtual int write_bytes( uint8_t byte1, uint8_t byte2, uint8_t byte3 );
@@ -42,7 +46,7 @@ public:
 
 	virtual int read_bytes( uint8_t* bytes, size_t* length ) = 0;
 
-	virtual void continue_transaction();
+	virtual void follow_transaction();
 	virtual void finish_transaction();
 	virtual void finish_communication();
 

@@ -22,8 +22,8 @@ wire_spi* wire_spi::make( uint spi_num, uint chip_select_gpio ) {
 //----------------------------------------------------------------
 
 wire_spi::wire_spi( uint spi_num, uint chip_select_gpio ):
-	_spi_instance { nullptr },
-	_chip_select_gpio { chip_select_gpio } {
+		_spi_instance { nullptr },
+		_chip_select_gpio { chip_select_gpio } {
 
 	_spi_instance = spi_get_instance( spi_num );
 
@@ -35,6 +35,7 @@ wire_spi::wire_spi( uint spi_num, uint chip_select_gpio ):
 //----------------------------------------------------------------
 
 wire_spi::~wire_spi() {
+	this->finish_communication();
 	gpio_put( _chip_select_gpio, false );
 	gpio_deinit( _chip_select_gpio );
 }

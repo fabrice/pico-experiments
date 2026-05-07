@@ -21,9 +21,7 @@
 
 //----------------------------------------------------------------
 
-
-
-using i2c_ptr = i2c_inst_t*;
+using pico_i2c_ptr = i2c_inst_t*;
 
 //----------------------------------------------------------------
 
@@ -31,7 +29,7 @@ class wire_i2c : public virtual wire {
 
 private:
 
-	i2c_ptr _i2c_instance { nullptr };
+	pico_i2c_ptr _i2c_instance { nullptr };
 	uint8_t _address { 0x00 };
 	bool _transaction { false };
 
@@ -40,7 +38,14 @@ public:
 	static wire_i2c* make( uint i2c_num, uint8_t address );
 
 	wire_i2c() = delete;
+
+private:
+
 	wire_i2c( uint i2c_num, uint8_t address );
+	wire_i2c( pico_i2c_ptr i2c_instance, uint8_t address );
+
+public:
+
 	virtual ~wire_i2c() override;
 
 	virtual void start_transaction() override;
@@ -53,7 +58,7 @@ public:
 
 	virtual int read_bytes( uint8_t* bytes, size_t* length ) override;
 
-	virtual void continue_transaction() override;
+	virtual void follow_transaction() override;
 	virtual void finish_transaction() override;
 
 };

@@ -25,6 +25,12 @@ void wire::start_transaction() {
 
 //----------------------------------------------------------------
 
+int wire::write_bytes( const std::vector< uint8_t > bytes ) {
+	return this->write_bytes( bytes.data(), bytes.size() );
+}
+
+//----------------------------------------------------------------
+
 int wire::write_bytes( uint8_t byte1 ) {
 	return this->write_bytes( &byte1, sizeof(byte1) );
 }
@@ -59,7 +65,7 @@ int wire::write_bytes( uint8_t byte1, uint8_t byte2, uint8_t byte3, uint8_t byte
 
 //----------------------------------------------------------------
 
-void wire::continue_transaction() {
+void wire::follow_transaction() {
 }
 
 //----------------------------------------------------------------

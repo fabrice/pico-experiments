@@ -19,9 +19,7 @@
 
 //----------------------------------------------------------------
 
-
-
-using uart_ptr = uart_inst_t*;
+using pico_uart_ptr = uart_inst_t*;
 
 //----------------------------------------------------------------
 
@@ -29,7 +27,7 @@ class wire_uart : public virtual wire {
 
 private:
 
-	uart_ptr _uart_instance { nullptr };
+	pico_uart_ptr _uart_instance { nullptr };
 
 public:
 
