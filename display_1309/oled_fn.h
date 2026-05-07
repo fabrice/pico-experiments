@@ -27,12 +27,16 @@ class OLED;
 OLED* oled_init( uint8_t i2c_num, uint8_t address, uint reset_gpio );
 
 //----------------------------------------------------------------
+// properties
 
 uint16_t oled_get_width( const OLED* oled );
 uint16_t oled_get_height( const OLED* oled );
 
 uint16_t oled_get_column_count( const OLED* oled );
 uint16_t oled_get_line_count( const OLED* oled );
+
+//----------------------------------------------------------------
+// configuration
 
 void oled_set_on( OLED* oled, bool on );
 void oled_set_orientation( OLED* oled, uint8_t orientation );
@@ -42,8 +46,12 @@ void oled_set_brightness_db( OLED* oled, float brightness_db );
 
 void oled_set_lico( OLED* oled, uint8_t line, uint8_t column );
 
+//----------------------------------------------------------------
+// text
+
 void oled_print( OLED* oled, const char* text );
 void oled_print( OLED* oled, const char* text, uint8_t line, uint8_t column );
+
 void oled_print_left( OLED* oled, const char* text, uint8_t line );
 void oled_print_center( OLED* oled, const char* text, uint8_t line );
 void oled_print_right( OLED* oled, const char* text, uint8_t line );
@@ -55,13 +63,19 @@ void oled_print( OLED* oled, char character, uint8_t line, uint8_t column );
 
 void oled_print_glyph( OLED* oled, const uint8_t glyph[6] );
 
+//----------------------------------------------------------------
+// graphics
+
 /**
  * oled_draw_yx_bytemap
- * \param oled display instance
- * \param yx_bytemap byte array, vertical, lsb first
+ * \param that display instance
+ * \param yx_bytemap byte array, vertical bytes, lsb first (on top)
  * \param length must be 1024 bytes
  */
 void oled_draw_yx_bytemap( OLED* oled, const uint8_t* yx_bytemap, uint16_t length );
+
+//----------------------------------------------------------------
+// finishes
 
 void oled_erase( OLED* oled );
 void oled_erase_line( OLED* oled, uint8_t line );

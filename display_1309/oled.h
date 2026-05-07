@@ -72,6 +72,8 @@ private:
 
 public:
 
+	// properties
+
 	wire* get_wire() const { return _wire; }
 
 	uint16_t get_width() const { return _width; }
@@ -81,6 +83,8 @@ public:
 	uint16_t get_columns_offset() const { return (_width % 6) / 2; }
 	uint16_t get_line_count() const { return _height / 8; }
 	uint16_t get_lines_offset() const { return (_height % 8) / 2; }
+
+	// configuration
 
 	void set_on( bool on );
 	void set_orientation( uint8_t orientation );
@@ -92,8 +96,11 @@ public:
 
 	void draw_logo();
 
+	// text
+
 	void print( const char* text );
 	void print( const char* text, uint8_t line, uint8_t column );
+
 	void print_left( const char* text, uint8_t line );
 	void print_center( const char* text, uint8_t line );
 	void print_right( const char* text, uint8_t line );
@@ -104,12 +111,17 @@ public:
 
 	void print( char character );
 	void print( char character, uint8_t line, uint8_t column );
+
 	void print_glyph( const uint8_t glyph[6] );
 	void print_glyph( const std::array< uint8_t, 6 > glyph );
+
+	// images
 
 	void draw_yx_bytemap( const std::array< uint8_t, 1024 >& yx_bytemap );
 	void draw_yx_bytemap( const uint8_t* yx_bytemap, size_t length );
 	void draw_xy_bitmap( const uint8_t* xy_bytemap, size_t length );
+
+	// finishes
 
 	void erase();
 	void erase( uint8_t line );

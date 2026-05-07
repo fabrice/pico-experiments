@@ -20,7 +20,7 @@
 
 //----------------------------------------------------------------
 
-constexpr uint8_t EE24LC02B_ADDRESS { 0x50 };
+constexpr uint8_t EE24LC02B_ADDRESS { 0x50 }; // 0xa0 >> 1
 
 constexpr uint16_t EE24LC02B_MEMORY_SIZE { 256 };
 constexpr uint8_t EE24LC02B_PAGE_SIZE { 8 };

@@ -36,16 +36,20 @@ private:
 	uint _reset_gpio { 255 };
 	uint _dc_gpio { 255 };
 	uint _backlight_gpio { 255 };
-	uint8_t _offset { 0 };
+
 	uint16_t _width { ST7735_TFTWIDTH };
 	uint16_t _height { ST7735_TFTHEIGHT };
+
 	uint8_t _brightness { 0x40 };
+
+	const uint8_t* _font { nullptr };
 	uint16_t _foreground_color { 0xffff };
 	uint16_t _background_color { 0x0000 };
+
 	uint8_t _line { 0 };
 	uint8_t _column { 0 };
-	const uint8_t* _font { nullptr };
-	uint8_t _color_mode { 0x00 };
+
+	uint8_t _color_mode { 0 };
 
 private:
 
@@ -67,6 +71,8 @@ private:
 public:
 
 	void reset();
+
+	// properties
 
 	inline uint16_t get_width() const { return _width; }
 	inline uint16_t get_height() const { return _height; }
@@ -93,6 +99,8 @@ public:
 
 	void set_lico( uint8_t line, uint8_t column );
 
+	// text
+
 	void print( int16_t x, int16_t y, char character );
 	void print( int16_t x, int16_t y, const char* text );
 	void print_left( const char* text, uint8_t line );
@@ -106,6 +114,10 @@ public:
 
 	void printf( const char* format, ... );
 	void vprintf( const char* format, va_list arg );
+
+	// graphics
+
+	void draw_pixel( int16_t x, int16_t y, uint16_t color );
 
 	void erase();
 	void erase( uint8_t line );
