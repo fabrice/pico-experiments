@@ -53,7 +53,9 @@ private:
 
 public:
 
-	display_7735( wire* wire, uint reset_gpio, uint dc_gpio, uint backlight_gpio, uint8_t offset = 0, bool bgr = false );
+	static display_7735* make( wire* wire, uint reset_gpio, uint dc_gpio, uint backlight_gpio );
+
+	display_7735( wire* wire, uint reset_gpio, uint dc_gpio, uint backlight_gpio, bool bgr = false );
 	~display_7735();
 
 private:

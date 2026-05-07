@@ -13,6 +13,15 @@
 
 //----------------------------------------------------------------
 
+wire_i2c* wire_i2c::make( uint i2c_num, uint8_t address ) {
+	auto i2c_instance = i2c_get_instance( i2c_num );
+	auto wire = new wire_i2c( i2c_instance, address );
+
+	return wire;
+}
+
+//----------------------------------------------------------------
+
 wire_i2c::wire_i2c( uint i2c_num, uint8_t address ):
 	_i2c_instance { nullptr },
 	_address { address },

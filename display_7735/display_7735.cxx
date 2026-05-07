@@ -81,6 +81,14 @@ constexpr uint8_t DELAY_FLAG { 0x80 };
 
 //----------------------------------------------------------------
 
+display_7735* display_7735::make( wire* wire, uint reset_gpio, uint dc_gpio, uint backlight_gpio ) {
+	auto that = new display_7735( wire, reset_gpio, dc_gpio, backlight_gpio );
+
+	return that;
+}
+
+//----------------------------------------------------------------
+
 display_7735::display_7735( wire* wire, uint reset_gpio, uint dc_gpio, uint backlight_gpio, uint8_t offset, bool bgr ):
 	_wire( wire ),
 	_reset_gpio( reset_gpio ),

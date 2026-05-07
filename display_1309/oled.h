@@ -57,8 +57,9 @@ private:
 
 public:
 
-	static OLED* make( uint8_t i2c_num, uint reset_gpio );
-	static OLED* make( uint8_t i2c_num, uint8_t address, uint reset_gpio );
+	static OLED* make( uint i2c_num, uint reset_gpio );
+	static OLED* make( uint i2c_num, uint8_t address, uint reset_gpio );
+	static OLED* make( wire* wire, uint reset_gpio );
 
 	OLED() = delete;
 	OLED( wire* wire, uint reset_gpio );

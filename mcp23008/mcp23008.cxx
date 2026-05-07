@@ -30,6 +30,15 @@ constexpr uint8_t MCP23008_OLAT { 0x0a };
 
 //----------------------------------------------------------------
 
+mcp23008* make( uint i2c_num, uint8_t address, uint8_t gpio_dir, uint8_t gpio_pull_up ) {
+	auto wire = wire_i2c::make( i2c_num, address );
+	auto that = new mcp23008( wire, gpio_dir, gpio_pull_up );
+
+	return that;
+}
+
+//----------------------------------------------------------------
+
 mcp23008::mcp23008( wire* wire, uint8_t gpio_dir, uint8_t gpio_pull_up ):
 	_wire { wire },
 	_address { MCP23008_ADDRESS },

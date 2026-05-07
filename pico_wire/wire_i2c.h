@@ -37,6 +37,8 @@ private:
 
 public:
 
+	static wire_i2c* make( uint i2c_num, uint8_t address );
+
 	wire_i2c() = delete;
 	wire_i2c( uint i2c_num, uint8_t address );
 	virtual ~wire_i2c() override;

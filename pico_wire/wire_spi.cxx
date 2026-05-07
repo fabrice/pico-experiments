@@ -13,6 +13,14 @@
 
 //----------------------------------------------------------------
 
+wire_spi* wire_spi::make( uint spi_num, uint chip_select_gpio ) {
+	auto wire = new wire_spi( spi_num, chip_select_gpio );
+
+	return wire;
+}
+
+//----------------------------------------------------------------
+
 wire_spi::wire_spi( uint spi_num, uint chip_select_gpio ):
 	_spi_instance { nullptr },
 	_chip_select_gpio { chip_select_gpio } {

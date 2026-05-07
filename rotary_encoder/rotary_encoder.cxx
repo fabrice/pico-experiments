@@ -19,6 +19,12 @@
 
 //----------------------------------------------------------------
 
+rotary_encoder* rotary_encoder::make( uint a_gpio, uint b_gpio, uint s_gpio ) {
+	return new rotary_encoder( a_gpio, b_gpio, s_gpio );
+}
+
+//----------------------------------------------------------------
+
 rotary_encoder::rotary_encoder( uint a_gpio, uint b_gpio, uint s_gpio ):
 	_a_gpio { a_gpio },
 	_b_gpio { b_gpio },

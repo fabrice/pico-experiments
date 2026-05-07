@@ -36,6 +36,8 @@ private:
 
 public:
 
+	static wire_spi* make( uint spi_num, uint chip_select_gpio );
+
 	wire_spi() = delete;
 	wire_spi( uint spi_num, uint chip_select_gpio );
 	virtual ~wire_spi() override;

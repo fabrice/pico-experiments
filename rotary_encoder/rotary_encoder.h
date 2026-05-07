@@ -43,6 +43,8 @@ private:
 
 public:
 
+	static rotary_encoder* make( uint a_gpio, uint b_gpio, uint s_gpio );
+
 	rotary_encoder() = delete;
 	rotary_encoder( uint a_gpio, uint b_gpio, uint s_gpio );
 	~rotary_encoder();

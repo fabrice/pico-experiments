@@ -36,6 +36,8 @@ private:
 
 public:
 
+	static mcp23008* make( uint i2c_num, uint8_t address, uint8_t gpio_dir, uint8_t gpio_pull_up );
+
 	mcp23008() = delete;
 	mcp23008( wire* wire, uint8_t gpio_dir, uint8_t gpio_pull_up );
 

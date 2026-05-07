@@ -31,6 +31,8 @@ private:
 
 public:
 
+	static mcp41xxx* make( uint spi_num, uint chip_select_gpio );
+
 	mcp41xxx() = delete;
 	mcp41xxx( wire* wire );
 	~mcp41xxx();

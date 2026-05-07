@@ -29,6 +29,15 @@ constexpr uint8_t MCP41_SHUTDOWN_POT11 { MCP41_SHUTDOWN | MCP41_POT11 };
 
 //----------------------------------------------------------------
 
+mcp41xxx* mcp41xxx::make( uint spi_num, uint chip_select_gpio ) {
+	auto wire = wire_spi::make( spi_num, chip_select_gpio );
+	auto that = new mcp41xxx( wire );
+
+	return that;
+}
+
+//----------------------------------------------------------------
+
 mcp41xxx::mcp41xxx( wire* wire ):
 	_wire { wire },
 	_step_p01 { 0x80 },
