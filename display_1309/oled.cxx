@@ -45,7 +45,7 @@ constexpr uint8_t DISPLAY_ON { 0xa4 }; // on following memory
 constexpr uint8_t DISPLAY_ON_NO_RAM { 0xa5 }; // on ignoring memory
 
 constexpr uint8_t DISPLAY_ACTIVE_HIGH { 0xa6 };
-constexpr uint8_t DISPLAY_ACTIVE_LOW { 0xa7};
+constexpr uint8_t DISPLAY_ACTIVE_LOW { 0xa7 };
 
 constexpr uint8_t SET_DISPLAY_OFF { 0xae }; // sleep
 constexpr uint8_t SET_DISPLAY_ON { 0xaf };
@@ -176,8 +176,8 @@ void OLED::display_init() {
 
 	_wire->write_bytes( WRITE_COMMAND, SET_DISPLAY_CLOCK, 0x70 ); // reset
 	_wire->write_bytes( WRITE_COMMAND, SET_PRECHARGE_PERIOD, 0x22 ); // reset
-//	_wire_i2c->write_bytes( WRITE_COMMAND, SET_COM_PINS, 0x12 );
-//	_wire_i2c->write_bytes( WRITE_COMMAND, SET_VCOMH_DESELECT_LEVEL, 0x40 );
+//	_wire->write_bytes( WRITE_COMMAND, SET_COM_PINS, 0x12 );
+//	_wire->write_bytes( WRITE_COMMAND, SET_VCOMH_DESELECT_LEVEL, 0x40 );
 
 	_wire->finish_communication();
 }
@@ -235,7 +235,7 @@ void OLED::set_brightness( uint8_t brightness ) {
 
 /*! OLED::set_brightness_db()
  * \brief règle la luminosité en dB.
- * \param brightness_db luminosité, 0 dB : 255, -6 dB : 127, -20 dB : 25, -48 : 1
+ * \param brightness_db luminosité, 0 dB : 255, -6 dB : 127, -20 dB : 25, -48 dB : 1
  */
 void OLED::set_brightness_db( float brightness_db ) {
 	float brightness = std::pow( 10.0f, brightness_db / 20.0f ) * 255.0f;
@@ -252,8 +252,8 @@ void OLED::draw_logo() {
 //----------------------------------------------------------------
 
 void OLED::set_lico( uint8_t line, uint8_t column ) {
-	_line = line < this->get_line_count() ? line : (uint8_t)this->get_line_count() - 1;
-	_column = _column < this->get_column_count() ? column : (uint8_t)this->get_column_count() - 1;
+	_line = line < this->get_line_count() ? line : 0;
+	_column = _column < this->get_column_count() ? column : 0;
 
 	uint16_t x = _column * 6 + this->get_columns_offset();
 
@@ -273,7 +273,7 @@ void OLED::print( const char* text ) {
 	if ( text_length == 0 ) return;
 
 	const uint16_t width = text_length * 6;
-	uint8_t buffer[ width + 1 ] {};
+	uint8_t buffer[ width + 1 ] { 0 };
 	buffer[ 0 ] = WRITE_DATA;
 
 	uint16_t x = 1;
@@ -388,7 +388,7 @@ void OLED::printf( const char* format, ... ) {
 //----------------------------------------------------------------
 
 void OLED::vprintf( const char* format, va_list args ) {
-	char text[22] {};
+	char text[22] { 0 };
 	vsnprintf( text, 22, format, args );
 	text[ 21 ] = 0;
 	this->print( text );
@@ -399,7 +399,7 @@ void OLED::vprintf( const char* format, va_list args ) {
 void OLED::print( char character ) {
 	if ( _font == nullptr ) return;
 
-	uint8_t buffer[7] {};
+	uint8_t buffer[7] { 0 };
 	buffer[0] = WRITE_DATA;
 	uint16_t index = character * 5;
 	std::copy_n( &_font[ index ], 5, buffer + 1 );
@@ -424,7 +424,7 @@ void OLED::print( char character, uint8_t line, uint8_t column ) {
 void OLED::print_glyph( const uint8_t glyph[6] ) {
 	if ( glyph == nullptr ) return;
 
-	uint8_t buffer[7];
+	uint8_t buffer[7] { 0 };
 	buffer[0] = WRITE_DATA;
 	std::copy_n( glyph, 6, buffer + 1 );
 
@@ -437,7 +437,7 @@ void OLED::print_glyph( const uint8_t glyph[6] ) {
 
 void OLED::print_glyph( const std::array< uint8_t, 6 > glyph ) {
 	const uint8_t length = glyph.size() + 1;
-	uint8_t buffer[ length ];
+	uint8_t buffer[ length ] { 0 };
 	buffer[0] = WRITE_DATA;
 	std::copy_n( glyph.begin(), glyph.size(), buffer + 1 );
 
@@ -451,7 +451,7 @@ void OLED::print_glyph( const std::array< uint8_t, 6 > glyph ) {
 void OLED::draw_yx_bytemap( const std::array< uint8_t, 1024 >& yx_bytemap ) {
 	if ( yx_bytemap.size() != ((_width * _height + 7) / 8) ) return;
 
-	uint8_t buffer[129] {};
+	uint8_t buffer[129] { 0 };
 	buffer[0] = WRITE_DATA;
 
 	_wire->start_communication();
@@ -472,7 +472,7 @@ void OLED::draw_yx_bytemap( const uint8_t* yx_bytemap, size_t length ) {
 	if ( yx_bytemap == nullptr ) return;
 	if ( length != ((_width * _height + 7) / 8) ) return;
 
-	uint8_t buffer[129] {};
+	uint8_t buffer[129] { 0 };
 	buffer[0] = WRITE_DATA;
 
 	_wire->start_communication();
@@ -510,7 +510,7 @@ void OLED::draw_xy_bitmap( const uint8_t* xy_bytemap, size_t length ) {
 //----------------------------------------------------------------
 
 void OLED::erase() {
-	uint8_t buffer[129] {};
+	uint8_t buffer[129] { 0 };
 	buffer[0] = WRITE_DATA;
 
 	_wire->start_communication();
@@ -525,7 +525,7 @@ void OLED::erase() {
 //----------------------------------------------------------------
 
 void OLED::erase( uint8_t line ) {
-	uint8_t buffer[129] {};
+	uint8_t buffer[129] { 0 };
 	buffer[0] = WRITE_DATA;
 
 	_wire->start_communication();
@@ -539,7 +539,7 @@ void OLED::erase( uint8_t line ) {
 //----------------------------------------------------------------
 
 void OLED::erase( uint8_t line, uint8_t column ) {
-	uint8_t buffer[7] {};
+	uint8_t buffer[7] { 0 };
 	buffer[0] = WRITE_DATA;
 
 	this->set_lico( line, column );

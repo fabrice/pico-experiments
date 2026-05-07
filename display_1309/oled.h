@@ -62,7 +62,13 @@ public:
 	static OLED* make( wire* wire, uint reset_gpio );
 
 	OLED() = delete;
+
+private:
+
 	OLED( wire* wire, uint reset_gpio );
+
+public:
+
 	~OLED();
 
 private:

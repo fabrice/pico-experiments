@@ -9,8 +9,6 @@
 
 #include "oled_oledkit_fn.h"
 
-#include "pico/stdlib.h"
-#include "pico/stdio.h"
 #include "wire_i2c.h"
 
 #include "oled.h"
@@ -20,54 +18,32 @@
 
 //----------------------------------------------------------------
 
-static OLED* oled = nullptr;
+namespace local {
+
+OLED* oled = nullptr;
+
+}
 
 //----------------------------------------------------------------
 
 void OLEDKitInit( void* oled ) {
-	if ( oled != nullptr ) return;
+	if ( local::oled != nullptr ) return;
 
-	::oled = (OLED*)oled;
+	local::oled = static_cast< OLED* >( oled );
 }
 
 //----------------------------------------------------------------
 
 void OLEDKitInit( uint8_t i2c_num, uint reset_gpio ) {
-	if ( oled != nullptr ) return;
+	if ( local::oled != nullptr ) return;
 
-	oled = OLED::make( i2c_num, reset_gpio );
-}
-
-//----------------------------------------------------------------
-
-void OLEDKitSendMessage( const char* text, uint8_t line, uint8_t column ) {
-	if ( oled == nullptr ) return;
-
-	oled->print( text, line, column );
-}
-
-//----------------------------------------------------------------
-
-void OLEDKitSendMessageINT( const char* text, int value, uint8_t line, uint8_t column ) {
-	if ( oled == nullptr ) return;
-
-	oled->set_lico( line, column );
-	oled->printf( "%s:%+6d", text, value );
-}
-
-//----------------------------------------------------------------
-
-void OLEDKitSendINT( int value, uint8_t line, uint8_t column ) {
-	if ( oled == nullptr ) return;
-
-	oled->set_lico( line, column );
-	oled->printf( "%+6d", value );
+	local::oled = OLED::make( i2c_num, reset_gpio );
 }
 
 //----------------------------------------------------------------
 
 void OLEDKitPrintInfo() {
-	if ( oled == nullptr ) return;
+	if ( local::oled == nullptr ) return;
 
 	EffacerEcran();
 	AfficherChaineAZTCentreLi( "OLEDKit_compat", 1 );
@@ -76,115 +52,141 @@ void OLEDKitPrintInfo() {
 
 //----------------------------------------------------------------
 
-void OLEDKitPrintImage( const uint8_t* image ) {
-	if ( oled == nullptr ) return;
-
-	oled->draw_yx_bytemap( image, SSD1309_WIDTH * SSD1309_HEIGHT / 8 );
-}
-
-//----------------------------------------------------------------
-
 void OLEDDisplayFlip( uint8_t flip ) {
-	if ( oled == nullptr ) return;
+	if ( local::oled == nullptr ) return;
 
-	oled->set_orientation( !!flip );
+	local::oled->set_orientation( !!flip );
 }
 
 //----------------------------------------------------------------
 
 void OLEDSetBrightness( uint8_t brightness ) {
-	if ( oled == nullptr ) return;
+	if ( local::oled == nullptr ) return;
 
-	oled->set_brightness( brightness );
+	local::oled->set_brightness( brightness );
 }
 
 //----------------------------------------------------------------
 
 void OLEDLibDelay1ms( uint32_t time ) {
-	if ( oled == nullptr ) return;
+	if ( local::oled == nullptr ) return;
 
 	sleep_ms( time );
 }
 
 //----------------------------------------------------------------
 
-void AfficherCaractere( char caractere ) {
-	if ( oled == nullptr ) return;
-
-	oled->print( caractere );
-}
-
-//----------------------------------------------------------------
-
-void AfficherGlyph( const uint8_t glyph[6] ) {
-	if ( oled == nullptr ) return;
-
-	oled->print_glyph( glyph );
-}
-
-//----------------------------------------------------------------
-
-void AfficheImage( const uint8_t* image ) {
-	if ( oled == nullptr ) return;
-
-	oled->draw_yx_bytemap( image, SSD1309_WIDTH * SSD1309_HEIGHT / 8 );
-}
-
-//----------------------------------------------------------------
-
-void AfficherByte( uint8_t byte ) {
-	if ( oled == nullptr ) return;
-
-	oled->get_wire()->write_bytes( /*WRITE_DATA*/0x40, byte );
-}
-
-//----------------------------------------------------------------
-
 void SelectPosLiCo( uint8_t line, uint8_t column ) {
-	if ( oled == nullptr ) return;
+	if ( local::oled == nullptr ) return;
 
-	oled->set_lico( line, column );
+	local::oled->set_lico( line, column );
 }
 
 //----------------------------------------------------------------
 
 void SelectPosCaractLiCo( uint8_t line, uint8_t column ) {
-	if ( oled == nullptr ) return;
+	if ( local::oled == nullptr ) return;
 
-	oled->set_lico( line, column );
+	local::oled->set_lico( line, column );
+}
+
+//----------------------------------------------------------------
+
+void OLEDKitSendMessage( const char* text, uint8_t line, uint8_t column ) {
+	if ( local::oled == nullptr ) return;
+
+	local::oled->print( text, line, column );
+}
+
+//----------------------------------------------------------------
+
+void OLEDKitSendMessageINT( const char* text, int value, uint8_t line, uint8_t column ) {
+	if ( local::oled == nullptr ) return;
+
+	local::oled->set_lico( line, column );
+	local::oled->printf( "%s:%+6d", text, value );
+}
+
+//----------------------------------------------------------------
+
+void OLEDKitSendINT( int value, uint8_t line, uint8_t column ) {
+	if ( local::oled == nullptr ) return;
+
+	local::oled->set_lico( line, column );
+	local::oled->printf( "%+6d", value );
 }
 
 //----------------------------------------------------------------
 
 void AfficherChaineAZT( const char* texte ) {
-	if ( oled == nullptr ) return;
+	if ( local::oled == nullptr ) return;
 
-	oled->print( texte );
+	local::oled->print( texte );
 }
 
 //----------------------------------------------------------------
 
 void AfficherChaineAZTCentreLi( const char* texte, uint8_t ligne ) {
-	if ( oled == nullptr ) return;
+	if ( local::oled == nullptr ) return;
 
-	oled->print_center( texte, ligne );
+	local::oled->print_center( texte, ligne );
+}
+
+//----------------------------------------------------------------
+
+void AfficherCaractere( char caractere ) {
+	if ( local::oled == nullptr ) return;
+
+	local::oled->print( caractere );
+}
+
+//----------------------------------------------------------------
+
+void AfficherGlyph( const uint8_t glyph[6] ) {
+	if ( local::oled == nullptr ) return;
+
+	local::oled->print_glyph( glyph );
+}
+
+//----------------------------------------------------------------
+
+void OLEDKitPrintImage( const uint8_t* image ) {
+	if ( local::oled == nullptr ) return;
+
+	local::oled->draw_yx_bytemap( image, SSD1309_WIDTH * SSD1309_HEIGHT / 8 );
+}
+
+//----------------------------------------------------------------
+
+void AfficheImage( const uint8_t* image ) {
+	if ( local::oled == nullptr ) return;
+
+	local::oled->draw_yx_bytemap( image, SSD1309_WIDTH * SSD1309_HEIGHT / 8 );
+}
+
+//----------------------------------------------------------------
+
+void AfficherByte( uint8_t byte ) {
+	if ( local::oled == nullptr ) return;
+
+	local::oled->get_wire()->write_bytes( /*WRITE_DATA*/0x40, byte );
 }
 
 //----------------------------------------------------------------
 
 void EffacerEcran() {
-	if ( oled == nullptr ) return;
+	if ( local::oled == nullptr ) return;
 
-	oled->erase();
+	local::oled->erase();
 }
 
 //----------------------------------------------------------------
 
 void OLEDKitDeinit() {
-	if ( oled == nullptr ) return;
+	if ( local::oled == nullptr ) return;
 
-	delete oled;
-	oled = nullptr;
+	delete local::oled;
+	local::oled = nullptr;
 }
 
 //----------------------------------------------------------------
