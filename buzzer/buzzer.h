@@ -31,29 +31,29 @@ public:
 	// music notes
 
 	static constexpr float C4 { 261.6 };
-	static constexpr float Cd4 { 277.2 };
+	static constexpr float CD4 { 277.2 };
 	static constexpr float D4 { 293.7 };
-	static constexpr float Dd4 { 311.1 };
+	static constexpr float DD4 { 311.1 };
 	static constexpr float E4 { 329.6 };
 	static constexpr float F4 { 349.2 };
-	static constexpr float Fd4 { 370.0 };
+	static constexpr float FD4 { 370.0 };
 	static constexpr float G4 { 392.0 };
-	static constexpr float Gd4 { 415.3 };
+	static constexpr float GD4 { 415.3 };
 	static constexpr float A4 { 440.0 };
-	static constexpr float Ad4 { 466.2 };
+	static constexpr float AD4 { 466.2 };
 	static constexpr float B4 { 493.9 };
 
 	static constexpr float C5 { 523.3 };
-	static constexpr float Cd5 { 554.4 };
+	static constexpr float CD5 { 554.4 };
 	static constexpr float D5 { 587.3 };
-	static constexpr float Dd5 { 622.3 };
+	static constexpr float DD5 { 622.3 };
 	static constexpr float E5 { 659.3 };
 	static constexpr float F5 { 698.5 };
-	static constexpr float Fd5 { 740.0 };
+	static constexpr float FD5 { 740.0 };
 	static constexpr float G5 { 784.0 };
-	static constexpr float Gd5 { 830.6 };
+	static constexpr float GD5 { 830.6 };
 	static constexpr float A5 { 880.0 };
-	static constexpr float Ad5 { 932.3 };
+	static constexpr float AD5 { 932.3 };
 	static constexpr float B5 { 987.8 };
 
 	static constexpr float BASE_NOTE { C5 };
