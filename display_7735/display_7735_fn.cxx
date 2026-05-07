@@ -14,8 +14,6 @@
 #include "pico/stdlib.h"
 #include "wire_spi.h"
 
-#include <cmath>
-#include "math_plus.h"
 #include <cstring>
 
 //----------------------------------------------------------------
@@ -33,195 +31,200 @@ constexpr uint ST7735_BACKLIGHT_GPIO { 2 };
 display_7735* display_7735_init( uint8_t spi_num, uint reset_gpio ) {
 	auto display_wire_spi = wire_spi::make( spi_num, ST7735_CS_GPIO );
 	display_wire_spi->io_init( SPI0_SCLK_GPIO, SPI0_MISO_GPIO, SPI0_MOSI_GPIO, 8e6 );
-	return new display_7735( display_wire_spi, reset_gpio, ST7735_DC_GPIO, ST7735_BACKLIGHT_GPIO );
+
+	auto driver = new display_7735( display_wire_spi, reset_gpio, ST7735_DC_GPIO, ST7735_BACKLIGHT_GPIO );
+
+	return driver;
 }
 
 //----------------------------------------------------------------
 
-uint16_t display_7735_get_width( const display_7735* display ) {
-	if ( display == nullptr ) return 0;
+uint16_t display_7735_get_width( const display_7735* that ) {
+	if ( that == nullptr ) return 0;
 
-	return display->get_width();
+	return that->get_width();
 }
 
 //----------------------------------------------------------------
 
-uint16_t display_7735_get_height( const display_7735* display ) {
-	if ( display == nullptr ) return 0;
+uint16_t display_7735_get_height( const display_7735* that ) {
+	if ( that == nullptr ) return 0;
 
-	return display->get_height();
+	return that->get_height();
 }
 
 //----------------------------------------------------------------
 
-uint16_t display_7735_get_column_count( const display_7735* display ) {
-	if ( display == nullptr ) return 0;
+uint16_t display_7735_get_column_count( const display_7735* that ) {
+	if ( that == nullptr ) return 0;
 
-	return display->get_column_count();
+	return that->get_column_count();
 }
 
 //----------------------------------------------------------------
 
-uint16_t display_7735_get_line_count( const display_7735* display ) {
-	if ( display == nullptr ) return 0;
+uint16_t display_7735_get_line_count( const display_7735* that ) {
+	if ( that == nullptr ) return 0;
 
-	return display->get_line_count();
+	return that->get_line_count();
 }
 
 //----------------------------------------------------------------
 
-void display_7735_set_on( display_7735* display, bool on ) {
-	if ( display == nullptr ) return;
+void display_7735_set_on( display_7735* that, bool on ) {
+	if ( that == nullptr ) return;
 
-	display->set_on( on );
+	that->set_on( on );
 }
 
 //----------------------------------------------------------------
 
-void display_7735_set_brightness( display_7735* display, uint8_t brightness ) {
-	if ( display == nullptr ) return;
+void display_7735_set_brightness( display_7735* that, uint8_t brightness ) {
+	if ( that == nullptr ) return;
 
-	display->set_brightness( brightness );
+	that->set_brightness( brightness );
 }
 
 //----------------------------------------------------------------
 
-void display_7735_set_brightness_db( display_7735* display, float brightness_db ) {
-	if ( display == nullptr ) return;
+void display_7735_set_brightness_db( display_7735* that, float brightness_db ) {
+	if ( that == nullptr ) return;
 
-	display->set_brightness_db( brightness_db );
+	that->set_brightness_db( brightness_db );
 }
 
 //----------------------------------------------------------------
 
-void display_7735_set_lico( display_7735* display, uint8_t line, uint8_t column ) {
-	if ( display == nullptr ) return;
+void display_7735_set_lico( display_7735* that, uint8_t line, uint8_t column ) {
+	if ( that == nullptr ) return;
 
-	display->set_lico( line, column );
+	that->set_lico( line, column );
 }
 
 //----------------------------------------------------------------
 
-void display_7735_print( display_7735* display, const char* text ) {
-	if ( display == nullptr ) return;
+void display_7735_print( display_7735* that, const char* text ) {
+	if ( that == nullptr ) return;
 
-	display->print( text );
+	that->print( text );
 }
 
 //----------------------------------------------------------------
 
-void display_7735_print( display_7735* display, const char* text, uint8_t line, uint8_t column ) {
-	if ( display == nullptr ) return;
+void display_7735_print( display_7735* that, const char* text, uint8_t line, uint8_t column ) {
+	if ( that == nullptr ) return;
 
-	display->print( line, column, text );
+	that->set_lico( line, column );
+	that->print( text );
 }
 
 //----------------------------------------------------------------
 
-void display_7735_print_left( display_7735* display, const char* text, uint8_t line ) {
-	if ( display == nullptr ) return;
+void display_7735_print_left( display_7735* that, const char* text, uint8_t line ) {
+	if ( that == nullptr ) return;
 
-	display->print_left( text, line );
+	that->print_left( text, line );
 }
 
 //----------------------------------------------------------------
 
-void display_7735_print_center( display_7735* display, const char* text, uint8_t line ) {
-	if ( display == nullptr ) return;
+void display_7735_print_center( display_7735* that, const char* text, uint8_t line ) {
+	if ( that == nullptr ) return;
 
-	display->print_center( text, line );
+	that->print_center( text, line );
 }
 
 //----------------------------------------------------------------
 
-void display_7735_print_right( display_7735* display, const char* text, uint8_t line ) {
-	if ( display == nullptr ) return;
+void display_7735_print_right( display_7735* that, const char* text, uint8_t line ) {
+	if ( that == nullptr ) return;
 
-	display->print_right( text, line );
+	that->print_right( text, line );
 }
 
 //----------------------------------------------------------------
 
-void display_7735_printf( display_7735* display, const char* format, ... ) {
-	if ( display == nullptr ) return;
+void display_7735_printf( display_7735* that, const char* format, ... ) {
+	if ( that == nullptr ) return;
 
 	va_list args;
 	va_start( args, format );
-	display->vprintf( format, args );
+	that->vprintf( format, args );
 	va_end( args );
 }
 
 //----------------------------------------------------------------
 
-void display_7735_print( display_7735* display, char character ) {
-	if ( display == nullptr ) return;
+void display_7735_print( display_7735* that, char character ) {
+	if ( that == nullptr ) return;
 
-	display->print( character );
+	that->print( character );
 }
 
 //----------------------------------------------------------------
 
-void display_7735_print( display_7735* display, char character, uint8_t line, uint8_t column ) {
-	if ( display == nullptr ) return;
+void display_7735_print( display_7735* that, char character, uint8_t line, uint8_t column ) {
+	if ( that == nullptr ) return;
 
-	display->print( line, column, character );
+	that->set_lico( line, column );
+	that->print( character );
 }
 
 //----------------------------------------------------------------
 
-void display_7735_print_glyph( display_7735* display, const uint8_t glyph[6] ) {
-	if ( display == nullptr ) return;
+void display_7735_print_glyph( display_7735* that, const uint8_t glyph[6] ) {
+	if ( that == nullptr ) return;
 
-	display->print_glyph( glyph );
+	that->print_glyph( glyph );
 }
 
 //----------------------------------------------------------------
 
-void display_7735_draw_pixmap( display_7735* display, int16_t x, int16_t y, int16_t width, int16_t height, const uint8_t* pixmap, uint16_t length ) {
-	if ( display == nullptr ) return;
+void display_7735_draw_pixmap( display_7735* that, const uint8_t* pixmap, uint16_t length, int16_t x, int16_t y, int16_t width, int16_t height ) {
+	if ( that == nullptr ) return;
 
-	display->draw_pixmap( x, y, width, height, pixmap, length );
+	that->draw_pixmap( pixmap, length, x, y, width, height );
 }
 
 //----------------------------------------------------------------
 
-void display_7735_draw_bitmap( display_7735* display, int16_t x, int16_t y, int16_t width, int16_t height, const uint8_t* bitmap, uint16_t length ) {
-	if ( display == nullptr ) return;
+void display_7735_draw_bitmap( display_7735* that, const uint8_t* bitmap, uint16_t length, int16_t x, int16_t y, int16_t width, int16_t height ) {
+	if ( that == nullptr ) return;
 
-	display->draw_bitmap( x, y, width, height, bitmap, length );
+	that->draw_bitmap( bitmap, length, x, y, width, height );
 }
 
 //----------------------------------------------------------------
 
-void display_7735_erase( display_7735* display ) {
-	if ( display == nullptr ) return;
+void display_7735_erase( display_7735* that ) {
+	if ( that == nullptr ) return;
 
-	display->erase();
+	that->erase();
 }
 
 //----------------------------------------------------------------
 
-void display_7735_erase_line( display_7735* display, uint8_t line ) {
-	if ( display == nullptr ) return;
+void display_7735_erase_line( display_7735* that, uint8_t line ) {
+	if ( that == nullptr ) return;
 
-	display->erase( line );
+	that->erase( line );
 }
 
 //----------------------------------------------------------------
 
-void display_7735_erase_character( display_7735* display, uint8_t line, uint8_t column ) {
-	if ( display == nullptr ) return;
+void display_7735_erase_character( display_7735* that, uint8_t line, uint8_t column ) {
+	if ( that == nullptr ) return;
 
-	display->erase( line, column );
+	that->erase( line, column );
 }
 
 //----------------------------------------------------------------
 
-void display_7735_deinit( display_7735*& display ) {
-	if ( display == nullptr ) return;
+void display_7735_deinit( display_7735*& that ) {
+	if ( that == nullptr ) return;
 
-	delete display;
-	display = nullptr;
+	delete that;
+	that = nullptr;
 }
 
 //----------------------------------------------------------------

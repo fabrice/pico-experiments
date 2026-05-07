@@ -18,6 +18,7 @@
 #include <cmath>
 #include <algorithm>
 #include <cstdio>
+#include <memory>
 
 //----------------------------------------------------------------
 // commands
@@ -128,7 +129,7 @@ display_7735::~display_7735() {
 void display_7735::display_init() {
 	this->reset();
 
-	const uint8_t commands[] = {
+	const uint8_t commands[] {
 		ST7735_SWRESET, DELAY_FLAG,
 			150,
 		ST7735_SLPOUT, DELAY_FLAG,
@@ -260,16 +261,46 @@ void display_7735::set_on( bool on ) {
 
 //----------------------------------------------------------------
 
+void display_7735::set_rotation( uint8_t m ) {
+	this->command(ST7735_MADCTL);
+	const uint8_t rotation = m % 4;
+
+	switch (rotation) {
+	case 0:
+		this->data(ST7735_MADCTL_MX | ST7735_MADCTL_MY | _color_mode);
+		_width = ST7735_TFTWIDTH;
+		_height = ST7735_TFTHEIGHT;
+		break;
+	case 1:
+		this->data(ST7735_MADCTL_MY | ST7735_MADCTL_MV | _color_mode);
+		_width = ST7735_TFTHEIGHT;
+		_height = ST7735_TFTWIDTH;
+		break;
+	case 2:
+		this->data(_color_mode);
+		_width = ST7735_TFTWIDTH;
+		_height = ST7735_TFTHEIGHT;
+		break;
+	case 3:
+		this->data(ST7735_MADCTL_MX | ST7735_MADCTL_MV | _color_mode);
+		_width = ST7735_TFTHEIGHT;
+		_height = ST7735_TFTWIDTH;
+		break;
+	}
+}
+
+//----------------------------------------------------------------
+
 void display_7735::set_brightness( uint8_t brightness ) {
 	_brightness = brightness;
 
 	uint pwm_slice = pwm_gpio_to_slice_num( _backlight_gpio );
 	uint pwm_channel = pwm_gpio_to_channel( _backlight_gpio );
 
-	pwm_set_clkdiv( pwm_slice, 150.0 );
+	pwm_set_clkdiv( pwm_slice, 150.0f );
     pwm_set_wrap( pwm_slice, 1000 );
 
-	float level = (float)brightness / 255.0 * 1000.0;
+	float level = (float)brightness / 255.0f * 1000.0f;
 	pwm_set_chan_level( pwm_slice, pwm_channel, (uint16_t)std::floor( level ) );
 
 	pwm_set_enabled( pwm_slice, true );
@@ -290,117 +321,17 @@ void display_7735::set_brightness_db( float brightness_db ) {
 void display_7735::set_addr_window( uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1 ) {
 	this->command(ST7735_CASET);
 	this->data(0x00);
-	this->data(x0 + _offset);
+	this->data(x0);
 	this->data(0x00);
-	this->data(x1 + _offset);
+	this->data(x1);
 
 	this->command(ST7735_RASET);
 	this->data(0x00);
-	this->data(y0 + _offset);
+	this->data(y0);
 	this->data(0x00);
-	this->data(y1 + _offset);
+	this->data(y1);
 
 	this->command(ST7735_RAMWR);
-}
-
-//----------------------------------------------------------------
-
-void display_7735::draw_pixel( int16_t x, int16_t y, uint16_t color ) {
-	if (x < 0 || x >= _width || y < 0 || y >= _height) return;
-
-	this->set_addr_window(x, y, x + 1, y + 1);
-
-	uint8_t buf[2] = {
-		static_cast<uint8_t>(color >> 8),
-		static_cast<uint8_t>(color & 0xff),
-	};
-	if ( _wire != nullptr ) {
-		gpio_put( _dc_gpio, true );
-		_wire->start_communication();
-		_wire->write_bytes( static_cast<uint8_t>(color >> 8), static_cast<uint8_t>(color & 0xff) );
-		_wire->finish_communication();
-	}
-}
-
-//----------------------------------------------------------------
-
-void display_7735::draw_block( int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t color ) {
-	int max_rows = 500 / w;
-	if (max_rows < 1) max_rows = 1;
-
-	uint8_t hi = color >> 8;
-	uint8_t lo = color & 0xFF;
-
-	int rows = 0;
-	while (rows < h) {
-		int block_rows = std::min(max_rows, (int)(h - rows));
-		size_t buf_len = (size_t)w * block_rows * 2;
-		uint8_t* buf = new uint8_t[buf_len];
-
-		for ( size_t i = 0 ; i < buf_len ; i += 2 ) {
-			buf[i] = hi;
-			buf[i + 1] = lo;
-		}
-
-		this->draw_pixmap( x, y + rows, w, block_rows, buf, buf_len );
-		delete[] buf;
-		rows += max_rows;
-	}
-}
-
-//----------------------------------------------------------------
-
-void display_7735::draw_pixmap( int16_t x, int16_t y, uint16_t w, uint16_t h, const uint8_t* pixmap, size_t length ) {
-	if (x >= _width || y >= _height) return;
-
-	if ((x + w - 1) >= _width) w = _width - x;
-	if ((y + h - 1) >= _height) h = _height - y;
-
-	this->set_addr_window(x, y, x + w - 1, y + h - 1);
-
-	if ( _wire != nullptr ) {
-		gpio_put( _dc_gpio, true );
-		_wire->start_communication();
-		_wire->write_bytes( pixmap, length );
-		_wire->finish_communication();
-	}
-}
-
-//----------------------------------------------------------------
-
-void display_7735::draw_bitmap( int16_t x, int16_t y, uint16_t w, uint16_t h, const uint8_t* bitmap, size_t length ) {
-	if (x >= _width || y >= _height) return;
-
-	if ((x + w - 1) >= _width) w = _width - x;
-	if ((y + h - 1) >= _height) h = _height - y;
-
-	uint8_t* pixelmap = new uint8_t[ w * h * 2 ] {};
-	for ( uint pixx = 0 ; pixx < w ; ++ pixx ) {
-		for ( uint pixy = 0 ; pixy < h ; ++ pixy ) {
-			uint16_t line = pixy / 8;
-			uint8_t bit = pixy % 8;
-			uint16_t idx = pixx + w * line;
-			uint16_t pixel = !!(bitmap[ idx ] & (1 << bit)) ? _foreground_color : _background_color;
-			pixelmap[ (pixx + w * pixy) * 2 + 0 ] = pixel >> 8;
-			pixelmap[ (pixx + w * pixy) * 2 + 1 ] = pixel & 0xff;
-		}
-	}
-
-	this->draw_pixmap( x, y, w, h, (const uint8_t*)pixelmap , w * h * 2 );
-
-	delete[] pixelmap;
-}
-
-//----------------------------------------------------------------
-
-void display_7735::fill_screen( uint16_t color ) {
-	this->draw_block( 0, 0, _width, _height, color );
-}
-
-//----------------------------------------------------------------
-
-void display_7735::fill_screen( uint8_t red, uint8_t green, uint8_t blue ) {
-	this->fill_screen( rgb_to_565( red, green, blue ) );
 }
 
 //----------------------------------------------------------------
@@ -414,64 +345,24 @@ void display_7735::set_lico( uint8_t line, uint8_t column ) {
 
 //----------------------------------------------------------------
 
-void display_7735::print( int16_t x, int16_t y, char character ) {
-	if ( _font == nullptr ) return;
+void display_7735::print( const char* text ) {
+	const int16_t x = _column * 6 + get_columns_offset();
+	const int16_t y = _line * 8 + get_lines_offset();
 
-	uint8_t char_buf[6];
-	memcpy(char_buf, &_font[ character * 5 ], 5);
-	char_buf[5] = 0;
-
-	uint8_t char_image[6 * 8 * 2] {}; // 6 wide, 8 tall, 2 bytes per pixel
-	size_t idx = 0;
-
-	uint8_t color_hi = _foreground_color >> 8;
-	uint8_t color_lo = _foreground_color & 0xFF;
-	uint8_t bg_hi = _background_color >> 8;
-	uint8_t bg_lo = _background_color & 0xFF;
-
-	for ( int bit = 0 ; bit < 8 ; ++ bit ) {
-		for ( int c = 0 ; c < 6 ; ++ c ) {
-			if ((char_buf[c] >> bit) & 0x01) {
-				char_image[idx] = color_hi;
-				++ idx;
-				char_image[idx] = color_lo;
-				++ idx;
-			} else {
-				char_image[idx] = bg_hi;
-				++ idx;
-				char_image[idx] = bg_lo;
-				++ idx;
-			}
-		}
-	}
-
-	this->draw_pixmap( x, y, 6, 8, char_image, sizeof(char_image) );
+	this->print( text, x, y );
 }
 
 //----------------------------------------------------------------
 
-void display_7735::print( int16_t x, int16_t y, const char* text ) {
+void display_7735::print( const char* text, int16_t x, int16_t y ) {
 	if ( _font == nullptr ) return;
 
 	while ( *text ) {
-		print( x, y, *text );
+		print( *text, x, y );
+		++ text;
 		x += 6;
-		text++;
+		if ( x > _width ) break;
 	}
-}
-
-//----------------------------------------------------------------
-
-void display_7735::print_center( uint8_t line, const char* text ) {
-	if ( _font == nullptr ) return;
-
-	uint8_t column_count = this->get_column_count();
-	size_t text_length = strlen( text );
-	uint8_t column = 0;
-	if ( text_length < column_count ) column = (column_count - text_length) / 2;
-	int16_t x = column * 6 + this->get_columns_offset();
-	int16_t y = line * 8 + get_lines_offset();
-	this->print( x, y, text );
 }
 
 //----------------------------------------------------------------
@@ -479,7 +370,7 @@ void display_7735::print_center( uint8_t line, const char* text ) {
 void display_7735::print_left( const char* text, uint8_t line ) {
 	if ( _font == nullptr ) return;
 
-	size_t text_length = strlen( text );
+	const size_t text_length = strlen( text );
 	if ( text_length == 0 ) return;
 
 	this->set_lico( line, 0 );
@@ -491,10 +382,10 @@ void display_7735::print_left( const char* text, uint8_t line ) {
 void display_7735::print_center( const char* text, uint8_t line ) {
 	if ( _font == nullptr ) return;
 
-	size_t text_length = strlen( text );
+	const size_t text_length = strlen( text );
 	if ( text_length == 0 ) return;
 
-	uint8_t column_count = this->get_column_count();
+	const uint8_t column_count = this->get_column_count();
 	uint8_t column = 0;
 	if ( text_length < column_count ) column = (column_count - text_length) / 2;
 
@@ -507,10 +398,10 @@ void display_7735::print_center( const char* text, uint8_t line ) {
 void display_7735::print_right( const char* text, uint8_t line ) {
 	if ( _font == nullptr ) return;
 
-	size_t text_length = strlen( text );
+	const size_t text_length = strlen( text );
 	if ( text_length == 0 ) return;
 
-	uint8_t column_count = this->get_column_count();
+	const uint8_t column_count = this->get_column_count();
 	uint8_t column = 0;
 	if ( text_length < column_count ) column = column_count - text_length;
 
@@ -520,16 +411,16 @@ void display_7735::print_right( const char* text, uint8_t line ) {
 
 //----------------------------------------------------------------
 
-void display_7735::print_aligned( const char* text, uint8_t line, char alignement ) {
+void display_7735::print_aligned( const char* text, uint8_t line, char alignment ) {
 	if ( _font == nullptr ) return;
 
-	size_t text_length = strlen( text );
+	const size_t text_length = strlen( text );
 	if ( text_length == 0 ) return;
 
-	uint8_t column_count = this->get_column_count();
+	const uint8_t column_count = this->get_column_count();
 	uint8_t column = 0;
 
-	switch ( alignement ) {
+	switch ( alignment ) {
 	case '<':
 		if ( text_length < column_count ) column = 0;
 		break;
@@ -549,11 +440,20 @@ void display_7735::print_aligned( const char* text, uint8_t line, char alignemen
 
 //----------------------------------------------------------------
 
-void display_7735::print( const char* text ) {
-	int16_t x = _column * 6 + get_columns_offset();
-	int16_t y = _line * 8 + get_lines_offset();
+void display_7735::printf( const char* format, ... ) {
+	va_list args;
+	va_start( args, format );
+	this->vprintf( format, args );
+	va_end( args );
+}
 
-	this->print( x, y, text );
+//----------------------------------------------------------------
+
+void display_7735::vprintf( const char* format, va_list args ) {
+	char text[27] { 0 };
+	vsnprintf( text, 27, format, args );
+	text[ 26 ] = 0;
+	this->print( text );
 }
 
 //----------------------------------------------------------------
@@ -565,6 +465,42 @@ void display_7735::print( char character ) {
 	int16_t y = _line * 8 + get_lines_offset();
 
 	this->print( x, y, character );
+}
+
+//----------------------------------------------------------------
+
+void display_7735::print( char character, int16_t x, int16_t y ) {
+	if ( _font == nullptr ) return;
+
+	uint8_t char_buf[6];
+	std::copy_n( &_font[ character * 5 ], 5, char_buf );
+	char_buf[5] = 0;
+
+	uint8_t char_image[6 * 8 * 2] {}; // 6 wide, 8 tall, 2 bytes per pixel
+	size_t idx = 0;
+
+	const uint8_t color_hi = _foreground_color >> 8;
+	const uint8_t color_lo = _foreground_color & 0xFF;
+	const uint8_t bg_hi = _background_color >> 8;
+	const uint8_t bg_lo = _background_color & 0xFF;
+
+	for ( int bit = 0 ; bit < 8 ; ++ bit ) {
+		for ( int c = 0 ; c < 6 ; ++ c ) {
+			if ((char_buf[c] >> bit) & 0x01) {
+				char_image[idx] = color_hi;
+				++ idx;
+				char_image[idx] = color_lo;
+				++ idx;
+			} else {
+				char_image[idx] = bg_hi;
+				++ idx;
+				char_image[idx] = bg_lo;
+				++ idx;
+			}
+		}
+	}
+
+	this->draw_pixmap( char_image, sizeof(char_image), x, y, 6, 8 );
 }
 
 //----------------------------------------------------------------
@@ -599,25 +535,141 @@ void display_7735::print_glyph( const uint8_t glyph[6] ) {
 		}
 	}
 
-	this->draw_pixmap( x, y, 6, 8, char_image, sizeof(char_image) );
+	this->draw_pixmap( char_image, sizeof(char_image), x, y, 6, 8 );
 }
 
 //----------------------------------------------------------------
 
-void display_7735::printf( const char* format, ... ) {
-	va_list args;
-	va_start( args, format );
-	this->vprintf( format, args );
-	va_end( args );
+void display_7735::draw_pixel( int16_t x, int16_t y, uint16_t color ) {
+	if (x < 0 || x >= _width || y < 0 || y >= _height) return;
+
+	this->set_addr_window(x, y, x + 1, y + 1);
+
+	if ( _wire != nullptr ) {
+		gpio_put( _dc_gpio, true );
+		_wire->start_communication();
+		_wire->write_bytes( static_cast<uint8_t>(color >> 8), static_cast<uint8_t>(color & 0xff) );
+		_wire->finish_communication();
+	}
 }
 
 //----------------------------------------------------------------
 
-void display_7735::vprintf( const char* format, va_list args ) {
-	char text[27];
-	vsnprintf( text, 27, format, args );
-	text[ 26 ] = 0;
-	this->print( text );
+void display_7735::draw_block( int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t color ) {
+	int max_rows = 500 / w;
+	if (max_rows < 1) max_rows = 1;
+
+	uint8_t hi = color >> 8;
+	uint8_t lo = color & 0xFF;
+
+	int rows = 0;
+	while (rows < h) {
+		int block_rows = std::min(max_rows, (int)(h - rows));
+		size_t buf_len = (size_t)w * block_rows * 2;
+		uint8_t* buf = new uint8_t[buf_len] { 0 };
+
+		for ( size_t i = 0 ; i < buf_len ; i += 2 ) {
+			buf[i] = hi;
+			buf[i + 1] = lo;
+		}
+
+		this->draw_pixmap( buf, buf_len, x, y + rows, w, block_rows );
+		delete[] buf;
+		rows += max_rows;
+	}
+}
+
+//----------------------------------------------------------------
+
+// TODO unfinished
+
+void display_7735::draw_graymap( const uint8_t* xy_graymap, size_t length, int16_t x, int16_t y, uint16_t width, uint16_t height ) {
+	if (x >= _width || y >= _height) return;
+
+	if ((x + width - 1) >= _width) width = _width - x;
+	if ((y + height - 1) >= _height) height = _height - y;
+
+	auto pixelmap = std::make_unique< uint8_t[] >( width * height * 2 );
+	for ( int16_t dx = 0 ; dx < width ; ++ dx ) {
+		for ( int16_t dy = 0 ; dy < height ; ++ dy ) {
+			const size_t index = dx + width * dy;
+			const uint8_t gray = 255 - xy_graymap[ index ];
+			uint16_t color = _foreground_color;
+			if ( gray == 255 ) {
+				color = _foreground_color;
+			}
+			else if ( gray == 0 ) {
+				color = _background_color;
+			}
+			else {
+				const float fgray = static_cast< float >( gray ) / 255.0f;
+				const float fred = this->get_foreground_color_red() * fgray + this->get_background_color_red() * (1.0f - fgray);
+				const float fgreen = this->get_foreground_color_green() * fgray + this->get_background_color_green() * (1.0f - fgray);
+				const float fblue = this->get_foreground_color_blue() * fgray + this->get_background_color_blue() * (1.0f - fgray);
+				color = rgb_to_565( static_cast< uint8_t >( fred ), static_cast< uint8_t >( fgreen ), static_cast< uint8_t >( fblue ) );
+			}
+			pixelmap[ (dx + width * dy) * 2 + 0 ] = (color >> 8) & 0xff;
+			pixelmap[ (dx + width * dy) * 2 + 1 ] = (color >> 0) & 0xff;
+		}
+	}
+	this->draw_pixmap( pixelmap.get(), width * height * 2, x, y, width, height );
+}
+
+//----------------------------------------------------------------
+
+void display_7735::draw_pixmap( const uint8_t* xy_pixmap, size_t length, int16_t x, int16_t y, uint16_t width, uint16_t height ) {
+	if (x >= _width || y >= _height) return;
+
+	if ((x + width - 1) >= _width) width = _width - x;
+	if ((y + height - 1) >= _height) height = _height - y;
+
+	this->set_addr_window(x, y, x + width - 1, y + height - 1);
+
+	if ( _wire != nullptr ) {
+		gpio_put( _dc_gpio, true );
+		_wire->start_communication();
+		_wire->write_bytes( xy_pixmap, length );
+		_wire->finish_communication();
+	}
+
+	this->set_addr_window( 0, 0, _width, _height );
+}
+
+//----------------------------------------------------------------
+
+void display_7735::draw_bitmap( const uint8_t* yx_bytemap, size_t length, int16_t x, int16_t y, uint16_t width, uint16_t height ) {
+	if (x >= _width || y >= _height) return;
+
+	if ((x + width - 1) >= _width) width = _width - x;
+	if ((y + height - 1) >= _height) height = _height - y;
+
+	uint8_t* pixelmap = new uint8_t[ width * height * 2 ] { 0 };
+	for ( uint dx = 0 ; dx < width ; ++ dx ) {
+		for ( uint dy = 0 ; dy < height ; ++ dy ) {
+			const uint16_t line = dy / 8;
+			const uint8_t bit = dy % 8;
+			const uint16_t idx = dx + width * line;
+			const uint16_t pixel = !!(yx_bytemap[ idx ] & (1 << bit)) ? _foreground_color : _background_color;
+			pixelmap[ (dx + width * dy) * 2 + 0 ] = (pixel >> 8) & 0xff;
+			pixelmap[ (dx + width * dy) * 2 + 1 ] = (pixel >> 0) & 0xff;
+		}
+	}
+
+	this->draw_pixmap( (const uint8_t*)pixelmap, width * height * 2, x, y, width , height );
+
+	delete[] pixelmap;
+}
+
+//----------------------------------------------------------------
+
+void display_7735::fill_screen( uint16_t color ) {
+	this->draw_block( 0, 0, _width, _height, color );
+}
+
+//----------------------------------------------------------------
+
+void display_7735::fill_screen( uint8_t red, uint8_t green, uint8_t blue ) {
+	this->fill_screen( rgb_to_565( red, green, blue ) );
 }
 
 //----------------------------------------------------------------
@@ -641,36 +693,6 @@ void display_7735::erase( uint8_t line, uint8_t column ) {
 
 uint16_t display_7735::rgb_to_565( uint8_t r, uint8_t g, uint8_t b ) {
 	return ((r & 0b11111000) << 8) | ((g & 0b11111100) << 3) | ((b & 0b11111000) >> 3);
-}
-
-//----------------------------------------------------------------
-
-void display_7735::set_rotation( uint8_t m ) {
-	this->command(ST7735_MADCTL);
-	uint8_t rotation = m % 4;
-
-	switch (rotation) {
-	case 0:
-		this->data(ST7735_MADCTL_MX | ST7735_MADCTL_MY | _color_mode);
-		_width = ST7735_TFTWIDTH;
-		_height = ST7735_TFTHEIGHT;
-		break;
-	case 1:
-		this->data(ST7735_MADCTL_MY | ST7735_MADCTL_MV | _color_mode);
-		_width = ST7735_TFTHEIGHT;
-		_height = ST7735_TFTWIDTH;
-		break;
-	case 2:
-		this->data(_color_mode);
-		_width = ST7735_TFTWIDTH;
-		_height = ST7735_TFTHEIGHT;
-		break;
-	case 3:
-		this->data(ST7735_MADCTL_MX | ST7735_MADCTL_MV | _color_mode);
-		_width = ST7735_TFTHEIGHT;
-		_height = ST7735_TFTWIDTH;
-		break;
-	}
 }
 
 //----------------------------------------------------------------
