@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.30)
 
-project(mcp41xxx_lib CXX C ASM)
+project(lib_mcp41xxx CXX C ASM)
 
 add_library(${PROJECT_NAME} STATIC
 	mcp41xxx.cxx
@@ -12,6 +12,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 target_link_libraries(${PROJECT_NAME}
 	pico_stdlib
-	pico_plus_lib
-	pico_wire_lib
+	lib_pico_plus
+	lib_pico_wire
 )
+
+set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")

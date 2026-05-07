@@ -16,7 +16,7 @@ else()
     set(USERHOME $ENV{HOME})
 endif()
 set(sdkVersion 2.2.0)
-set(toolchainVersion 14_2_Rel1)
+set(toolchainVersion 15_2_Rel1)
 set(picotoolVersion 2.2.0-a4)
 set(picoVscode ${USERHOME}/.pico-sdk/cmake/pico-vscode.cmake)
 if (EXISTS ${picoVscode})
@@ -33,7 +33,7 @@ project(Experiments CXX C ASM)
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
-# Add executable. Default name is the project name, version 0.1
+# Add executable.
 
 add_executable(${PROJECT_NAME}
 	experiments.cxx
@@ -49,6 +49,8 @@ add_subdirectory(gfx)
 # pico explorer board
 add_subdirectory(display_7735)
 add_subdirectory(buzzer)
+add_subdirectory(ui_leds)
+add_subdirectory(working_led)
 
 # cfpt stuff
 add_subdirectory(display_1309)
@@ -58,35 +60,28 @@ add_subdirectory(rotary_encoder)
 add_subdirectory(mcp23008)
 add_subdirectory(mcp41xxx)
 add_subdirectory(memory_24lc02b)
-
-#add_compile_options(-fexec-charset=ISO-8859-1)
-target_compile_options(${PROJECT_NAME} PRIVATE -fexec-charset=ISO-8859-1)
-target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
-
-pico_set_program_name(${PROJECT_NAME} "Playground")
-pico_set_program_version(${PROJECT_NAME} "0.1")
-
-# Modify the below lines to enable/disable output over UART/USB
-pico_enable_stdio_uart(${PROJECT_NAME} 0)
-pico_enable_stdio_usb(${PROJECT_NAME} 1)
+add_subdirectory(mcp3221)
+add_subdirectory(mcp9800)
 
 # Add the standard library to the build
 target_link_libraries(${PROJECT_NAME}
-	std_plus_lib
+	lib_std_plus
 	pico_stdlib
 	hardware_i2c
 	hardware_spi
-	pico_plus_lib
-	gpio_plus_lib
-	pwm_plus_lib
-	pico_wire_lib
-	gfx_lib
-	display_7735_lib
-	buzzer_lib
-	display_1309_lib
-	rotary_encoder_lib
-	mcp23008_lib
-	memory_24lc02b_lib
+	lib_pico_plus
+	lib_gpio_plus
+	lib_pwm_plus
+	lib_pico_wire
+	lib_gfx
+	lib_display_7735
+	lib_buzzer
+	lib_ui_leds
+	lib_working_led
+	lib_display_1309
+	lib_rotary_encoder
+	lib_mcp23008
+	lib_memory_24lc02b
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -95,7 +90,19 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 pico_add_extra_outputs(${PROJECT_NAME})
 
+pico_set_program_name(${PROJECT_NAME} "Playground")
+pico_set_program_version(${PROJECT_NAME} "avril 2026")
+
+# Modify the below lines to enable/disable output over UART/USB
+pico_enable_stdio_uart(${PROJECT_NAME} 0)
+pico_enable_stdio_usb(${PROJECT_NAME} 1)
+
+#add_compile_options(-fexec-charset=ISO-8859-1)
+target_compile_options(${PROJECT_NAME} PRIVATE -fexec-charset=ISO-8859-1)
+target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
+
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-	COMMAND arm-none-eabi-size --format=sysv $<TARGET_FILE:${PROJECT_NAME}>
+	COMMAND ${PICO_TOOLCHAIN_PATH}/bin/arm-none-eabi-size $<TARGET_FILE:${PROJECT_NAME}>
+#	COMMAND ${PICO_TOOLCHAIN_PATH}/bin/arm-none-eabi-size --format=sysv $<TARGET_FILE:${PROJECT_NAME}>
 	COMMENT "Binary sizes:"
 )

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.30)
 
-project(pico_plus_lib CXX C ASM)
+project(lib_pico_plus CXX C ASM)
 
 add_library(${PROJECT_NAME} STATIC
 )
@@ -12,3 +12,5 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 target_link_libraries(${PROJECT_NAME}
 	pico_stdlib
 )
+
+set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")

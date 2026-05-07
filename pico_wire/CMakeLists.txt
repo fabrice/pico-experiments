@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.30)
 
-project(pico_wire_lib CXX C ASM)
+project(lib_pico_wire CXX C ASM)
 
 add_library(${PROJECT_NAME} STATIC
 	wire.cxx
@@ -15,7 +15,9 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 target_link_libraries(${PROJECT_NAME}
 	pico_stdlib
-	pico_plus_lib
+	lib_pico_plus
 	hardware_i2c
 	hardware_spi
 )
+
+set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")

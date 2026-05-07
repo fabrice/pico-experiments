@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.30)
 
-project(pwm_plus_lib CXX C ASM)
+project(lib_pwm_plus CXX C ASM)
 
 add_library(${PROJECT_NAME} STATIC
 	pwm.cxx
@@ -12,7 +12,9 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 
 target_link_libraries(${PROJECT_NAME}
-	std_plus_lib
+	lib_std_plus
 	pico_stdlib
 	hardware_pwm
 )
+
+set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")

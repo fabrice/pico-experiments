@@ -1,14 +1,11 @@
 cmake_minimum_required(VERSION 3.30)
 
-project(gfx_lib CXX C ASM)
+project(lib_gfx CXX C ASM)
 
 add_library(${PROJECT_NAME} STATIC
 	gfx_point.cxx
 	gfx_rectangle.cxx
-	gfx_color_rgb.cxx
 	gfx_color_hsb.cxx
-	gfx_color_gray.cxx
-	gfx_color_argb.cxx
 	gfx_canvas.cxx
 	gfx_image.cxx
 	gfx_bitmap.cxx
@@ -23,6 +20,11 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 
 target_link_libraries(${PROJECT_NAME}
-	std_plus_lib
+	lib_std_plus
 	pico_stdlib
 )
+
+set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
+
+target_compile_options(${PROJECT_NAME} PRIVATE -fexec-charset=ISO-8859-1)
+target_compile_options(${PROJECT_NAME} PRIVATE -Wall)

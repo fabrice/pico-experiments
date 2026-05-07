@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.30)
 
-project(buzzer_lib CXX C ASM)
+project(lib_buzzer CXX C ASM)
 
 add_library(${PROJECT_NAME} STATIC
 	buzzer.cxx
@@ -12,5 +12,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 target_link_libraries(${PROJECT_NAME}
 	pico_stdlib
-	pwm_plus_lib
+	lib_pwm_plus
 )
+
+set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")

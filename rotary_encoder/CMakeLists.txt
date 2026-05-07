@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.30)
 
-project(rotary_encoder_lib CXX C ASM)
+project(lib_rotary_encoder CXX C ASM)
 
 add_library(${PROJECT_NAME} STATIC
 	rotary_encoder.cxx
@@ -13,5 +13,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 target_link_libraries(${PROJECT_NAME}
 	pico_stdlib
-	gpio_plus_lib
+	lib_gpio_plus
 )
+
+set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
