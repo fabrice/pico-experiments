@@ -49,10 +49,11 @@ gfx_color_rgb::gfx_color_rgb( uint8_t red, uint8_t green, uint8_t blue, uint8_t 
 
 //----------------------------------------------------------------
 
-gfx_color_rgb::gfx_color_rgb( float red, float green, float blue ):
-	_red { static_cast< uint8_t >( std::floor( red * 255.0f ) ) },
-	_green { static_cast< uint8_t >( std::floor( green * 255.0f ) ) },
-	_blue { static_cast< uint8_t >( std::floor( blue * 255.0f ) ) } {
+gfx_color_rgb::gfx_color_rgb( float red, float green, float blue )
+		requires (!std::is_floating_point_v< color_t >):
+		_red { gfx::component_cast< float, color_t >( red ) },
+		_green { gfx::component_cast< float, color_t >( green ) },
+		_blue { gfx::component_cast< float, color_t >( blue ) } {
 }
 
 //----------------------------------------------------------------

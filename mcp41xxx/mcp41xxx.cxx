@@ -39,9 +39,7 @@ mcp41xxx* mcp41xxx::make( uint spi_num, uint chip_select_gpio ) {
 //----------------------------------------------------------------
 
 mcp41xxx::mcp41xxx( wire* wire ):
-	_wire { wire },
-	_step_p01 { 0x80 },
-	_step_p10 { 0x80 } {
+		_wire { wire } {
 
 	this->set_step_all( 0x80 );
 }

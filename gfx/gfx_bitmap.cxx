@@ -19,15 +19,15 @@
 //----------------------------------------------------------------
 
 gfx_bitmap::gfx_bitmap( const gfx_dimension& dimension ):
-	_dimension( dimension ),
-	_bytemap( (_dimension.get_area() + 7) / 8, 0x00 ) {
+		_dimension( dimension ),
+		_bytemap( (dimension.get_area() + 7) / 8, 0x00 ) {
 }
 
 //----------------------------------------------------------------
 
 gfx_bitmap::gfx_bitmap( gfx_wh_t width, gfx_wh_t height ):
-	_dimension( width, height ),
-	_bytemap( (_dimension.get_area() + 7) / 8, 0x00 ) {
+		_dimension( width, height ),
+		_bytemap( (_dimension.get_area() + 7) / 8, 0x00 ) {
 }
 
 //----------------------------------------------------------------

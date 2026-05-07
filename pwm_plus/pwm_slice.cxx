@@ -19,11 +19,11 @@
 //----------------------------------------------------------------
 
 pwm_slice::pwm_slice( uint slice_num ):
-	v_reference_count( true ),
-	_slice_num { slice_num },
-	_divider_uint { 1 },
-	_divider_frac { 0 },
-	_wrap { 65535 } {
+		v_reference_count( true ),
+		_slice_num { slice_num },
+		_divider_uint { 1 },
+		_divider_frac { 0 },
+		_wrap { 65535 } {
 	check_slice_num_param( slice_num );
 	this->set_divider( _divider_uint, _divider_frac );
 	this->set_wrap( _wrap );
@@ -32,11 +32,11 @@ pwm_slice::pwm_slice( uint slice_num ):
 //----------------------------------------------------------------
 
 pwm_slice::pwm_slice( uint slice_num, uint8_t divider_uint, uint8_t divider_frac, uint16_t wrap ):
-	v_reference_count( true ),
-	_slice_num { slice_num },
-	_divider_uint { divider_uint },
-	_divider_frac { divider_frac },
-	_wrap { wrap } {
+		v_reference_count( true ),
+		_slice_num { slice_num },
+		_divider_uint { divider_uint },
+		_divider_frac { divider_frac },
+		_wrap { wrap } {
 	check_slice_num_param( slice_num );
 	this->set_divider( divider_uint, divider_frac );
 	this->set_wrap( wrap );
@@ -45,11 +45,11 @@ pwm_slice::pwm_slice( uint slice_num, uint8_t divider_uint, uint8_t divider_frac
 //----------------------------------------------------------------
 
 pwm_slice::pwm_slice( uint slice_num, float divider, uint16_t wrap ):
-	v_reference_count( true ),
-	_slice_num { slice_num },
-	_divider_uint { 1 },
-	_divider_frac { 0 },
-	_wrap { wrap } {
+		v_reference_count( true ),
+		_slice_num { slice_num },
+		_divider_uint { 1 },
+		_divider_frac { 0 },
+		_wrap { wrap } {
 	check_slice_num_param( slice_num );
 	this->set_divider( divider );
 	this->set_wrap( wrap );
@@ -58,11 +58,11 @@ pwm_slice::pwm_slice( uint slice_num, float divider, uint16_t wrap ):
 //----------------------------------------------------------------
 
 pwm_slice::pwm_slice( uint slice_num, float frequency ):
-	v_reference_count( true ),
-	_slice_num { slice_num },
-	_divider_uint { 1 },
-	_divider_frac { 0 },
-	_wrap { 65535 } {
+		v_reference_count( true ),
+		_slice_num { slice_num },
+		_divider_uint { 1 },
+		_divider_frac { 0 },
+		_wrap { 65535 } {
 	check_slice_num_param( slice_num );
 	this->set_frequency( frequency );
 }

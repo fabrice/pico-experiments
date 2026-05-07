@@ -32,17 +32,17 @@ const gfx_color_hsb gfx_color_hsb::MAGENTA { 300, 0xff_u8, 0xff_u8 };
 //----------------------------------------------------------------
 
 gfx_color_hsb::gfx_color_hsb( uint16_t hue, uint8_t sat, uint8_t bri ):
-	_hue { static_cast< float >( hue ) },
-	_sat { static_cast< float >( sat ) / 255.0f },
-	_bri { static_cast< float >( bri ) / 255.0f } {
+		_hue { static_cast< float >( hue ) },
+		_sat { static_cast< float >( sat ) / 255.0f },
+		_bri { static_cast< float >( bri ) / 255.0f } {
 }
 
 //----------------------------------------------------------------
 
 gfx_color_hsb::gfx_color_hsb( const gfx_color_hsb& that ):
-    _hue { that._hue },
-    _sat { that._sat },
-    _bri { that._bri } {
+		_hue { that._hue },
+		_sat { that._sat },
+		_bri { that._bri } {
     _hue = std::fmod( std::abs( _hue ), 360.0f );
     _sat = std::abs( _sat );
     _sat = constrain( _sat, 0.0f, 1.0f );

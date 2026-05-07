@@ -89,15 +89,14 @@ display_7735* display_7735::make( wire* wire, uint reset_gpio, uint dc_gpio, uin
 
 //----------------------------------------------------------------
 
-display_7735::display_7735( wire* wire, uint reset_gpio, uint dc_gpio, uint backlight_gpio, uint8_t offset, bool bgr ):
-	_wire( wire ),
-	_reset_gpio( reset_gpio ),
-	_dc_gpio( dc_gpio ),
-	_backlight_gpio( backlight_gpio ),
-	_offset( offset ),
-	_brightness( 63 ),
-	_font( &cfpt_mono_6x8[0][0] ),
-	_color_mode { bgr ? ST7735_MADCTL_BGR : ST7735_MADCTL_RGB } {
+display_7735::display_7735( wire* wire, uint reset_gpio, uint dc_gpio, uint backlight_gpio, bool bgr ):
+		_wire( wire ),
+		_reset_gpio( reset_gpio ),
+		_dc_gpio( dc_gpio ),
+		_backlight_gpio( backlight_gpio ),
+		_brightness( 63 ),
+		_font( &cfpt_mono_6x8[0][0] ),
+		_color_mode { bgr ? ST7735_MADCTL_BGR : ST7735_MADCTL_RGB } {
 	gpio_init( _reset_gpio);
 	gpio_set_dir( _reset_gpio, GPIO_OUT );
 	gpio_put( _reset_gpio, true );

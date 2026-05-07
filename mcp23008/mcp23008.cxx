@@ -40,10 +40,10 @@ mcp23008* make( uint i2c_num, uint8_t address, uint8_t gpio_dir, uint8_t gpio_pu
 //----------------------------------------------------------------
 
 mcp23008::mcp23008( wire* wire, uint8_t gpio_dir, uint8_t gpio_pull_up ):
-	_wire { wire },
-	_address { MCP23008_ADDRESS },
-	_gpio_dir { gpio_dir },
-	_gpio_pull_up { gpio_pull_up } {
+		_wire { wire },
+		_address { MCP23008_ADDRESS },
+		_gpio_dir { gpio_dir },
+		_gpio_pull_up { gpio_pull_up } {
 
 	this->gpio_init();
 }

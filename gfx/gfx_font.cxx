@@ -15,23 +15,22 @@
 //----------------------------------------------------------------
 
 gfx_font::gfx_font():
-	v_reference_count { true } {
+		v_reference_count { true } {
 }
 
 //----------------------------------------------------------------
 
 gfx_font::gfx_font( gfx_dxy_t y_advance ):
-	v_reference_count { true },
-	_x_advance { 0 },
-	_y_advance { y_advance } {
+		v_reference_count { true },
+		_y_advance { y_advance } {
 }
 
 //----------------------------------------------------------------
 
 gfx_font::gfx_font( const gfx_font_data& font_data ):
-	v_reference_count { true },
-	_x_advance { font_data.x_advance },
-	_y_advance { font_data.y_advance } {
+		v_reference_count { true },
+		_x_advance { font_data.x_advance },
+		_y_advance { font_data.y_advance } {
 	for ( const auto& [ key, data ] : font_data.glyphs ) {
 		_glyphs[ key ] = gfx_glyph( data );
 	}

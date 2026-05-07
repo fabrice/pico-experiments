@@ -26,11 +26,11 @@ rotary_encoder* rotary_encoder::make( uint a_gpio, uint b_gpio, uint s_gpio ) {
 //----------------------------------------------------------------
 
 rotary_encoder::rotary_encoder( uint a_gpio, uint b_gpio, uint s_gpio ):
-	_a_gpio { a_gpio },
-	_b_gpio { b_gpio },
-	_s_gpio { s_gpio },
-	_rotations { 0 },
-	_clicks { 0 } {
+		_a_gpio { a_gpio },
+		_b_gpio { b_gpio },
+		_s_gpio { s_gpio },
+		_rotations { 0 },
+		_clicks { 0 } {
 
 	this->io_init();
 }

@@ -28,8 +28,8 @@ gfx_pixmap::gfx_pixmap( const gfx_dimension& dimension ):
 //----------------------------------------------------------------
 
 gfx_pixmap::gfx_pixmap( gfx_wh_t width, gfx_wh_t height ):
-	_dimension { width, height },
-	_pixmap( _dimension.get_area(), 0x00 ) {
+		_dimension { width, height },
+		_pixmap( _dimension.get_area(), gfx_color_rgb_8::BLACK ) {
 }
 
 //----------------------------------------------------------------

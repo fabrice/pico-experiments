@@ -19,28 +19,28 @@
 //----------------------------------------------------------------
 
 gfx_glyph::gfx_glyph( char character, gfx_xy_t left, gfx_xy_t top, gfx_wh_t width, gfx_wh_t height, gfx_dxy_t x_advance ):
-	_character { character },
-	_box { gfx_point( left, top ), gfx_dimension( width, height ) },
-	_x_advance { x_advance },
-	_bytemap( (_box.get_area() + 7) / 8, 0x00 ) {
+		_character { character },
+		_box { gfx_point( left, top ), gfx_dimension( width, height ) },
+		_x_advance { x_advance },
+		_bytemap( (_box.get_area() + 7) / 8, 0x00 ) {
 }
 
 //----------------------------------------------------------------
 
 gfx_glyph::gfx_glyph( const gfx_glyph_data& glyph_data ):
-	_character { glyph_data.character },
-	_box { gfx_point( glyph_data.x, glyph_data.y ), gfx_dimension( glyph_data.width, glyph_data.height ) },
-	_x_advance { glyph_data.x_advance },
-	_bytemap( glyph_data.bytemap ) {
+		_character { glyph_data.character },
+		_box { gfx_point( glyph_data.x, glyph_data.y ), gfx_dimension( glyph_data.width, glyph_data.height ) },
+		_x_advance { glyph_data.x_advance },
+		_bytemap( glyph_data.bytemap ) {
 }
 
 //----------------------------------------------------------------
 
 gfx_glyph::gfx_glyph( const gfx_glyph& that ):
-	_character { that._character },
-	_box { that._box },
-	_x_advance { that._x_advance },
-	_bytemap( that._bytemap ) {
+		_character { that._character },
+		_box { that._box },
+		_x_advance { that._x_advance },
+		_bytemap( that._bytemap ) {
 }
 
 //----------------------------------------------------------------

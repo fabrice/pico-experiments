@@ -117,12 +117,12 @@ OLED* OLED::make( wire* wire, uint reset_gpio ) {
 //----------------------------------------------------------------
 
 OLED::OLED( wire* wire, uint reset_gpio ):
-	_wire { wire },
-	_reset_gpio { reset_gpio },
-	_width { SSD1309_WIDTH },
-	_height { SSD1309_HEIGHT },
-	_font { &cfpt_mono_6x8[0][0] },
-	_font_array( &cfpt_mono_6x8_array ) {
+		_wire { wire },
+		_reset_gpio { reset_gpio },
+		_width { SSD1309_WIDTH },
+		_height { SSD1309_HEIGHT },
+		_font { &cfpt_mono_6x8[0][0] },
+		_font_array( &cfpt_mono_6x8_array ) {
 
 	this->init();
 }

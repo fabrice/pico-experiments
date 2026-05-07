@@ -31,7 +31,7 @@ memory_24lc02b* memory_24lc02b::make( uint i2c_num, uint8_t address ) {
 //----------------------------------------------------------------
 
 memory_24lc02b::memory_24lc02b( wire* wire ):
-	_wire { wire } {
+		_wire { wire } {
 }
 
 //----------------------------------------------------------------

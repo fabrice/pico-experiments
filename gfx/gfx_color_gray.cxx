@@ -36,7 +36,7 @@ gfx_color_gray::gfx_color_gray( uint8_t gray, uint8_t max ):
 //----------------------------------------------------------------
 
 gfx_color_gray::gfx_color_gray( float gray ):
-	_gray( std::floor( gray * 255.0f ) ) {
+		_gray { gfx::component_cast< float, color_t >( gray ) } {
 }
 
 //----------------------------------------------------------------

@@ -24,14 +24,14 @@
 //----------------------------------------------------------------
 
 gfx_canvas::gfx_canvas( gfx_wh_t width, gfx_wh_t height ):
-	_dimension { width, height } {
+		_dimension { width, height } {
 	_image = new gfx_bitmap( _dimension );
 }
 
 //----------------------------------------------------------------
 
 gfx_canvas::gfx_canvas( gfx_wh_t width, gfx_wh_t height, uint8_t bits ):
-	_dimension { width, height } {
+		_dimension { width, height } {
 	if ( bits <= 1 ) {
 		_image = new gfx_bitmap( _dimension );
 	}
@@ -43,7 +43,8 @@ gfx_canvas::gfx_canvas( gfx_wh_t width, gfx_wh_t height, uint8_t bits ):
 //----------------------------------------------------------------
 
 gfx_canvas::gfx_canvas( const gfx_dimension& dimension ):
-	_dimension { dimension } {
+		_dimension { dimension } {
+	_image = new gfx_bitmap( _dimension );
 }
 
 //----------------------------------------------------------------

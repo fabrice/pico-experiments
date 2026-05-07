@@ -19,7 +19,7 @@
 //----------------------------------------------------------------
 
 pwm::pwm( uint gpio ):
-	_gpio { gpio } {
+		_gpio { gpio } {
 
 	const uint slice_num = pwm_gpio_to_slice_num( _gpio );
 	_slice = new pwm_slice( slice_num );
@@ -30,8 +30,8 @@ pwm::pwm( uint gpio ):
 //----------------------------------------------------------------
 
 pwm::pwm( uint gpio, float divider, uint16_t wrap, uint16_t level ):
-	_gpio { gpio },
-	_level { level } {
+		_gpio { gpio },
+		_level { level } {
 
 	const uint slice_num = pwm_gpio_to_slice_num( _gpio );
 	_slice = new pwm_slice( slice_num, divider, wrap );
@@ -42,8 +42,8 @@ pwm::pwm( uint gpio, float divider, uint16_t wrap, uint16_t level ):
 //----------------------------------------------------------------
 
 pwm::pwm( uint gpio, uint8_t divider_uint, uint8_t divider_frac, uint16_t wrap, uint16_t level ):
-	_gpio { gpio },
-	_level { level } {
+		_gpio { gpio },
+		_level { level } {
 
 	const uint slice_num = pwm_gpio_to_slice_num( _gpio );
 	_slice = new pwm_slice( slice_num, divider_uint, divider_frac, wrap );
@@ -54,7 +54,7 @@ pwm::pwm( uint gpio, uint8_t divider_uint, uint8_t divider_frac, uint16_t wrap, 
 //----------------------------------------------------------------
 
 pwm::pwm( uint gpio, float frequency, float duty ):
-	_gpio { gpio } {
+		_gpio { gpio } {
 
 	const uint slice_num = pwm_gpio_to_slice_num( _gpio );
 	_slice = new pwm_slice( slice_num, frequency );
@@ -65,8 +65,8 @@ pwm::pwm( uint gpio, float frequency, float duty ):
 //----------------------------------------------------------------
 
 pwm::pwm( uint gpio, pwm_slice* slice ):
-	_gpio { gpio },
-	_slice { slice } {
+		_gpio { gpio },
+		_slice { slice } {
 
 	_slice->retain();
 	this->io_init();

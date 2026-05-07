@@ -25,10 +25,10 @@ const gfx_color_argb gfx_color_argb::CLEAR { 0xff_u8, 0xff_u8, 0xff_u8, 0xff_u8 
 //----------------------------------------------------------------
 
 gfx_color_argb::gfx_color_argb( float alpha, float red, float green, float blue ):
-	_alpha( std::floor( alpha * 255.0f ) ),
-	_red( std::floor( red * 255.0f ) ),
-	_green( std::floor( green * 255.0f ) ),
-	_blue( std::floor( blue * 255.0f ) ) {
+		_alpha( gfx::component_cast< float, color_t >( alpha ) ),
+		_red( gfx::component_cast< float, color_t >( red ) ),
+		_green( gfx::component_cast< float, color_t >( green ) ),
+		_blue( gfx::component_cast< float, color_t >( blue ) ) {
 }
 
 //----------------------------------------------------------------
