@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.30)
+cmake_minimum_required(VERSION 4.0)
 
 project(lib_display_7735 CXX C ASM)
 
