@@ -29,107 +29,107 @@ rotary_encoder* encoder_init( uint a_gpio, uint b_gpio, uint s_gpio ) {
 
 //----------------------------------------------------------------
 
-bool encoder_get_a( const rotary_encoder* encoder ) {
-	if ( encoder == nullptr ) return false;
+bool encoder_get_a( const rotary_encoder* that ) {
+	if ( that == nullptr ) return false;
 
-	return encoder->get_a();
+	return that->get_a();
 }
 
 //----------------------------------------------------------------
 
-bool encoder_get_b( const rotary_encoder* encoder ) {
-	if ( encoder == nullptr ) return false;
+bool encoder_get_b( const rotary_encoder* that ) {
+	if ( that == nullptr ) return false;
 
-	return encoder->get_b();
+	return that->get_b();
 }
 
 //----------------------------------------------------------------
 
-bool encoder_get_s( const rotary_encoder* encoder ) {
-	if ( encoder == nullptr ) return false;
+bool encoder_get_s( const rotary_encoder* that ) {
+	if ( that == nullptr ) return false;
 
-	return encoder->get_s();
+	return that->get_s();
 }
 
 //----------------------------------------------------------------
 
-bool encoder_is_a_equal_b( const rotary_encoder* encoder ) {
-	if ( encoder == nullptr ) return false;
+bool encoder_is_a_equal_b( const rotary_encoder* that ) {
+	if ( that == nullptr ) return false;
 
-	return encoder->is_a_equal_b();
+	return that->is_a_equal_b();
 }
 
 //----------------------------------------------------------------
 
-bool encoder_is_a_notequal_b( const rotary_encoder* encoder ) {
-	if ( encoder == nullptr ) return false;
+bool encoder_is_a_notequal_b( const rotary_encoder* that ) {
+	if ( that == nullptr ) return false;
 
-	return encoder->is_a_notequal_b();
+	return that->is_a_notequal_b();
 }
 
 //----------------------------------------------------------------
 
-int32_t encoder_get_rotations( const rotary_encoder* encoder ) {
-	if ( encoder == nullptr ) return 0;
+int32_t encoder_get_rotations( const rotary_encoder* that ) {
+	if ( that == nullptr ) return 0;
 
-	return encoder->get_rotations();
+	return that->get_rotations();
 }
 
 //----------------------------------------------------------------
 
-int8_t encoder_use_rotation( rotary_encoder* encoder ) {
-	if ( encoder == nullptr ) return 0;
+int8_t encoder_use_rotation( rotary_encoder* that ) {
+	if ( that == nullptr ) return 0;
 
-	return encoder->use_rotation();
+	return that->use_rotation();
 }
 
 //----------------------------------------------------------------
 
-int8_t encoder_get_direction( const rotary_encoder* encoder ) {
-	if ( encoder == nullptr ) return 0;
+int8_t encoder_get_direction( const rotary_encoder* that ) {
+	if ( that == nullptr ) return 0;
 
-	return encoder->get_direction();
+	return that->get_direction();
 }
 
 //----------------------------------------------------------------
 
-uint32_t encoder_get_clicks( const rotary_encoder* encoder ) {
-	if ( encoder == nullptr ) return 0;
+uint32_t encoder_get_clicks( const rotary_encoder* that ) {
+	if ( that == nullptr ) return 0;
 
-	return encoder->get_clicks();
+	return that->get_clicks();
 }
 
 //----------------------------------------------------------------
 
-bool encoder_use_click( rotary_encoder* encoder ) {
-	if ( encoder == nullptr ) return false;
+bool encoder_use_click( rotary_encoder* that ) {
+	if ( that == nullptr ) return false;
 
-	return encoder->use_click();
+	return that->use_click();
 }
 
 //----------------------------------------------------------------
 
-void encoder_set_callback_a( rotary_encoder* encoder, gpio_irq_callback_t callback ) {
-	if ( encoder == nullptr ) return;
+void encoder_set_callback_a( rotary_encoder* that, gpio_irq_callback_t callback ) {
+	if ( that == nullptr ) return;
 
-	gpio_irq_vtable_set_callback( encoder->get_a_gpio(), callback );
+	gpio_irq_vtable_set_callback( that->get_a_gpio(), callback );
 }
 
 //----------------------------------------------------------------
 
-void encoder_set_callback_s( rotary_encoder* encoder, gpio_irq_callback_t callback ) {
-	if ( encoder == nullptr ) return;
+void encoder_set_callback_s( rotary_encoder* that, gpio_irq_callback_t callback ) {
+	if ( that == nullptr ) return;
 
-	gpio_irq_vtable_set_callback( encoder->get_s_gpio(), callback );
+	gpio_irq_vtable_set_callback( that->get_s_gpio(), callback );
 }
 
 //----------------------------------------------------------------
 
-void encoder_deinit( rotary_encoder*& encoder ) {
-	if ( encoder == nullptr ) return;
+void encoder_deinit( rotary_encoder*& that ) {
+	if ( that == nullptr ) return;
 
-	delete encoder;
-	encoder = nullptr;
+	delete that;
+	that = nullptr;
 }
 
 //----------------------------------------------------------------

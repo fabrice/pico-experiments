@@ -15,7 +15,9 @@
 
 #include "pico/stdlib.h"
 #include "hardware_i2c_plus.h"
+
 #include <cstring>
+#include <algorithm>
 
 //----------------------------------------------------------------
 
@@ -24,7 +26,7 @@ constexpr uint32_t EE24LC02B_WRITE_CYCLE = 5; // ms
 //----------------------------------------------------------------
 
 memory_24lc02b* memory_24lc02b::make( uint i2c_num, uint8_t address ) {
-	auto wire = new wire_i2c( i2c_num, address );
+	auto wire = wire_i2c::make( i2c_num, address );
 	return new memory_24lc02b( wire );
 }
 
@@ -80,7 +82,7 @@ uint8_t memory_24lc02b::read_byte( uint8_t address ) const {
 
 	uint8_t data;
 	size_t length = 1;
-	_wire->continue_transaction();
+	_wire->follow_transaction();
 	result = _wire->read_bytes( &data, &length );
 	_wire->finish_transaction();
 	if ( result < PICO_OK ) return result;
@@ -103,7 +105,7 @@ void memory_24lc02b::read_page( uint8_t address, uint8_t data[8] ) const {
 	}
 
 	size_t length = EE24LC02B_PAGE_SIZE;
-	_wire->continue_transaction();
+	_wire->follow_transaction();
 	result = _wire->read_bytes( data, &length );
 	_wire->finish_transaction();
 }
@@ -121,7 +123,7 @@ void memory_24lc02b::read_bytes( uint8_t address, uint8_t data[], uint16_t lengt
 	}
 
 	size_t rlength = length;
-	_wire->continue_transaction();
+	_wire->follow_transaction();
 	result = _wire->read_bytes( data, &rlength );
 	_wire->finish_transaction();
 }

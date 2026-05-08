@@ -35,6 +35,7 @@ public:
 
 	mcp41xxx() = delete;
 	mcp41xxx( wire* wire );
+
 	~mcp41xxx();
 
 	void set_step( uint pot, uint8_t step );

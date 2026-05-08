@@ -43,8 +43,6 @@ public:
 	memory_24lc02b() = delete;
 	memory_24lc02b( wire* wire );
 
-public:
-
 	~memory_24lc02b();
 
 	void write_byte( uint8_t address, uint8_t data ) const;

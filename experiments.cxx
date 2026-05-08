@@ -59,6 +59,13 @@ constexpr uint ST7735_BACKLIGHT_GPIO { 2 };
 // Buzzer
 constexpr uint BUZZER_GPIO { 27 };
 
+// Buttons
+
+constexpr uint BUTTON_UP_GPIO { 10 };
+constexpr uint BUTTON_RIGHT_GPIO { 11 };
+constexpr uint BUTTON_DOWN_GPIO { 14 };
+constexpr uint BUTTON_LEFT_GPIO { 15 };
+
 // OLED
 
 constexpr uint I2C0_SDA_GPIO { 4 };
@@ -320,7 +327,7 @@ int main() {
 
 	//--------------------
 	// encoder
-	auto encoder = new rotary_encoder( 10, 11, 14 );
+	auto encoder = new rotary_encoder( BUTTON_UP_GPIO, BUTTON_RIGHT_GPIO, BUTTON_DOWN_GPIO );
 
 	//--------------------
 	// forever
@@ -335,15 +342,19 @@ int main() {
 			printf( "click ! \n" );
 		}
 
-		if ( !gpio_get( 10 ) ) {
-			if ( is_not_null( display_tft ) ) display_tft->print_center( 5, "  up  " );
+		if ( !gpio_get( BUTTON_UP_GPIO ) ) {
+			if ( is_not_null( display_tft ) ) display_tft->print_center( "  up  ", 5 );
 		}
-		if ( !gpio_get( 11 ) ) {
-			if ( is_not_null( display_tft ) ) display_tft->print_center( 5, "right " );
+		if ( !gpio_get( BUTTON_RIGHT_GPIO ) ) {
+			if ( is_not_null( display_tft ) ) display_tft->print_center( "right ", 5 );
 		}
 
-		if ( !gpio_get( 14 ) ) {
-			if ( is_not_null( display_tft ) ) display_tft->print_center( 5, " down " );
+		if ( !gpio_get( BUTTON_DOWN_GPIO ) ) {
+			if ( is_not_null( display_tft ) ) display_tft->print_center( " down ", 5 );
+		}
+
+		if ( !gpio_get( BUTTON_LEFT_GPIO ) ) {
+			if ( is_not_null( display_tft ) ) display_tft->print_center( " left ", 5 );
 		}
 
 //		tight_loop_contents();
