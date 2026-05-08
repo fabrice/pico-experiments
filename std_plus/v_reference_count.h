@@ -22,7 +22,7 @@ class v_reference_count {
 
 private:
 
-	uint8_t _reference_count { uint8_t(0) };
+	mutable uint8_t _reference_count { uint8_t(0) };
 
 public:
 
@@ -40,7 +40,7 @@ public:
 
 	inline uint8_t get_reference_count() const { return _reference_count; }
 
-	inline void retain() { ++_reference_count; }
+	inline void retain() const { ++_reference_count; }
 
 	bool release();
 
