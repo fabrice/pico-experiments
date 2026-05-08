@@ -61,9 +61,9 @@ void memory_24lc02b::write_page( uint8_t address, uint8_t data[8] ) const {
 
 	address -= address % EE24LC02B_PAGE_SIZE;
 
-	uint8_t buffer[9];
+	uint8_t buffer[9] { 0 };
 	buffer[0] = address;
-	memcpy( buffer + 1, data, 8 );
+	std::copy_n( data, 8, buffer + 1 );
 	_wire->write_bytes( buffer, sizeof(buffer) );
 	sleep_ms( EE24LC02B_WRITE_CYCLE );
 }
@@ -133,7 +133,7 @@ void memory_24lc02b::read_bytes( uint8_t address, uint8_t data[], uint16_t lengt
 void memory_24lc02b::fill( uint8_t data ) const {
 	if ( _wire == nullptr ) return;
 
-	uint8_t buffer[EE24LC02B_PAGE_SIZE + 1];
+	uint8_t buffer[EE24LC02B_PAGE_SIZE + 1] { 0 };
 	memset( buffer + 1, data, EE24LC02B_PAGE_SIZE );
 
 	for ( uint16_t address = 0 ; address < EE24LC02B_MEMORY_SIZE ; address += EE24LC02B_PAGE_SIZE ) {

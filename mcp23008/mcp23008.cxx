@@ -61,7 +61,7 @@ mcp23008::~mcp23008() {
 //----------------------------------------------------------------
 
 void mcp23008::gpio_init() {
-	uint8_t buffer[] = {
+	uint8_t buffer[] {
 		MCP23008_IODIR, // register IODIR
 		(uint8_t)~_gpio_dir, // IODIR
 		0x00, // IPOL
