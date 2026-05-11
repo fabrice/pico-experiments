@@ -25,7 +25,7 @@ protected:
 
 public:
 
-	virtual ~wire() = 0;
+	virtual ~wire() noexcept = 0;
 
 	virtual void set_bitrate( uint bitrate ) = 0;
 

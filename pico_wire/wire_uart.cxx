@@ -21,7 +21,7 @@ wire_uart::wire_uart( uint uart_num ):
 
 //----------------------------------------------------------------
 
-wire_uart::~wire_uart() {
+wire_uart::~wire_uart() noexcept {
 	//uart_deinit( _uart_instance );
 }
 

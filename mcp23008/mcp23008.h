@@ -47,7 +47,7 @@ private:
 
 public:
 
-	~mcp23008();
+	~mcp23008() noexcept;
 
 	void gpio_set_dir( uint8_t gpio, bool out );
 	void gpio_set_pull_up( uint8_t gpio, bool up );

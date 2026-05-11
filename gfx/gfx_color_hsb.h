@@ -55,7 +55,7 @@ public:
 	gfx_color_hsb( const gfx_color_hsb& that );
 	gfx_color_hsb( uint16_t hue, uint8_t sat, uint8_t bri );
 	gfx_color_hsb( float hue, float sat, float bri ): _hue { hue }, _sat { sat }, _bri { bri } {}
-	~gfx_color_hsb() = default;
+	~gfx_color_hsb() noexcept = default;
 
 	inline uint16_t get_hue() const { return (uint16_t)std::fmod( std::floor( _hue ), 360.0f ); }
 	inline uint8_t get_sat() const { return (uint8_t)std::floor( _sat * 255.0f ); }
@@ -78,6 +78,6 @@ public:
 
 //----------------------------------------------------------------
 
-
+static_assert( std::semiregular< gfx_color_hsb > );
 
 //----------------------------------------------------------------

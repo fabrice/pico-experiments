@@ -40,7 +40,7 @@ public:
 	mcp3221() = delete;
 	mcp3221( wire* wire );
 
-	~mcp3221();
+	~mcp3221() noexcept;
 
 	uint16_t get_adc() { return _adc; }
 

@@ -32,7 +32,7 @@ gfx_pixmap::gfx_pixmap( gfx_wh_t width, gfx_wh_t height ):
 
 //----------------------------------------------------------------
 
-gfx_pixmap::~gfx_pixmap() {
+gfx_pixmap::~gfx_pixmap() noexcept {
 	_pixmap.clear();
 }
 

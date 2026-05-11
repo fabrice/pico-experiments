@@ -47,7 +47,7 @@ gfx_canvas::gfx_canvas( const gfx_dimension& dimension ):
 
 //----------------------------------------------------------------
 
-gfx_canvas::~gfx_canvas() {
+gfx_canvas::~gfx_canvas() noexcept {
 	if ( _font != nullptr ) {
 		_font->release();
 		_font = nullptr;

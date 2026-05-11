@@ -34,15 +34,15 @@ public:
 
 protected:
 
-	virtual ~v_reference_count();
+	virtual ~v_reference_count() noexcept;
 
 public:
 
-	inline uint8_t get_reference_count() const { return _reference_count; }
+	uint8_t get_reference_count() const noexcept { return _reference_count; }
 
-	inline void retain() const { ++_reference_count; }
+	void retain() const noexcept { ++_reference_count; }
 
-	bool release();
+	bool release() noexcept;
 
 };
 

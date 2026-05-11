@@ -68,7 +68,7 @@ public:
 
 	gfx_color_rgb( float red, float green, float blue ) requires (!std::is_floating_point_v< color_t >);
 
-	~gfx_color_rgb() = default;
+	~gfx_color_rgb() noexcept = default;
 
 	inline color_t get_red() const { return _red; }
 	inline color_t get_green() const { return _green; }
@@ -96,5 +96,10 @@ public:
 	gfx_color_hsb to_hsb() const;
 
 };
+
+//----------------------------------------------------------------
+
+static_assert( std::semiregular< gfx_color_rgb< uint8_t > > );
+static_assert( std::semiregular< gfx_color_rgb< float > > );
 
 //----------------------------------------------------------------

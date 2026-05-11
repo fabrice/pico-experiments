@@ -38,7 +38,7 @@ public:
 	gfx_bitmap() = delete;
 	explicit gfx_bitmap( const gfx_dimension& dimension );
 	gfx_bitmap( gfx_wh_t width, gfx_wh_t height );
-	virtual ~gfx_bitmap() override;
+	virtual ~gfx_bitmap() noexcept override;
 
 	gfx_wh_t get_width() const { return _dimension.get_width(); }
 	gfx_wh_t get_height() const { return _dimension.get_height(); }

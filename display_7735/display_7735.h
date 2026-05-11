@@ -58,7 +58,7 @@ public:
 	static display_7735* make( wire* wire, uint reset_gpio, uint dc_gpio, uint backlight_gpio );
 
 	display_7735( wire* wire, uint reset_gpio, uint dc_gpio, uint backlight_gpio, bool bgr = false );
-	~display_7735();
+	~display_7735() noexcept;
 
 private:
 

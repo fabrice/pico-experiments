@@ -129,7 +129,7 @@ OLED::OLED( wire* wire, uint reset_gpio ):
 
 //----------------------------------------------------------------
 
-OLED::~OLED() {
+OLED::~OLED() noexcept {
 	this->erase();
 	this->set_on( false );
 	this->reset();

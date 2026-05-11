@@ -67,7 +67,7 @@ private:
 
 public:
 
-	~OLED();
+	~OLED() noexcept;
 
 private:
 

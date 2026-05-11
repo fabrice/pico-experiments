@@ -68,7 +68,7 @@ public:
 	buzzer( uint gpio );
 	buzzer( pwm* pwm );
 
-	~buzzer();
+	~buzzer() noexcept;
 
 	float get_frequency() const;
 	void set_frequency( float frequency );

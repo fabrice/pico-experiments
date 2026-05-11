@@ -38,7 +38,7 @@ memory_24lc02b::memory_24lc02b( wire* wire ):
 
 //----------------------------------------------------------------
 
-memory_24lc02b::~memory_24lc02b() {
+memory_24lc02b::~memory_24lc02b() noexcept {
 	if ( _wire != nullptr ) {
 		delete _wire;
 		_wire = nullptr;

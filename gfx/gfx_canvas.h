@@ -46,7 +46,7 @@ public:
 	gfx_canvas( gfx_wh_t width, gfx_wh_t height );
 	gfx_canvas( gfx_wh_t width, gfx_wh_t height, uint8_t bits );
 	gfx_canvas( const gfx_dimension& dimension );
-	~gfx_canvas();
+	~gfx_canvas() noexcept;
 
 	gfx_wh_t get_width() const { return _dimension.get_width(); }
 	gfx_wh_t get_height() const { return _dimension.get_height(); }

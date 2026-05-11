@@ -33,7 +33,7 @@ public:
 
 	wire_uart() = delete;
 	wire_uart( uint uart_num );
-	virtual ~wire_uart() override;
+	virtual ~wire_uart() noexcept override;
 
 	void io_init( uint tx_gpio, uint rx_gpio, uint bitrate );
 

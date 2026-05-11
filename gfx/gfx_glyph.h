@@ -63,7 +63,7 @@ private:
 
 public:
 
-	~gfx_glyph();
+	~gfx_glyph() noexcept;
 
 	char get_character() const { return _character; }
 	void set_character( char character ) { _character = character; }

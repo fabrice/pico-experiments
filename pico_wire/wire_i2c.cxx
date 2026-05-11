@@ -40,7 +40,7 @@ wire_i2c::wire_i2c( pico_i2c_ptr i2c_instance, uint8_t address ):
 
 //----------------------------------------------------------------
 
-wire_i2c::~wire_i2c() {
+wire_i2c::~wire_i2c() noexcept {
 	this->finish_transaction();
 	//i2c_deinit( _i2c_instance );
 }

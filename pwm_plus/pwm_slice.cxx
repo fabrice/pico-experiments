@@ -69,7 +69,7 @@ pwm_slice::pwm_slice( uint slice_num, float frequency ):
 
 //----------------------------------------------------------------
 
-pwm_slice::~pwm_slice() {
+pwm_slice::~pwm_slice() noexcept {
 	this->set_enabled( false );
 }
 

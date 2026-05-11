@@ -43,7 +43,7 @@ public:
 	mcp9800() = delete;
 	mcp9800( wire* wire );
 
-	~mcp9800();
+	~mcp9800() noexcept;
 
 	void read_configuration();
 

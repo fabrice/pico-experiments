@@ -31,7 +31,7 @@ class gfx_image {
 public:
 
 	gfx_image() = default;
-	virtual ~gfx_image() = default;
+	virtual ~gfx_image() noexcept = default;
 
 	virtual gfx_dimension get_dimension() const = 0;
 

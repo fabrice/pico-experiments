@@ -64,7 +64,7 @@ public:
 
 	gfx_color_argb( float alpha, float red, float green, float blue ) requires (!std::is_floating_point_v< color_t >);
 
-	~gfx_color_argb() = default;
+	~gfx_color_argb() noexcept = default;
 
 	color_t get_alpha() const { return _alpha; }
 	color_t get_red() const { return _red; }
@@ -89,5 +89,10 @@ public:
 	gfx_color_rgb< uint8_t > to_rgb() const { return gfx_color_rgb( gfx::component_cast< color_t, uint8_t >( _red ), gfx::component_cast< color_t, uint8_t >( _green ), gfx::component_cast< color_t, uint8_t >( _blue ) ); }
 
 };
+
+//----------------------------------------------------------------
+
+static_assert( std::semiregular< gfx_color_argb< uint8_t > > );
+static_assert( std::semiregular< gfx_color_argb< float > > );
 
 //----------------------------------------------------------------

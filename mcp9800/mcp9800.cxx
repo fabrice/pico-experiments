@@ -40,7 +40,7 @@ mcp9800::mcp9800( wire* wire ):
 
 //----------------------------------------------------------------
 
-mcp9800::~mcp9800() {
+mcp9800::~mcp9800() noexcept {
 	if ( _wire != nullptr ) {
 		delete _wire;
 		_wire = nullptr;

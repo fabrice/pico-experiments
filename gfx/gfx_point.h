@@ -40,7 +40,7 @@ public:
 	constexpr gfx_point() = default;
 	constexpr gfx_point( const gfx_point& that ): _x { that._x }, _y { that._y } {}
 	constexpr gfx_point( gfx_xy_t x, gfx_xy_t y ): _x { x }, _y { y } {}
-	constexpr ~gfx_point() = default;
+	constexpr ~gfx_point() noexcept = default;
 
 	gfx_xy_t get_x() const { return _x; }
 	void set_x( gfx_xy_t x ) { _x = x; }
@@ -88,6 +88,6 @@ public:
 
 //----------------------------------------------------------------
 
-
+static_assert( std::regular< gfx_point > );
 
 //----------------------------------------------------------------

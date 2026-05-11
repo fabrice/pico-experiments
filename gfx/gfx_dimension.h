@@ -49,7 +49,7 @@ public:
 		_height { height } {
 	}
 
-	constexpr ~gfx_dimension() = default;
+	constexpr ~gfx_dimension() noexcept = default;
 
 	gfx_wh_t get_width() const { return _width; }
 	gfx_wh_t get_height() const { return _height; }
@@ -72,5 +72,9 @@ public:
 		return is_gt( (*this) <=> that ); }
 
 };
+
+//----------------------------------------------------------------
+
+static_assert( std::regular< gfx_dimension > );
 
 //----------------------------------------------------------------

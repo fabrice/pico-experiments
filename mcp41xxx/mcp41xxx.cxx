@@ -46,7 +46,7 @@ mcp41xxx::mcp41xxx( wire* wire ):
 
 //----------------------------------------------------------------
 
-mcp41xxx::~mcp41xxx() {
+mcp41xxx::~mcp41xxx() noexcept {
 	if ( _wire != nullptr ) {
 		_wire->start_communication();
 		_wire->write_bytes( MCP41_SHUTDOWN_POT11, 0x00 );

@@ -42,7 +42,7 @@ private:
 
 public:
 
-	virtual ~wire_spi() override;
+	virtual ~wire_spi() noexcept override;
 
 	void io_init( uint sclk_gpio, uint miso_gpio, uint mosi_gpio, uint bitrate );
 

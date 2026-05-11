@@ -34,7 +34,7 @@ wire_spi::wire_spi( uint spi_num, uint chip_select_gpio ):
 
 //----------------------------------------------------------------
 
-wire_spi::~wire_spi() {
+wire_spi::~wire_spi() noexcept {
 	this->finish_communication();
 	gpio_put( _chip_select_gpio, false );
 	gpio_deinit( _chip_select_gpio );

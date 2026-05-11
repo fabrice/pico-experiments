@@ -50,7 +50,7 @@ mcp23008::mcp23008( wire* wire, uint8_t gpio_dir, uint8_t gpio_pull_up ):
 
 //----------------------------------------------------------------
 
-mcp23008::~mcp23008() {
+mcp23008::~mcp23008() noexcept {
 	this->gpio_put_all( false );
 	if ( _wire != nullptr ) {
 		delete _wire;

@@ -32,7 +32,7 @@ gfx_bitmap::gfx_bitmap( gfx_wh_t width, gfx_wh_t height ):
 
 //----------------------------------------------------------------
 
-gfx_bitmap::~gfx_bitmap() {
+gfx_bitmap::~gfx_bitmap() noexcept {
 	_bytemap.clear();
 }
 

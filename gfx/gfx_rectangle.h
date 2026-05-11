@@ -64,7 +64,7 @@ public:
 			_bottom_right( 0 + dimension.get_width(), 0 + dimension.get_height() ) {
 	}
 
-	constexpr ~gfx_rectangle() = default;
+	constexpr ~gfx_rectangle() noexcept = default;
 
 private:
 
@@ -131,6 +131,6 @@ public:
 
 //----------------------------------------------------------------
 
-
+static_assert( std::regular< gfx_rectangle > );
 
 //----------------------------------------------------------------

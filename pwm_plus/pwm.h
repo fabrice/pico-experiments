@@ -45,7 +45,7 @@ private:
 
 public:
 
-	~pwm();
+	~pwm() noexcept;
 
 	uint get_gpio() const { return _gpio; };
 

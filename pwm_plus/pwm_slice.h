@@ -40,7 +40,7 @@ public:
 
 private:
 
-	virtual ~pwm_slice() override;
+	virtual ~pwm_slice() noexcept override;
 
 public:
 

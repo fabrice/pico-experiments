@@ -115,7 +115,7 @@ display_7735::display_7735( wire* wire, uint reset_gpio, uint dc_gpio, uint back
 
 //----------------------------------------------------------------
 
-display_7735::~display_7735() {
+display_7735::~display_7735() noexcept {
 	this->erase();
 	this->set_on( false );
 	this->reset();

@@ -45,7 +45,7 @@ public:
 
 	rotary_encoder() = delete;
 	rotary_encoder( uint a_gpio, uint b_gpio, uint s_gpio );
-	~rotary_encoder();
+	~rotary_encoder() noexcept;
 
 private:
 

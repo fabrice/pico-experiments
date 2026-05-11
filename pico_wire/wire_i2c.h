@@ -44,7 +44,7 @@ private:
 
 public:
 
-	virtual ~wire_i2c() override;
+	virtual ~wire_i2c() noexcept override;
 
 	virtual void start_transaction() override;
 

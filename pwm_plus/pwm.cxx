@@ -83,7 +83,7 @@ void pwm::io_init() {
 
 //----------------------------------------------------------------
 
-pwm::~pwm() {
+pwm::~pwm() noexcept {
 	this->set_channel_enabled( false, false );
 	gpio_deinit( _gpio );
 

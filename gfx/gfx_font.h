@@ -63,7 +63,7 @@ public:
 	gfx_font( gfx_dxy_t y_advance );
 	gfx_font( const gfx_font_data& font_data );
 
-	virtual ~gfx_font() override;
+	virtual ~gfx_font() noexcept override;
 
 	gfx_dxy_t get_x_advance() const { return _x_advance; }
 	gfx_dxy_t get_x_advance_from_glyphs();

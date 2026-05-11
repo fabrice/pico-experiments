@@ -38,7 +38,7 @@ gfx_font::gfx_font( const gfx_font_data& font_data ):
 
 //----------------------------------------------------------------
 
-gfx_font::~gfx_font() {
+gfx_font::~gfx_font() noexcept {
 	_glyphs.clear();
 }
 

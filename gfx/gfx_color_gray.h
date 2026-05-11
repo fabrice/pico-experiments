@@ -60,7 +60,7 @@ public:
 
 	explicit gfx_color_gray( float gray ) requires (!std::is_floating_point_v< color_t >);
 
-	~gfx_color_gray() = default;
+	~gfx_color_gray() noexcept = default;
 
 	color_t get_gray() const { return _gray; }
 
@@ -80,5 +80,10 @@ public:
 //----------------------------------------------------------------
 
 #include "gfx_color_gray.cxx"
+
+//----------------------------------------------------------------
+
+static_assert( std::semiregular< gfx_color_gray< uint8_t > > );
+static_assert( std::semiregular< gfx_color_gray< float > > );
 
 //----------------------------------------------------------------

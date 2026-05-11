@@ -30,7 +30,7 @@ mcp3221::mcp3221( wire* wire ):
 
 //----------------------------------------------------------------
 
-mcp3221::~mcp3221() {
+mcp3221::~mcp3221() noexcept {
 	if ( _wire != nullptr ) {
 		delete _wire;
 		_wire = nullptr;

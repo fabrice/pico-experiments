@@ -27,7 +27,7 @@ buzzer::buzzer( pwm* pwm ):
 
 //----------------------------------------------------------------
 
-buzzer::~buzzer() {
+buzzer::~buzzer() noexcept {
 	if ( _pwm != nullptr ) {
 		_pwm->set_enabled( false, false );
 		delete _pwm;

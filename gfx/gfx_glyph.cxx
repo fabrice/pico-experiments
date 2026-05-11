@@ -206,7 +206,7 @@ void gfx_glyph::remove_column( gfx_xy_t x ) {
 
 //----------------------------------------------------------------
 
-gfx_glyph::~gfx_glyph() {
+gfx_glyph::~gfx_glyph() noexcept {
 	_bytemap.clear();
 }
 

@@ -30,7 +30,7 @@ public:
 	gfx_bytemap_data( std::initializer_list< uint8_t > list ): std::vector< uint8_t >( list ) {}
 	gfx_bytemap_data& operator=( const gfx_bytemap_data& rhs ) = default;
 
-	~gfx_bytemap_data() = default;
+	~gfx_bytemap_data() noexcept = default;
 
 	bool get_bit( size_t index ) const {
 		return !!((*this)[ index / 8 ] & (0b10000000 >> (index % 8)));

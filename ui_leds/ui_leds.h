@@ -41,7 +41,7 @@ public:
 	ui_leds( display_7735* display, const std::string_view& title ): _title { title } {}
 	ui_leds( const ui_leds& that ) = delete;
 
-	~ui_leds() = default;
+	~ui_leds() noexcept = default;
 
 	void set_title( const std::string_view& text );
 	void set_message( const std::string_view& text );
