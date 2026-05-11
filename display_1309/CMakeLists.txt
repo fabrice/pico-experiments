@@ -1,4 +1,8 @@
+#-----------------------------------------------------------------
+
 cmake_minimum_required(VERSION 4.0)
+
+#-----------------------------------------------------------------
 
 project(lib_display_1309 CXX C ASM)
 
@@ -11,8 +15,10 @@ add_library(${PROJECT_NAME} STATIC
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-  ${CMAKE_CURRENT_SOURCE_DIR}/
+	${CMAKE_CURRENT_SOURCE_DIR}/
 )
+
+#-----------------------------------------------------------------
 
 target_link_libraries(${PROJECT_NAME}
 	lib_std_plus
@@ -21,7 +27,11 @@ target_link_libraries(${PROJECT_NAME}
 	lib_pico_wire
 )
 
+#-----------------------------------------------------------------
+
 set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
 
 target_compile_options(${PROJECT_NAME} PRIVATE -fexec-charset=ISO-8859-1)
 #target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
+
+#-----------------------------------------------------------------

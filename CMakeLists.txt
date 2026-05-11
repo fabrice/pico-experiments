@@ -58,10 +58,20 @@ add_subdirectory(rotary_encoder)
 
 # pic i2c board
 add_subdirectory(mcp23008)
-add_subdirectory(mcp41xxx)
 add_subdirectory(memory_24lc02b)
+add_subdirectory(mcp41xxx)
 add_subdirectory(mcp3221)
+#add_subdirectory(tc1321)
 add_subdirectory(mcp9800)
+
+# pic spi board
+#add_subdirectory(mem25lc02)
+#add_subdirectory(tc77)
+#add_subdirectory(mcp3201)
+#add_subdirectory(mcp4822)
+#add_subdirectory(mcp41010)
+#add_subdirectory(mcp6s92)
+#add_subdirectory(mcp23s08)
 
 # Add the standard library to the build
 target_link_libraries(${PROJECT_NAME}
@@ -81,7 +91,7 @@ target_link_libraries(${PROJECT_NAME}
 	lib_display_1309
 	lib_rotary_encoder
 	lib_mcp23008
-	lib_memory_24lc02b
+	lib_mem24lc02
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
