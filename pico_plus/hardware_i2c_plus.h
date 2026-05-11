@@ -8,8 +8,6 @@
 //----------------------------------------------------------------
 
 #pragma once
-#ifndef _HARDWARE_I2C_PLUS_H
-#define _HARDWARE_I2C_PLUS_H
 
 //----------------------------------------------------------------
 
@@ -46,9 +44,5 @@ inline int i2c_write_bytes_blocking( i2c_inst_t* i2c, uint8_t addr, uint8_t byte
 	uint8_t buffer[] { byte1, byte2, byte3, byte4 };
 	return i2c_write_blocking( i2c, addr, buffer, sizeof(buffer), false );
 }
-
-//----------------------------------------------------------------
-
-#endif
 
 //----------------------------------------------------------------

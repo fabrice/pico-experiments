@@ -8,8 +8,6 @@
 //----------------------------------------------------------------
 
 #pragma once
-#ifndef _ROTARY_ENCODER_H
-#define _ROTARY_ENCODER_H
 
 //----------------------------------------------------------------
 
@@ -57,23 +55,23 @@ private:
 
 public:
 
-	inline uint get_a_gpio() const { return _a_gpio; };
-	inline uint get_b_gpio() const { return _b_gpio; };
-	inline uint get_s_gpio() const { return _s_gpio; };
+	uint get_a_gpio() const { return _a_gpio; };
+	uint get_b_gpio() const { return _b_gpio; };
+	uint get_s_gpio() const { return _s_gpio; };
 
-	inline bool get_a() const { return gpio_get( _a_gpio ); };
-	inline bool get_b() const { return gpio_get( _b_gpio ); };
-	inline bool get_s() const { return gpio_get( _s_gpio ); };
+	bool get_a() const { return gpio_get( _a_gpio ); };
+	bool get_b() const { return gpio_get( _b_gpio ); };
+	bool get_s() const { return gpio_get( _s_gpio ); };
 
-	inline bool is_a_equal_b() const { return this->get_a() == this->get_b(); };
-	inline bool is_a_notequal_b() const { return this->get_a() != this->get_b(); };
+	bool is_a_equal_b() const { return this->get_a() == this->get_b(); };
+	bool is_a_notequal_b() const { return this->get_a() != this->get_b(); };
 
-	inline int32_t get_rotations() const { return _rotations; };
+	int32_t get_rotations() const { return _rotations; };
 	int8_t use_rotation();
 
 	int8_t get_direction() const;
 
-	inline uint32_t get_clicks() const { return _clicks; };
+	uint32_t get_clicks() const { return _clicks; };
 	bool use_click();
 
 private:
@@ -82,9 +80,5 @@ private:
 	void gpio_interrupt_s( uint gpio, uint32_t events );
 
 };
-
-//----------------------------------------------------------------
-
-#endif
 
 //----------------------------------------------------------------

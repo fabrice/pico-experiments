@@ -51,20 +51,25 @@ public:
 
 	constexpr ~gfx_dimension() = default;
 
-	inline gfx_wh_t get_width() const { return _width; }
-	inline gfx_wh_t get_height() const { return _height; }
+	gfx_wh_t get_width() const { return _width; }
+	gfx_wh_t get_height() const { return _height; }
 
-	inline gfx_wh_t get_diagonal() const { return std::hypot( _width, _height ); }
-	inline gfx_area_t get_area() const { return (gfx_area_t)_width * (gfx_area_t)_height; }
+	gfx_wh_t get_diagonal() const { return std::hypot( _width, _height ); }
+	gfx_area_t get_area() const { return (gfx_area_t)_width * (gfx_area_t)_height; }
 
-	inline bool is_zero() const { return (_width == 0) && (_height == 0); }
+	bool is_zero() const { return (_width == 0) && (_height == 0); }
 
 	std::strong_ordering operator<=>( const gfx_dimension& that ) const;
-	inline bool operator<( const gfx_dimension& that ) const { return is_lt( (*this) <=> that ); }
-	inline bool operator<=( const gfx_dimension& that ) const { return is_lteq( (*this) <=> that ); }
-	inline bool operator==( const gfx_dimension& that ) const { return is_eq( (*this) <=> that ); }
-	inline bool operator>=( const gfx_dimension& that ) const { return is_gteq( (*this) <=> that ); }
-	inline bool operator>( const gfx_dimension& that ) const { return is_gt( (*this) <=> that ); }
+	bool operator<( const gfx_dimension& that ) const {
+		return is_lt( (*this) <=> that ); }
+	bool operator<=( const gfx_dimension& that ) const {
+		return is_lteq( (*this) <=> that ); }
+	bool operator==( const gfx_dimension& that ) const {
+		return is_eq( (*this) <=> that ); }
+	bool operator>=( const gfx_dimension& that ) const {
+		return is_gteq( (*this) <=> that ); }
+	bool operator>( const gfx_dimension& that ) const {
+		return is_gt( (*this) <=> that ); }
 
 };
 

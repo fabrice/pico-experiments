@@ -8,8 +8,6 @@
 //----------------------------------------------------------------
 
 #pragma once
-#ifndef _ROTARY_ENCODER_FN_H
-#define _ROTARY_ENCODER_FN_H
 
 //----------------------------------------------------------------
 
@@ -44,9 +42,5 @@ void encoder_set_callback_a( rotary_encoder* that, gpio_irq_callback_t callback 
 void encoder_set_callback_s( rotary_encoder* that, gpio_irq_callback_t callback );
 
 void encoder_deinit( rotary_encoder*& that );
-
-//----------------------------------------------------------------
-
-#endif
 
 //----------------------------------------------------------------

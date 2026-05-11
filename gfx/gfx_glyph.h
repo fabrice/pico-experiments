@@ -65,24 +65,24 @@ public:
 
 	~gfx_glyph();
 
-	inline char get_character() const { return _character; }
-	inline void set_character( char character ) { _character = character; }
+	char get_character() const { return _character; }
+	void set_character( char character ) { _character = character; }
 
-	inline gfx_rectangle get_box() const { return _box; }
-	inline void set_box( gfx_rectangle box ) { _box = box; _bytemap.resize( (_box.get_area() + 7) / 8, false ); }
+	gfx_rectangle get_box() const { return _box; }
+	void set_box( gfx_rectangle box ) { _box = box; _bytemap.resize( (_box.get_area() + 7) / 8, false ); }
 
-	inline gfx_xy_t get_left() const { return _box.get_left(); }
-	inline gfx_xy_t get_top() const { return _box.get_top(); }
-	inline gfx_xy_t get_right() const { return _box.get_right(); }
-	inline gfx_xy_t get_bottom() const { return _box.get_bottom(); }
+	gfx_xy_t get_left() const { return _box.get_left(); }
+	gfx_xy_t get_top() const { return _box.get_top(); }
+	gfx_xy_t get_right() const { return _box.get_right(); }
+	gfx_xy_t get_bottom() const { return _box.get_bottom(); }
 
-	inline gfx_wh_t get_width() const { return _box.get_width(); }
-	inline gfx_wh_t get_height() const { return _box.get_height(); }
+	gfx_wh_t get_width() const { return _box.get_width(); }
+	gfx_wh_t get_height() const { return _box.get_height(); }
 
-	inline gfx_point get_top_left() const { return _box.get_top_left(); }
-	inline gfx_dimension get_dimension() const { return _box.get_dimension(); }
+	gfx_point get_top_left() const { return _box.get_top_left(); }
+	gfx_dimension get_dimension() const { return _box.get_dimension(); }
 
-	inline gfx_dxy_t get_x_advance() const { return _x_advance; }
+	gfx_dxy_t get_x_advance() const { return _x_advance; }
 
 	gfx_glyph& operator=( const gfx_glyph& that );
 

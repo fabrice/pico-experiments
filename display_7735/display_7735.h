@@ -9,8 +9,6 @@
 //----------------------------------------------------------------
 
 #pragma once
-#ifndef _DISPLAY_7735_H
-#define _DISPLAY_7735_H
 
 //----------------------------------------------------------------
 
@@ -74,15 +72,15 @@ public:
 
 	// properties
 
-	inline uint16_t get_width() const { return _width; }
-	inline uint16_t get_height() const { return _height; }
+	uint16_t get_width() const { return _width; }
+	uint16_t get_height() const { return _height; }
 
 	void set_font( const uint8_t* font ) { _font = font; }
 
-	inline uint16_t get_column_count() const { return _width / 6; }
-	inline uint16_t get_columns_offset() const { return (_width % 6) / 2; }
-	inline uint16_t get_line_count() const { return _height / 8; }
-	inline uint16_t get_lines_offset() const { return (_height % 8) / 2; }
+	uint16_t get_column_count() const { return _width / 6; }
+	uint16_t get_columns_offset() const { return (_width % 6) / 2; }
+	uint16_t get_line_count() const { return _height / 8; }
+	uint16_t get_lines_offset() const { return (_height % 8) / 2; }
 
 	uint16_t get_foreground_color() const { return _foreground_color; }
 	uint8_t get_foreground_color_red() const { return (_foreground_color >> 8) & 0b11111000; }
@@ -150,9 +148,5 @@ public:
 	static uint16_t rgb_to_565( uint8_t r, uint8_t g, uint8_t b );
 
 };
-
-//----------------------------------------------------------------
-
-#endif
 
 //----------------------------------------------------------------

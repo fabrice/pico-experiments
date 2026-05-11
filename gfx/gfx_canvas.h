@@ -48,15 +48,15 @@ public:
 	gfx_canvas( const gfx_dimension& dimension );
 	~gfx_canvas();
 
-	inline gfx_wh_t get_width() const { return _dimension.get_width(); }
-	inline gfx_wh_t get_height() const { return _dimension.get_height(); }
+	gfx_wh_t get_width() const { return _dimension.get_width(); }
+	gfx_wh_t get_height() const { return _dimension.get_height(); }
 
-	inline gfx_dimension get_dimension() const { return _dimension; }
-	inline gfx_rectangle get_box() const { return gfx_rectangle( _dimension ); }
+	gfx_dimension get_dimension() const { return _dimension; }
+	gfx_rectangle get_box() const { return gfx_rectangle( _dimension ); }
 
 	void set_window( gfx_xy_t x, gfx_xy_t y, gfx_wh_t width, gfx_wh_t height );
 
-	inline gfx_point get_spot() const { return _spot; }
+	gfx_point get_spot() const { return _spot; }
 	void set_spot( const gfx_point& xy );
 	void set_spot( gfx_xy_t x, gfx_xy_t y );
 	void move_spot_by( gfx_dxy_t dx, gfx_dxy_t dy );
@@ -64,7 +64,7 @@ public:
 	gfx_wh_t get_lico_width() const;
 	gfx_wh_t get_lico_height() const;
 
-	inline gfx_point get_lico() const { return _lico; }
+	gfx_point get_lico() const { return _lico; }
 	void set_lico( const gfx_point& xy );
 	void set_lico( gfx_xy_t line, gfx_xy_t column );
 	void move_lico_by( gfx_dxy_t dline, gfx_dxy_t dcolumn );

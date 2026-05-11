@@ -18,7 +18,7 @@ inline bool is_null( const void* pointer ) {
 //----------------------------------------------------------------
 
 inline bool is_not_null( const void* pointer ) {
-	return !(pointer == nullptr);
+	return pointer != nullptr;
 }
 
 //----------------------------------------------------------------

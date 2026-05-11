@@ -9,8 +9,6 @@
 //----------------------------------------------------------------
 
 #pragma once
-#ifndef _GFX_BITMAP_H
-#define _GFX_BITMAP_H
 
 //----------------------------------------------------------------
 
@@ -42,14 +40,14 @@ public:
 	gfx_bitmap( gfx_wh_t width, gfx_wh_t height );
 	virtual ~gfx_bitmap() override;
 
-	inline gfx_wh_t get_width() const { return _dimension.get_width(); }
-	inline gfx_wh_t get_height() const { return _dimension.get_height(); }
+	gfx_wh_t get_width() const { return _dimension.get_width(); }
+	gfx_wh_t get_height() const { return _dimension.get_height(); }
 
-	inline gfx_xy_t get_right() const { return _dimension.get_width(); }
-	inline gfx_xy_t get_bottom() const { return _dimension.get_height(); }
+	gfx_xy_t get_right() const { return _dimension.get_width(); }
+	gfx_xy_t get_bottom() const { return _dimension.get_height(); }
 
 	virtual gfx_dimension get_dimension() const override { return _dimension; }
-	inline gfx_rectangle get_box() const { return gfx_rectangle( _dimension ); }
+	gfx_rectangle get_box() const { return gfx_rectangle( _dimension ); }
 
 	virtual gfx_color_bit get_pixel_lit( gfx_xy_t x, gfx_xy_t y ) const override;
 	virtual gfx_color_rgb_8 get_pixel( gfx_xy_t x, gfx_xy_t y ) const override;
@@ -63,9 +61,5 @@ public:
 	virtual void erase() override;
 
 };
-
-//----------------------------------------------------------------
-
-#endif
 
 //----------------------------------------------------------------

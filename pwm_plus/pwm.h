@@ -8,8 +8,6 @@
 //----------------------------------------------------------------
 
 #pragma once
-#ifndef _PWM_H
-#define _PWM_H
 
 //----------------------------------------------------------------
 
@@ -49,23 +47,23 @@ public:
 
 	~pwm();
 
-	inline uint get_gpio() const { return _gpio; };
+	uint get_gpio() const { return _gpio; };
 
 	// slice
 
-	inline pwm_slice* get_slice() { return _slice; };
+	pwm_slice* get_slice() { return _slice; };
 
-	inline uint8_t get_divider_uint() const { return _slice->get_divider_uint(); };
-	inline uint8_t get_divider_frac() const { return _slice->get_divider_frac(); };
-	inline float get_divider() const { return _slice->get_divider(); };
-	inline uint16_t get_divider_pack() const { return _slice->get_divider_pack(); };
+	uint8_t get_divider_uint() const { return _slice->get_divider_uint(); };
+	uint8_t get_divider_frac() const { return _slice->get_divider_frac(); };
+	float get_divider() const { return _slice->get_divider(); };
+	uint16_t get_divider_pack() const { return _slice->get_divider_pack(); };
 
 	void set_divider( float divider );
 	void set_divider( uint8_t divider_uint, uint8_t divider_frac );
 
-	inline void set_wrap( uint16_t wrap ) { _slice->set_wrap( wrap ); };
+	void set_wrap( uint16_t wrap ) { _slice->set_wrap( wrap ); };
 	
-	inline float get_frequency() const { return _slice->get_frequency(); };
+	float get_frequency() const { return _slice->get_frequency(); };
 	void set_frequency( float frequency );
 
 	// channel
@@ -81,9 +79,5 @@ public:
 	void set_enabled( bool enabled, bool state );
 
 };
-
-//----------------------------------------------------------------
-
-#endif
 
 //----------------------------------------------------------------

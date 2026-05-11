@@ -62,14 +62,14 @@ public:
 
 	~gfx_color_gray() = default;
 
-	inline color_t get_gray() const { return _gray; }
+	color_t get_gray() const { return _gray; }
 
 	color_t get_bri() const;
 
-	inline bool is_black() const { return _gray == 0; }
-	inline bool is_white() const { return _gray == std::numeric_limits< color_t >::max(); }
-	inline bool is_gray() const { return (_gray > 0) && (_gray < std::numeric_limits< color_t >::max()); }
-	inline bool is_lit() const { return _gray > 0; }
+	bool is_black() const { return _gray == 0; }
+	bool is_white() const { return _gray == std::numeric_limits< color_t >::max(); }
+	bool is_gray() const { return (_gray > 0) && (_gray < std::numeric_limits< color_t >::max()); }
+	bool is_lit() const { return _gray > 0; }
 
 	gfx_color_gray& operator=( const gfx_color_gray& rhs );
 

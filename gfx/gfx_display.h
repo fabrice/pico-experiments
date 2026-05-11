@@ -49,12 +49,12 @@ public:
 	gfx_display( uint16_t width, uint16_t height, uint8_t pixel_size ): _width { width }, _height { height } {}
 	virtual ~gfx_display() = default;
 
-	inline uint16_t get_width() const { return _width; }
-	inline uint16_t get_height() const { return _height; }
+	uint16_t get_width() const { return _width; }
+	uint16_t get_height() const { return _height; }
 
-	inline gfx_point get_spot() const { return _spot; }
-	inline void set_spot( gfx_point& spot ) { _spot = spot; }
-	inline void set_spot( gfx_xy_t x, gfx_xy_t y ) { _spot = gfx_point( x, y ); }
+	gfx_point get_spot() const { return _spot; }
+	void set_spot( gfx_point& spot ) { _spot = spot; }
+	void set_spot( gfx_xy_t x, gfx_xy_t y ) { _spot = gfx_point( x, y ); }
 
 	virtual void set_on( bool on ) = 0;
 	virtual void set_brightness( uint8_t brightness ) = 0;

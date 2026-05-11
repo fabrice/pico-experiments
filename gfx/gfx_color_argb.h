@@ -66,24 +66,24 @@ public:
 
 	~gfx_color_argb() = default;
 
-	inline color_t get_alpha() const { return _alpha; }
-	inline color_t get_red() const { return _red; }
-	inline color_t get_green() const { return _green; }
-	inline color_t get_blue() const { return _blue; }
+	color_t get_alpha() const { return _alpha; }
+	color_t get_red() const { return _red; }
+	color_t get_green() const { return _green; }
+	color_t get_blue() const { return _blue; }
 
 	color_t get_bri() const;
 
-	inline bool is_black() const { return (_red == 0) && (_green == _red) && (_blue == _red); };
-	inline bool is_white() const { return (gfx::component_cast< color_t, uint8_t >( _red ) == std::numeric_limits< uint8_t >::max()) && (_green == _red) && (_blue == _red); };
-	inline bool is_gray() const { return (_red > 0) && (gfx::component_cast< color_t, uint8_t >( _red ) < std::numeric_limits< uint8_t >::max()) && (_green == _red) && (_blue == _red); };
-	inline bool is_lit() const { return (_red > 0) || (_green > 0) || (_blue > 0); };
+	bool is_black() const { return (_red == 0) && (_green == _red) && (_blue == _red); };
+	bool is_white() const { return (gfx::component_cast< color_t, uint8_t >( _red ) == std::numeric_limits< uint8_t >::max()) && (_green == _red) && (_blue == _red); };
+	bool is_gray() const { return (_red > 0) && (gfx::component_cast< color_t, uint8_t >( _red ) < std::numeric_limits< uint8_t >::max()) && (_green == _red) && (_blue == _red); };
+	bool is_lit() const { return (_red > 0) || (_green > 0) || (_blue > 0); };
 
 	gfx_color_argb& operator=( const gfx_color_argb& that );
 
 	gfx_color_bit to_black_and_white() const;
 	uint8_t to_2222() const;
 	uint16_t to_4444() const;
-	inline uint32_t to_8888() const { return pack( gfx::component_cast< color_t, uint8_t >( _alpha ), gfx::component_cast< color_t, uint8_t >( _red ), gfx::component_cast< color_t, uint8_t >( _green ), gfx::component_cast< color_t, uint8_t >( _blue ) ); };
+	uint32_t to_8888() const { return pack( gfx::component_cast< color_t, uint8_t >( _alpha ), gfx::component_cast< color_t, uint8_t >( _red ), gfx::component_cast< color_t, uint8_t >( _green ), gfx::component_cast< color_t, uint8_t >( _blue ) ); };
 
 	[[nodiscard]]
 	gfx_color_rgb< uint8_t > to_rgb() const { return gfx_color_rgb( gfx::component_cast< color_t, uint8_t >( _red ), gfx::component_cast< color_t, uint8_t >( _green ), gfx::component_cast< color_t, uint8_t >( _blue ) ); }

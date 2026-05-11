@@ -128,10 +128,10 @@ void io_init() {
 
 //----------------------------------------------------------------
 
-#define ENABLE_OLED_1309 0
-#define ENABLE_TFT_7735 1
-#define ENABLE_TFT_7735_DELETION 1
-#define ENABLE_EXPANDER_MCP23008 0
+constexpr bool ENABLE_OLED_1309 { true };
+constexpr bool ENABLE_TFT_7735 { true };
+constexpr bool ENABLE_TFT_7735_DELETION { true };
+constexpr bool ENABLE_EXPANDER_MCP23008 { true };
 
 //----------------------------------------------------------------
 

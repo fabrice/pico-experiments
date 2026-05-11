@@ -26,11 +26,11 @@ private:
 
 public:
 
-	inline v_reference_count() = default;
-	inline v_reference_count( uint8_t reference_count ): _reference_count { reference_count } {}
-	inline v_reference_count( bool retained ): _reference_count { retained ? uint8_t(1) : uint8_t(0) } {}
+	v_reference_count() = default;
+	v_reference_count( uint8_t reference_count ): _reference_count { reference_count } {}
+	v_reference_count( bool retained ): _reference_count { retained ? uint8_t(1) : uint8_t(0) } {}
 
-	inline v_reference_count( v_reference_count& that ): _reference_count { uint8_t(0) } {}
+	v_reference_count( v_reference_count& that ): _reference_count { uint8_t(0) } {}
 
 protected:
 

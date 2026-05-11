@@ -8,8 +8,6 @@
 //----------------------------------------------------------------
 
 #pragma once
-#ifndef _PWM_SLICE_H
-#define _PWM_SLICE_H
 
 //----------------------------------------------------------------
 
@@ -46,16 +44,16 @@ private:
 
 public:
 
-	inline uint get_slice_num() const { return _slice_num; };
-	inline uint8_t get_divider_uint() const { return _divider_uint; };
-	inline uint8_t get_divider_frac() const { return _divider_frac; };
+	uint get_slice_num() const { return _slice_num; };
+	uint8_t get_divider_uint() const { return _divider_uint; };
+	uint8_t get_divider_frac() const { return _divider_frac; };
 	float get_divider() const;
-	inline uint16_t get_divider_pack() const { return pack( _divider_uint, _divider_frac ); };
+	uint16_t get_divider_pack() const { return pack( _divider_uint, _divider_frac ); };
 
 	void set_divider( uint8_t divider_uint, uint8_t divider_frac );
 	void set_divider( float divider );
 
-	inline uint16_t get_wrap() const { return _wrap; };
+	uint16_t get_wrap() const { return _wrap; };
 	void set_wrap( uint16_t wrap );
 
 	float get_frequency() const;
@@ -64,9 +62,5 @@ public:
 	void set_enabled( bool enabled );
 
 };
-
-//----------------------------------------------------------------
-
-#endif
 
 //----------------------------------------------------------------

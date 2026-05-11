@@ -8,8 +8,6 @@
 //----------------------------------------------------------------
 
 #pragma once
-#ifndef _GPIO_IRQ_VTABLE_H
-#define _GPIO_IRQ_VTABLE_H
 
 //----------------------------------------------------------------
 
@@ -31,9 +29,5 @@ void gpio_irq_vtable_set_callback( uint gpio, gpio_irq_callback_t callback );
 void gpio_irq_vtable_set_fn_callback( uint gpio, gpio_irq_fn_callback_t fn_callback );
 
 void gpio_irq_vtable_call_callback( uint gpio, uint32_t events );
-
-//----------------------------------------------------------------
-
-#endif
 
 //----------------------------------------------------------------
