@@ -3,7 +3,7 @@
 // Raspberry Pico
 // Target : PicoSDK C/C++
 //
-// pico_plus.h
+// pico_plus
 //
 //----------------------------------------------------------------
 

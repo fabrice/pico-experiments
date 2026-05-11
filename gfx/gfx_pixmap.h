@@ -37,7 +37,7 @@ public:
 	gfx_pixmap() = delete;
 	gfx_pixmap( const gfx_dimension& dimension );
 	gfx_pixmap( gfx_wh_t width, gfx_wh_t height );
-	virtual ~gfx_pixmap() override;
+	virtual ~gfx_pixmap() noexcept override;
 
 	gfx_xy_t get_left() const { return 0; }
 	gfx_xy_t get_top() const { return 0; }

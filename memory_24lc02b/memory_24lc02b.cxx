@@ -4,8 +4,8 @@
 // Target : PicoSDK C/C++
 // CFPT Électronique
 //
-// eeprom 256 bytes
-// memory_24lc02b
+// eeprom 256 bytes I2C
+// mem24lc02
 //
 //----------------------------------------------------------------
 
@@ -21,7 +21,7 @@
 
 //----------------------------------------------------------------
 
-constexpr uint32_t EE24LC02B_WRITE_CYCLE = 5; // ms
+constexpr uint32_t EE24LC02B_WRITE_CYCLE { 5 }; // ms
 
 //----------------------------------------------------------------
 

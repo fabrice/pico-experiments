@@ -5,7 +5,7 @@
 // CFPT Électronique
 //
 // eeprom 256 bytes
-// memory_24lc02b
+// mem24lc02
 //
 //----------------------------------------------------------------
 
@@ -25,7 +25,7 @@ constexpr uint8_t EE24LC02B_ADDRESS { 0x50 }; // 0xa0 >> 1
 constexpr uint16_t EE24LC02B_MEMORY_SIZE { 256 };
 constexpr uint8_t EE24LC02B_PAGE_SIZE { 8 };
 
-constexpr uint8_t EE24LC02B_I2C_FREQUENCY { 8 };
+constexpr uint8_t EE24LC02B_I2C_FREQUENCY { 8 }; // MHz
 
 //----------------------------------------------------------------
 

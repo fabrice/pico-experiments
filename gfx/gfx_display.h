@@ -28,7 +28,6 @@ constexpr uint8_t GFX_COLOR_MODE_565 { 16 };
 constexpr uint8_t GFX_COLOR_MODE_888 { 24 };
 
 //----------------------------------------------------------------
-// classe
 
 class gfx_display {
 
@@ -47,7 +46,7 @@ private:
 public:
 
 	gfx_display( uint16_t width, uint16_t height, uint8_t pixel_size ): _width { width }, _height { height } {}
-	virtual ~gfx_display() = default;
+	virtual ~gfx_display() noexcept = default;
 
 	uint16_t get_width() const { return _width; }
 	uint16_t get_height() const { return _height; }

@@ -25,10 +25,6 @@
 
 //----------------------------------------------------------------
 
-class gfx_color_hsb;
-
-//----------------------------------------------------------------
-
 class gfx_color_hsb {
 
 public:
@@ -57,19 +53,19 @@ public:
 	gfx_color_hsb( float hue, float sat, float bri ): _hue { hue }, _sat { sat }, _bri { bri } {}
 	~gfx_color_hsb() noexcept = default;
 
-	inline uint16_t get_hue() const { return (uint16_t)std::fmod( std::floor( _hue ), 360.0f ); }
-	inline uint8_t get_sat() const { return (uint8_t)std::floor( _sat * 255.0f ); }
-	inline uint8_t get_bri() const { return (uint8_t)std::floor( _bri * 255.0f ); }
+	uint16_t get_hue() const { return (uint16_t)std::fmod( std::floor( _hue ), 360.0f ); }
+	uint8_t get_sat() const { return (uint8_t)std::floor( _sat * 255.0f ); }
+	uint8_t get_bri() const { return (uint8_t)std::floor( _bri * 255.0f ); }
 
 	uint8_t get_lit() const;
 	uint8_t get_chroma() const;
 
-	inline bool is_black() const { return _bri == 0.0f; };
-	inline bool is_white() const { return (_bri > 0.0f) && (_sat == 0.0f); };
-	inline bool is_gray() const { return (_bri > 0.0f) && (_sat == 0.0f); }
-	inline bool is_lit() const { return _bri > 0.0f; };
+	bool is_black() const { return _bri == 0.0f; };
+	bool is_white() const { return (_bri > 0.0f) && (_sat == 0.0f); };
+	bool is_gray() const { return (_bri > 0.0f) && (_sat == 0.0f); }
+	bool is_lit() const { return _bri > 0.0f; };
 
-	inline uint32_t to_988() const { return pack( get_hue(), pack( get_sat(), get_bri() ) ); }
+	uint32_t to_988() const { return pack( this->get_hue(), pack( this->get_sat(), this->get_bri() ) ); }
 
 	[[nodiscard]]
 	gfx_color_rgb< uint8_t > to_rgb() const;
