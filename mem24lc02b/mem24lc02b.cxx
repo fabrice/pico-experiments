@@ -9,7 +9,7 @@
 //
 //----------------------------------------------------------------
 
-#include "memory_24lc02b.h"
+#include "mem24lc02b.h"
 
 #include "wire_i2c.h"
 
@@ -25,20 +25,20 @@ constexpr uint32_t EE24LC02B_WRITE_CYCLE { 5 }; // ms
 
 //----------------------------------------------------------------
 
-memory_24lc02b* memory_24lc02b::make( uint i2c_num, uint8_t address ) {
+mem24lc02b* mem24lc02b::make( uint i2c_num, uint8_t address ) {
 	auto wire = wire_i2c::make( i2c_num, address );
-	return new memory_24lc02b( wire );
+	return new mem24lc02b( wire );
 }
 
 //----------------------------------------------------------------
 
-memory_24lc02b::memory_24lc02b( wire* wire ):
+mem24lc02b::mem24lc02b( wire* wire ):
 		_wire { wire } {
 }
 
 //----------------------------------------------------------------
 
-memory_24lc02b::~memory_24lc02b() noexcept {
+mem24lc02b::~mem24lc02b() noexcept {
 	if ( _wire != nullptr ) {
 		delete _wire;
 		_wire = nullptr;
@@ -47,7 +47,7 @@ memory_24lc02b::~memory_24lc02b() noexcept {
 
 //----------------------------------------------------------------
 
-void memory_24lc02b::write_byte( uint8_t address, uint8_t data ) const {
+void mem24lc02b::write_byte( uint8_t address, uint8_t data ) const {
 	if ( _wire == nullptr ) return;
 
 	_wire->write_bytes( address, data );
@@ -56,7 +56,7 @@ void memory_24lc02b::write_byte( uint8_t address, uint8_t data ) const {
 
 //----------------------------------------------------------------
 
-void memory_24lc02b::write_page( uint8_t address, uint8_t data[8] ) const {
+void mem24lc02b::write_page( uint8_t address, uint8_t data[8] ) const {
 	if ( _wire == nullptr ) return;
 
 	address -= address % EE24LC02B_PAGE_SIZE;
@@ -70,7 +70,7 @@ void memory_24lc02b::write_page( uint8_t address, uint8_t data[8] ) const {
 
 //----------------------------------------------------------------
 
-uint8_t memory_24lc02b::read_byte( uint8_t address ) const {
+uint8_t mem24lc02b::read_byte( uint8_t address ) const {
 	if ( _wire == nullptr ) return PICO_ERROR_IO;
 
 	_wire->start_transaction();
@@ -92,7 +92,7 @@ uint8_t memory_24lc02b::read_byte( uint8_t address ) const {
 
 //----------------------------------------------------------------
 
-void memory_24lc02b::read_page( uint8_t address, uint8_t data[8] ) const {
+void mem24lc02b::read_page( uint8_t address, uint8_t data[8] ) const {
 	if ( _wire == nullptr ) return;
 
 	address -= address % EE24LC02B_PAGE_SIZE;
@@ -112,7 +112,7 @@ void memory_24lc02b::read_page( uint8_t address, uint8_t data[8] ) const {
 
 //----------------------------------------------------------------
 
-void memory_24lc02b::read_bytes( uint8_t address, uint8_t data[], uint16_t length ) const {
+void mem24lc02b::read_bytes( uint8_t address, uint8_t data[], uint16_t length ) const {
 	if ( _wire == nullptr ) return;
 
 	_wire->start_transaction();
@@ -130,7 +130,7 @@ void memory_24lc02b::read_bytes( uint8_t address, uint8_t data[], uint16_t lengt
 
 //----------------------------------------------------------------
 
-void memory_24lc02b::fill( uint8_t data ) const {
+void mem24lc02b::fill( uint8_t data ) const {
 	if ( _wire == nullptr ) return;
 
 	uint8_t buffer[EE24LC02B_PAGE_SIZE + 1] { 0 };
@@ -146,7 +146,7 @@ void memory_24lc02b::fill( uint8_t data ) const {
 
 //----------------------------------------------------------------
 
-void memory_24lc02b::erase() const {
+void mem24lc02b::erase() const {
 	this->fill( 0x00 );
 }
 

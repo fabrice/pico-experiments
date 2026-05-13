@@ -5,7 +5,7 @@
 // CFPT Électronique
 //
 // eeprom 256 bytes
-// mem24lc02
+// mem24lc02b
 //
 //----------------------------------------------------------------
 
@@ -29,7 +29,7 @@ constexpr uint8_t EE24LC02B_I2C_FREQUENCY { 8 }; // MHz
 
 //----------------------------------------------------------------
 
-class memory_24lc02b {
+class mem24lc02b {
 
 private:
 
@@ -38,12 +38,12 @@ private:
 
 public:
 
-	static memory_24lc02b* make( uint i2c_num, uint8_t address );
+	static mem24lc02b* make( uint i2c_num, uint8_t address );
 
-	memory_24lc02b() = delete;
-	memory_24lc02b( wire* wire );
+	mem24lc02b() = delete;
+	mem24lc02b( wire* wire );
 
-	~memory_24lc02b() noexcept;
+	~mem24lc02b() noexcept;
 
 	void write_byte( uint8_t address, uint8_t data ) const;
 

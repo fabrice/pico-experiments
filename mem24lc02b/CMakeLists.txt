@@ -4,10 +4,10 @@ cmake_minimum_required(VERSION 4.0)
 
 #-----------------------------------------------------------------
 
-project(lib_mem24lc02 CXX C ASM)
+project(lib_mem24lc02b CXX C ASM)
 
 add_library(${PROJECT_NAME} STATIC
-	memory_24lc02b.cxx
+	mem24lc02b.cxx
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
