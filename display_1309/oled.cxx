@@ -147,7 +147,7 @@ void OLED::init() {
 	this->set_orientation( 1 );
 	this->set_dark_mode( false );
 	this->set_brightness( 0x7f );
-	this->set_lico( 0, 0 );
+	this->set_cursor( 0, 0 );
 	sleep_ms( 100 );
 
 	this->erase();
@@ -251,7 +251,7 @@ void OLED::draw_logo() {
 
 //----------------------------------------------------------------
 
-void OLED::set_lico( uint8_t line, uint8_t column ) {
+void OLED::set_cursor( uint8_t line, uint8_t column ) {
 	_line = line < this->get_line_count() ? line : 0;
 	_column = _column < this->get_column_count() ? column : 0;
 
@@ -299,7 +299,7 @@ void OLED::print( const char* text ) {
 void OLED::print( const char* text, uint8_t line, uint8_t column ) {
 	if ( _font == nullptr ) return;
 
-	this->set_lico( line, column );
+	this->set_cursor( line, column );
 	this->print( text );
 }
 
@@ -311,7 +311,7 @@ void OLED::print_left( const char* text, uint8_t line ) {
 	size_t text_length = strlen( text );
 	if ( text_length == 0 ) return;
 
-	this->set_lico( line, 0 );
+	this->set_cursor( line, 0 );
 	this->print( text );
 }
 
@@ -327,7 +327,7 @@ void OLED::print_center( const char* text, uint8_t line ) {
 	uint8_t column = 0;
 	if ( text_length < column_count ) column = (column_count - text_length) / 2;
 
-	this->set_lico( line, column );
+	this->set_cursor( line, column );
 	this->print( text );
 }
 
@@ -343,7 +343,7 @@ void OLED::print_right( const char* text, uint8_t line ) {
 	uint8_t column = 0;
 	if ( text_length < column_count ) column = column_count - text_length;
 
-	this->set_lico( line, column );
+	this->set_cursor( line, column );
 	this->print( text );
 }
 
@@ -372,7 +372,7 @@ void OLED::print_aligned( const char* text, uint8_t line, char alignment ) {
 		break;
 	}
 
-	this->set_lico( line, column );
+	this->set_cursor( line, column );
 	this->print( text );
 }
 
@@ -415,7 +415,7 @@ void OLED::print( char character ) {
 void OLED::print( char character, uint8_t line, uint8_t column ) {
 	if ( _font == nullptr ) return;
 
-	this->set_lico( line, column );
+	this->set_cursor( line, column );
 	this->print( character );
 }
 
@@ -542,7 +542,7 @@ void OLED::erase( uint8_t line, uint8_t column ) {
 	uint8_t buffer[7] { 0 };
 	buffer[0] = WRITE_DATA;
 
-	this->set_lico( line, column );
+	this->set_cursor( line, column );
 	_wire->start_communication();
 	_wire->write_bytes( buffer, 7 );
 	_wire->finish_communication();

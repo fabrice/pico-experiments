@@ -42,7 +42,7 @@ void oled_set_dark_mode( OLED* that, bool mode );
 void oled_set_brightness( OLED* that, uint8_t brightness );
 void oled_set_brightness_db( OLED* that, float brightness_db );
 
-void oled_set_lico( OLED* that, uint8_t line, uint8_t column );
+void oled_set_cursor( OLED* that, uint8_t line, uint8_t column );
 
 //----------------------------------------------------------------
 // text

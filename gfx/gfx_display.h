@@ -37,7 +37,7 @@ private:
 	uint16_t _height { 0 };
 
 	gfx_point _spot { 0, 0 };
-	gfx_point _lico { 0, 0 };
+	gfx_point _cursor { 0, 0 };
 
 private:
 

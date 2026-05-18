@@ -336,7 +336,7 @@ void display_7735::set_addr_window( uint8_t x0, uint8_t y0, uint8_t x1, uint8_t 
 
 //----------------------------------------------------------------
 
-void display_7735::set_lico( uint8_t line, uint8_t column ) {
+void display_7735::set_cursor( uint8_t line, uint8_t column ) {
 	if ( line >= get_line_count() ) line = this->get_line_count() - 1;
 	if ( column >= get_column_count() ) column = this->get_column_count() - 1;
 	_line = line;
@@ -373,7 +373,7 @@ void display_7735::print_left( const char* text, uint8_t line ) {
 	const size_t text_length = strlen( text );
 	if ( text_length == 0 ) return;
 
-	this->set_lico( line, 0 );
+	this->set_cursor( line, 0 );
 	this->print( text );
 }
 
@@ -389,7 +389,7 @@ void display_7735::print_center( const char* text, uint8_t line ) {
 	uint8_t column = 0;
 	if ( text_length < column_count ) column = (column_count - text_length) / 2;
 
-	this->set_lico( line, column );
+	this->set_cursor( line, column );
 	this->print( text );
 }
 
@@ -405,7 +405,7 @@ void display_7735::print_right( const char* text, uint8_t line ) {
 	uint8_t column = 0;
 	if ( text_length < column_count ) column = column_count - text_length;
 
-	this->set_lico( line, column );
+	this->set_cursor( line, column );
 	this->print( text );
 }
 
@@ -434,7 +434,7 @@ void display_7735::print_aligned( const char* text, uint8_t line, char alignment
 		break;
 	}
 
-	this->set_lico( line, column );
+	this->set_cursor( line, column );
 	this->print( text );
 }
 

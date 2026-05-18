@@ -171,22 +171,12 @@ int main() {
 	sleep_ms( 250 );
 	if ( is_not_null( display_tft ) ) display_tft->fill_screen( ( 0 << 11) | ( 0 << 5) | (31 << 0) );
 	sleep_ms( 250 );
-	if ( is_not_null( display_oled ) ) display_oled->print( '0', 0, 20 );
-	if ( is_not_null( display_oled ) ) display_oled->print( '1', 1, 20 );
-	if ( is_not_null( display_oled ) ) display_oled->print( '2', 2, 20 );
-	if ( is_not_null( display_oled ) ) display_oled->print( '3', 3, 20 );
-	if ( is_not_null( display_oled ) ) display_oled->print( '4', 4, 20 );
-	if ( is_not_null( display_oled ) ) display_oled->print( '5', 5, 20 );
-	if ( is_not_null( display_oled ) ) display_oled->print( '6', 6, 20 );
-	if ( is_not_null( display_oled ) ) display_oled->print( "012345678901234567890", 7, 0 );
+	if ( is_not_null( display_tft ) ) {
+		display_tft->fill_screen( 0, 0, 0 );
+		display_tft->set_cursor( 4, 0 );
+		display_tft->print_center( "Hello ST7735", 4 );
 
-	if ( is_not_null( display_tft ) ) display_tft->fill_screen( 0, 0, 0 );
-	if ( is_not_null( display_tft ) ) display_tft->set_foreground_color( 255, 255, 255 );
-	if ( is_not_null( display_tft ) ) display_tft->set_background_color( 0, 0, 0 );
-	if ( is_not_null( display_tft ) ) display_tft->set_lico( 4, 0 );
-	if ( is_not_null( display_tft ) ) display_tft->print_center( 4, "Hello ST7735" );
-
-	sleep_ms( 1000 );
+	}
 
 	auto canvas = new gfx_canvas( display_tft->get_width(), display_tft->get_height(), 24 );
 	if ( is_not_null( display_tft ) ) {
@@ -255,17 +245,18 @@ int main() {
 	sleep_ms( 1000 );
 
 	if ( is_not_null( expander ) ) expander->gpio_put( 0, true );
-	if ( is_not_null( display_oled ) ) display_oled->erase( 0 );
-	if ( is_not_null( display_oled ) ) display_oled->erase( 7, 9 );
+	if ( is_not_null( display_oled ) ) {
+		display_oled->erase( 0 );
 
 	uint8_t glyph[] { 0x44, 0x80, 0x90, 0x80, 0x44, 0x00 };
-	if ( is_not_null( display_oled ) ) display_oled->set_lico( 5, 5 );
-	if ( is_not_null( display_oled ) ) display_oled->print_glyph( glyph );
-	if ( is_not_null( display_oled ) ) display_oled->set_lico( 5, 7 );
-	if ( is_not_null( display_oled ) ) display_oled->print( "àéîöûµ" );
+		display_oled->set_cursor( 5, 5 );
+		display_oled->print_glyph( glyph );
+		display_oled->set_cursor( 5, 7 );
+		display_oled->print( "àéîöûµ" );
 
-	if ( is_not_null( display_oled ) ) display_oled->set_lico( 6, 2 );
-	if ( is_not_null( display_oled ) ) display_oled->printf( "value: %.2f V", (float)3.1415926 );
+		display_oled->set_cursor( 6, 2 );
+		display_oled->printf( "value: %.2f V", 3.1415926f );
+	}
 
 	sleep_ms( 250 );
 	if ( is_not_null( display_tft ) ) display_tft->erase( 4 );

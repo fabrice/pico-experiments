@@ -96,7 +96,7 @@ public:
 	void set_brightness( uint8_t brightness );
 	void set_brightness_db( float brightness_db );
 
-	void set_lico( uint8_t line, uint8_t column );
+	void set_cursor( uint8_t line, uint8_t column );
 
 	void draw_logo();
 

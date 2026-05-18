@@ -107,9 +107,9 @@ public:
 
 	void set_addr_window( uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1 );
 
-	void set_lico( uint8_t line, uint8_t column );
-
 	// text
+
+	void set_cursor( uint8_t line, uint8_t column );
 
 	void print( const char* text );
 	void print( const char* text, int16_t x, int16_t y );

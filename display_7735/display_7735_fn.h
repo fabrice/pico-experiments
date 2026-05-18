@@ -39,7 +39,7 @@ void display_7735_set_on( display_7735* that, bool on );
 void display_7735_set_brightness( display_7735* that, uint8_t brightness );
 void display_7735_set_brightness_db( display_7735* that, float brightness_db );
 
-void display_7735_set_lico( display_7735* that, uint8_t line, uint8_t column );
+void display_7735_set_cursor( display_7735* that, uint8_t line, uint8_t column );
 
 //----------------------------------------------------------------
 // text

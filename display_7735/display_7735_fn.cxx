@@ -95,10 +95,10 @@ void display_7735_set_brightness_db( display_7735* that, float brightness_db ) {
 
 //----------------------------------------------------------------
 
-void display_7735_set_lico( display_7735* that, uint8_t line, uint8_t column ) {
+void display_7735_set_cursor( display_7735* that, uint8_t line, uint8_t column ) {
 	if ( that == nullptr ) return;
 
-	that->set_lico( line, column );
+	that->set_cursor( line, column );
 }
 
 //----------------------------------------------------------------
@@ -114,7 +114,7 @@ void display_7735_print( display_7735* that, const char* text ) {
 void display_7735_print( display_7735* that, const char* text, uint8_t line, uint8_t column ) {
 	if ( that == nullptr ) return;
 
-	that->set_lico( line, column );
+	that->set_cursor( line, column );
 	that->print( text );
 }
 

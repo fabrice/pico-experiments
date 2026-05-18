@@ -93,7 +93,7 @@ void gfx_canvas::move_spot_by( gfx_dxy_t dx, gfx_dxy_t dy ) {
 
 //----------------------------------------------------------------
 
-gfx_wh_t gfx_canvas::get_lico_width() const {
+gfx_wh_t gfx_canvas::get_column_count() const {
 	if ( _font == nullptr ) return 0;
 
 	if ( _font->is_monospace() ) {
@@ -112,7 +112,7 @@ gfx_wh_t gfx_canvas::get_lico_width() const {
 
 //----------------------------------------------------------------
 
-gfx_wh_t gfx_canvas::get_lico_height() const {
+gfx_wh_t gfx_canvas::get_line_count() const {
 	if ( _font == nullptr ) return 0;
 
 	const auto line_height = _font->get_y_advance();
@@ -123,18 +123,18 @@ gfx_wh_t gfx_canvas::get_lico_height() const {
 
 //----------------------------------------------------------------
 
-void gfx_canvas::set_lico( const gfx_point& xy ) {
-	this->set_lico( xy.get_x(), xy.get_y() );
+void gfx_canvas::set_cursor( const gfx_point& xy ) {
+	this->set_cursor( xy.get_x(), xy.get_y() );
 }
 
 //----------------------------------------------------------------
 
-void gfx_canvas::set_lico( gfx_xy_t line, gfx_xy_t column ) {
+void gfx_canvas::set_cursor( gfx_xy_t line, gfx_xy_t column ) {
 	if ( _font != nullptr ) {
-		if ( line > this->get_lico_height() ) line = 0;
-		if ( column > this->get_lico_width() ) column = 0;
+		if ( line > this->get_line_count() ) line = 0;
+		if ( column > this->get_column_count() ) column = 0;
 
-		_lico.set_xy( line, column );
+		_cursor.set_xy( line, column );
 
 		const auto x = column * this->get_width();
 		const auto x_offset = (this->get_width() - x) / 2;
@@ -143,21 +143,21 @@ void gfx_canvas::set_lico( gfx_xy_t line, gfx_xy_t column ) {
 		this->set_spot( x + x_offset, y + y_offset );
 	}
 	else {
-		_lico.set_xy( 0, 0 );
+		_cursor.set_xy( 0, 0 );
 	}
 }
 
 //----------------------------------------------------------------
 
-void gfx_canvas::move_lico_by( gfx_dxy_t dline, gfx_dxy_t dcolumn ) {
+void gfx_canvas::move_cursor_by( gfx_dxy_t dline, gfx_dxy_t dcolumn ) {
 	if ( _font == nullptr ) return;
 
-	gfx_dxy_t line = _lico.get_y() + dline;
+	gfx_dxy_t line = _cursor.get_y() + dline;
 	if ( line < 0 ) line = 0;
-	gfx_dxy_t column = _lico.get_x() + dcolumn;
+	gfx_dxy_t column = _cursor.get_x() + dcolumn;
 	if ( column < 0 ) column = 0;
 
-	this->set_lico( line, column );
+	this->set_cursor( line, column );
 }
 
 //----------------------------------------------------------------
@@ -166,7 +166,7 @@ void gfx_canvas::set_font( gfx_font* font ) {
 	if ( font != nullptr ) font->retain();
 	if ( _font != nullptr ) _font->release();
 	_font = font;
-	this->set_lico( _lico );
+	this->set_cursor( _cursor );
 }
 
 //----------------------------------------------------------------

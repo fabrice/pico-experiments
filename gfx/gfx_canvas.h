@@ -31,7 +31,7 @@ private:
 	gfx_dimension _dimension { 0, 0 };
 
 	gfx_point _spot { 0, 0 };
-	gfx_point _lico { 0, 0 };
+	gfx_point _cursor { 0, 0 };
 
 	gfx_color_rgb_8 _foreground_color { gfx_color_rgb_8::BLACK };
 	gfx_color_rgb_8 _background_color { gfx_color_rgb_8::WHITE };
@@ -61,13 +61,13 @@ public:
 	void set_spot( gfx_xy_t x, gfx_xy_t y );
 	void move_spot_by( gfx_dxy_t dx, gfx_dxy_t dy );
 
-	gfx_wh_t get_lico_width() const;
-	gfx_wh_t get_lico_height() const;
+	gfx_wh_t get_column_count() const;
+	gfx_wh_t get_line_count() const;
 
-	gfx_point get_lico() const { return _lico; }
-	void set_lico( const gfx_point& xy );
-	void set_lico( gfx_xy_t line, gfx_xy_t column );
-	void move_lico_by( gfx_dxy_t dline, gfx_dxy_t dcolumn );
+	gfx_point get_cursor() const { return _cursor; }
+	void set_cursor( const gfx_point& xy );
+	void set_cursor( gfx_xy_t line, gfx_xy_t column );
+	void move_cursor_by( gfx_dxy_t dline, gfx_dxy_t dcolumn );
 
 	gfx_color_rgb_8 get_foreground_color() { return _foreground_color; }
 	void set_foreground_color( gfx_color_rgb_8 color ) { _foreground_color = color; }

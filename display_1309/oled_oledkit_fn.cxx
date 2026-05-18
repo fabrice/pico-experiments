@@ -79,7 +79,7 @@ void OLEDLibDelay1ms( uint32_t time ) {
 void SelectPosLiCo( uint8_t line, uint8_t column ) {
 	if ( local::oled == nullptr ) return;
 
-	local::oled->set_lico( line, column );
+	local::oled->set_cursor( line, column );
 }
 
 //----------------------------------------------------------------
@@ -87,7 +87,7 @@ void SelectPosLiCo( uint8_t line, uint8_t column ) {
 void SelectPosCaractLiCo( uint8_t line, uint8_t column ) {
 	if ( local::oled == nullptr ) return;
 
-	local::oled->set_lico( line, column );
+	local::oled->set_cursor( line, column );
 }
 
 //----------------------------------------------------------------
@@ -103,7 +103,7 @@ void OLEDKitSendMessage( const char* text, uint8_t line, uint8_t column ) {
 void OLEDKitSendMessageINT( const char* text, int value, uint8_t line, uint8_t column ) {
 	if ( local::oled == nullptr ) return;
 
-	local::oled->set_lico( line, column );
+	local::oled->set_cursor( line, column );
 	local::oled->printf( "%s:%+6d", text, value );
 }
 
@@ -112,7 +112,7 @@ void OLEDKitSendMessageINT( const char* text, int value, uint8_t line, uint8_t c
 void OLEDKitSendINT( int value, uint8_t line, uint8_t column ) {
 	if ( local::oled == nullptr ) return;
 
-	local::oled->set_lico( line, column );
+	local::oled->set_cursor( line, column );
 	local::oled->printf( "%+6d", value );
 }
 

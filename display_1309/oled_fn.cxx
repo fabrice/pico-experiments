@@ -97,10 +97,10 @@ void oled_set_brightness_db( OLED* that, float brightness_db ) {
 
 //----------------------------------------------------------------
 
-void oled_set_lico( OLED* that, uint8_t line, uint8_t column ) {
+void oled_set_cursor( OLED* that, uint8_t line, uint8_t column ) {
 	if ( that == nullptr ) return;
 
-	that->set_lico( line, column );
+	that->set_cursor( line, column );
 }
 
 //----------------------------------------------------------------
