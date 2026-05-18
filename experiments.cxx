@@ -179,6 +179,20 @@ int main() {
 	io_init();
 
 	//--------------------
+	// watchdog
+
+	if ( watchdog_caused_reboot() ) {
+		working_led_init( 25, 200, 0.2f );
+		while ( true ) {
+			working_led_tick();
+			sleep_ms( 100 );
+		}
+	}
+
+	watchdog_enable( 10000, true );
+
+
+	//--------------------
 	// oled
 	auto display_wire_i2c = new wire_i2c( 0, SSD1309_ADDRESS );
 	display_wire_i2c->io_init( I2C0_SDA_GPIO, I2C0_SCL_GPIO, 1.5e6 );
@@ -197,19 +211,24 @@ int main() {
 	if ( is_not_null( display_tft ) ) display_tft->draw_bitmap( 0, 0, 128, 160, cfpt_logo_128_160, sizeof( cfpt_logo_128_160 ) );
 
 	sleep_ms( 2500 );
+	watchdog_update();
 
 	if ( is_not_null( display_oled )  ) display_oled->erase();
 	if ( is_not_null( display_tft ) ) display_tft->erase();
 
 	sleep_ms( 250 );
+	watchdog_update();
 
 	if ( is_not_null( display_oled ) ) display_oled->print_aligned( "Hello OLED", 1, '^' );
 	if ( is_not_null( display_tft ) ) display_tft->fill_screen( (31 << 11) | ( 0 << 5) | ( 0 << 0) );
 	sleep_ms( 250 );
+	watchdog_update();
 	if ( is_not_null( display_tft ) ) display_tft->fill_screen( ( 0 << 11) | (63 << 5) | ( 0 << 0) );
 	sleep_ms( 250 );
+	watchdog_update();
 	if ( is_not_null( display_tft ) ) display_tft->fill_screen( ( 0 << 11) | ( 0 << 5) | (31 << 0) );
 	sleep_ms( 250 );
+	watchdog_update();
 	if ( is_not_null( display_oled ) ) {
 		display_oled->print( '0', 0, 20 );
 		display_oled->print( '1', 1, 20 );
@@ -252,7 +271,7 @@ int main() {
 	}
 
 	sleep_ms( 5000 );
-	}
+	watchdog_update();
 
 	auto canvas = new gfx_canvas( display_tft->get_width(), display_tft->get_height(), 24 );
 	if ( is_not_null( display_tft ) ) {
@@ -280,6 +299,7 @@ int main() {
 		display_tft->draw_pixmap( 0, 0, 128, 160, (const uint8_t*) pixmap.data(), pixmap.size() * sizeof(uint16_t) );
 
 		sleep_ms( 1000 );
+		watchdog_update();
 	}
 	//--------------------
 	// font
@@ -319,6 +339,7 @@ int main() {
 	if ( is_not_null( expander ) ) expander->gpio_put_all( 0xa5 );
 
 	sleep_ms( 1000 );
+	watchdog_update();
 
 	if ( is_not_null( expander ) ) expander->gpio_put( 0, true );
 	if ( is_not_null( display_oled ) ) {
@@ -336,16 +357,20 @@ int main() {
 	}
 
 	sleep_ms( 250 );
+	watchdog_update();
 	if ( is_not_null( display_tft ) ) display_tft->erase( 4 );
 	sleep_ms( 2500 );
+	watchdog_update();
 	if ( is_not_null( display_tft ) ) display_tft->set_foreground_color( 255, 255, 255 );
 	if ( is_not_null( display_tft ) ) display_tft->draw_bitmap( 0, 0, 128, 160, cfpt_logo_128_160, sizeof( cfpt_logo_128_160 ) );
 	if ( is_not_null( display_tft ) ) display_tft->set_brightness_db( -30 );
 	if ( is_not_null( expander ) ) expander->gpio_put( 0, false );
 
-	sleep_ms( 10000 );
+	sleep_ms( 5000 );
+	watchdog_update();
 	if ( is_not_null( display_oled ) ) display_oled->set_brightness( 0 );
-	sleep_ms( 10000 );
+	sleep_ms( 5000 );
+	watchdog_update();
 	if ( is_not_null( expander ) ) expander->gpio_put( 0, true );
 
 	//--------------------
@@ -355,13 +380,17 @@ int main() {
 	for ( int level = -50 ; level <= 0 ; ++ level ) {
 		backlight->set_duty_db( (float)level );
 		sleep_ms( 100 );
+		watchdog_update();
 	}
 	backlight->set_duty( 0 );
 	sleep_ms( 1000 );
+	watchdog_update();
 	backlight->set_duty( 1 );
 	sleep_ms( 1000 );
+	watchdog_update();
 	backlight->set_channel_enabled( false, 0 );
 	sleep_ms( 1000 );
+	watchdog_update();
 	if ( is_not_null( expander ) ) expander->gpio_put( 0, false );
 
 //	oled->set_on( false );
@@ -399,6 +428,7 @@ int main() {
 
 	//--------------------
 	// forever
+	watchdog_update();
 	while( true ) {
 		int8_t rotation = encoder->use_rotation();
 		if ( rotation != 0 ) {
@@ -427,6 +457,7 @@ int main() {
 
 //		tight_loop_contents();
 		sleep_ms( 100 );
+		watchdog_update();
 	}
 
 	return PICO_OK;
