@@ -191,6 +191,11 @@ int main() {
 
 	watchdog_enable( 10000, true );
 
+	//--------------------
+	// working led
+
+	working_led_init( 25, 5000, 0.2f );
+	working_led_clr_led();
 
 	//--------------------
 	// oled
@@ -429,6 +434,7 @@ int main() {
 	//--------------------
 	// forever
 	watchdog_update();
+	working_led_start();
 	while( true ) {
 		int8_t rotation = encoder->use_rotation();
 		if ( rotation != 0 ) {
@@ -458,6 +464,7 @@ int main() {
 //		tight_loop_contents();
 		sleep_ms( 100 );
 		watchdog_update();
+		working_led_tick();
 	}
 
 	return PICO_OK;
