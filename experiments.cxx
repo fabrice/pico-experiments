@@ -8,6 +8,7 @@
 //----------------------------------------------------------------
 
 #include "pico/stdlib.h"
+#include "pico/binary_info.h"
 #include "pico/printf.h"
 
 #include "pwm.h"
@@ -95,6 +96,40 @@ Pico :
 
 */
 
+
+//----------------------------------------------------------------
+
+void io_info() {
+	// fonctionnalités
+	bi_decl( bi_program_feature( "Pico Explorer Board" ) );
+
+	// pins
+	bi_decl( bi_1pin_with_name( UART_TX_GPIO, "UART0 TX" ) );
+	bi_decl( bi_1pin_with_name( UART_RX_GPIO, "UART0 RX" ) );
+
+	bi_decl( bi_1pin_with_name( SPI0_SCLK_GPIO, "SPI0 SCLK" ) );
+	bi_decl( bi_1pin_with_name( SPI0_MISO_GPIO, "SPI0 MISO" ) );
+	bi_decl( bi_1pin_with_name( SPI0_MOSI_GPIO, "SPI0 MOSI" ) );
+
+	bi_decl( bi_1pin_with_name( I2C0_SDA_GPIO, "I2C0 SDA" ) );
+	bi_decl( bi_1pin_with_name( I2C0_SCL_GPIO, "I2C0 SCL" ) );
+
+	bi_decl( bi_1pin_with_name( BUTTON_UP_GPIO, "Button Up" ) );
+	bi_decl( bi_1pin_with_name( BUTTON_RIGHT_GPIO, "Button Right" ) );
+	bi_decl( bi_1pin_with_name( BUTTON_DOWN_GPIO, "Button Down" ) );
+	bi_decl( bi_1pin_with_name( BUTTON_LEFT_GPIO, "Button Left" ) );
+
+	bi_decl( bi_1pin_with_name( 1, "Neopixels x 4" ) );
+
+	bi_decl( bi_1pin_with_name( ST7735_CS_GPIO, "ST7735 Chip Select" ) );
+	bi_decl( bi_1pin_with_name( ST7735_RESET_GPIO, "ST7735 Reset" ) );
+	bi_decl( bi_1pin_with_name( ST7735_DC_GPIO, "ST7735 Data/Command" ) );
+	bi_decl( bi_1pin_with_name( ST7735_BACKLIGHT_GPIO, "ST7735 Backlight" ) );
+
+	bi_decl( bi_1pin_with_name( BUZZER_GPIO, "Buzzer" ) );
+
+	bi_decl( bi_1pin_with_name( 0, "DHT11" ) );
+}
 
 //----------------------------------------------------------------
 
