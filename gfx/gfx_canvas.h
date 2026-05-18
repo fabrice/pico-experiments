@@ -30,7 +30,7 @@ private:
 
 	gfx_dimension _dimension { 0, 0 };
 
-	gfx_point _spot { 0, 0 };
+	gfx_point _pencil { 0, 0 };
 	gfx_point _cursor { 0, 0 };
 
 	gfx_color_rgb_8 _foreground_color { gfx_color_rgb_8::BLACK };
@@ -56,10 +56,10 @@ public:
 
 	void set_window( gfx_xy_t x, gfx_xy_t y, gfx_wh_t width, gfx_wh_t height );
 
-	gfx_point get_spot() const { return _spot; }
-	void set_spot( const gfx_point& xy );
-	void set_spot( gfx_xy_t x, gfx_xy_t y );
-	void move_spot_by( gfx_dxy_t dx, gfx_dxy_t dy );
+	gfx_point get_pencil() const { return _pencil; }
+	void set_pencil( const gfx_point& xy );
+	void set_pencil( gfx_xy_t x, gfx_xy_t y );
+	void move_pencil_by( gfx_dxy_t dx, gfx_dxy_t dy );
 
 	gfx_wh_t get_column_count() const;
 	gfx_wh_t get_line_count() const;

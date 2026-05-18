@@ -166,7 +166,7 @@ void display_7735_print( display_7735* that, char character ) {
 void display_7735_print( display_7735* that, char character, uint8_t line, uint8_t column ) {
 	if ( that == nullptr ) return;
 
-	that->set_lico( line, column );
+	that->set_cursor( line, column );
 	that->print( character );
 }
 

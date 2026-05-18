@@ -188,16 +188,16 @@ int main() {
 		canvas->set_foreground_color( gfx_color_rgb( 0_u8, 200_u8, 0_u8 ) );
 		canvas->draw_rectangle( 5, 5, 127-5, 159-5 );
 		canvas->set_foreground_color( gfx_color_rgb( 200_u8, 200_u8, 0_u8 ) );
-		canvas->set_spot( 7, 7 );
+		canvas->set_pencil( 7, 7 );
 		canvas->draw_line_to( 7, 159-7 );
 		canvas->draw_line_to( 127-7, 159-7 );
 		canvas->draw_line_to( 127-7, 7 );
 		canvas->draw_line_to( 7, 7 );
 		canvas->set_foreground_color( gfx_color_rgb( 0_u8, 200_u8, 200_u8 ) );
 		canvas->draw_circle( 64, 80, 32 );
-		canvas->set_spot( 15, 15 );
+		canvas->set_pencil( 15, 15 );
 		canvas->draw_line_to( 127-15, 159-15 );
-		canvas->set_spot( 15, 159-15 );
+		canvas->set_pencil( 15, 159-15 );
 		canvas->draw_line_to( 127-15, 15 );
 		canvas->fill_circle( 50, 100, 20, 0b1111 );
 		std::vector< uint16_t > pixmap = canvas->make_pixmap_565();
@@ -215,7 +215,7 @@ int main() {
 	canvas->set_font( bitfont );
 
 	canvas->erase();
-	canvas->set_spot( 2, 60 );
+	canvas->set_pencil( 2, 60 );
 	canvas->print_center( "Hello àäéèëîûüµú¿?" );
 
 	if ( is_not_null( display_tft ) ) {

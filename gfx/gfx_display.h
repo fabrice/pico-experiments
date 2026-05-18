@@ -36,7 +36,7 @@ private:
 	uint16_t _width { 0 };
 	uint16_t _height { 0 };
 
-	gfx_point _spot { 0, 0 };
+	gfx_point _pencil { 0, 0 };
 	gfx_point _cursor { 0, 0 };
 
 private:
@@ -51,9 +51,9 @@ public:
 	uint16_t get_width() const { return _width; }
 	uint16_t get_height() const { return _height; }
 
-	gfx_point get_spot() const { return _spot; }
-	void set_spot( gfx_point& spot ) { _spot = spot; }
-	void set_spot( gfx_xy_t x, gfx_xy_t y ) { _spot = gfx_point( x, y ); }
+	gfx_point get_pencil() const { return _pencil; }
+	void set_pencil( gfx_point& spot ) { _pencil = spot; }
+	void set_pencil( gfx_xy_t x, gfx_xy_t y ) { _pencil = gfx_point( x, y ); }
 
 	virtual void set_on( bool on ) = 0;
 	virtual void set_brightness( uint8_t brightness ) = 0;

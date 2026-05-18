@@ -60,35 +60,35 @@ gfx_canvas::~gfx_canvas() noexcept {
 
 //----------------------------------------------------------------
 
-void gfx_canvas::set_spot( const gfx_point& xy ) {
+void gfx_canvas::set_pencil( const gfx_point& xy ) {
 	if ( xy > this->get_box() ) return;
 
 	if ( xy <= this->get_box() ) {
-		_spot = xy;
+		_pencil = xy;
 	}
 	else {
-		_spot.set_xy( 0, 0 );
+		_pencil.set_xy( 0, 0 );
 	}
 }
 
 //----------------------------------------------------------------
 
-void gfx_canvas::set_spot( gfx_xy_t x, gfx_xy_t y ) {
+void gfx_canvas::set_pencil( gfx_xy_t x, gfx_xy_t y ) {
 	if ( gfx_point( x, y ) <= this->get_box() ) {
-		_spot.set_xy( x, y );
+		_pencil.set_xy( x, y );
 	}
 	else {
-		_spot.set_xy( 0, 0 );
+		_pencil.set_xy( 0, 0 );
 	}
 }
 
 //----------------------------------------------------------------
 
-void gfx_canvas::move_spot_by( gfx_dxy_t dx, gfx_dxy_t dy ) {
-	const gfx_point xy { static_cast< gfx_xy_t >( _spot.get_x() + dx ), static_cast< gfx_xy_t >( _spot.get_y() + dy ) };
+void gfx_canvas::move_pencil_by( gfx_dxy_t dx, gfx_dxy_t dy ) {
+	const gfx_point xy { static_cast< gfx_xy_t >( _pencil.get_x() + dx ), static_cast< gfx_xy_t >( _pencil.get_y() + dy ) };
 	if ( xy > this->get_box() ) return;
 
-	_spot = xy;
+	_pencil = xy;
 }
 
 //----------------------------------------------------------------
@@ -140,7 +140,7 @@ void gfx_canvas::set_cursor( gfx_xy_t line, gfx_xy_t column ) {
 		const auto x_offset = (this->get_width() - x) / 2;
 		const auto y = line * this->get_height();
 		const auto y_offset = (this->get_height() - y) / 2;
-		this->set_spot( x + x_offset, y + y_offset );
+		this->set_pencil( x + x_offset, y + y_offset );
 	}
 	else {
 		_cursor.set_xy( 0, 0 );
@@ -190,7 +190,7 @@ void gfx_canvas::print_center( std::string_view text ) {
 	gfx_wh_t width = _font->get_text_width( text );
 	if ( width <= this->get_width() ) {
 		gfx_wh_t x = (this->get_width() - width) / 2;
-		_spot.set_x( x );
+		_pencil.set_x( x );
 	}
 
 	this->print( text );
@@ -203,18 +203,18 @@ void gfx_canvas::print_glyph( const gfx_glyph& glyph ) {
 		for ( gfx_xy_t x = 0 ; x < glyph.get_width() ; ++ x ) {
 			gfx_color_bit lit = glyph.get_pixel_lit( x, y );
 			if ( lit ) {
-				this->draw_point( _spot.get_x() + glyph.get_left() + x, _spot.get_y() + glyph.get_top() + y );
+				this->draw_point( _pencil.get_x() + glyph.get_left() + x, _pencil.get_y() + glyph.get_top() + y );
 			}
 		}
 	}
 
-	this->move_spot_by( glyph.get_x_advance(), 0 );
+	this->move_pencil_by( glyph.get_x_advance(), 0 );
 }
 
 //----------------------------------------------------------------
 
 void gfx_canvas::draw_point() {
-	_image->set_pixel( _spot, _foreground_color );
+	_image->set_pixel( _pencil, _foreground_color );
 }
 
 //----------------------------------------------------------------
@@ -294,8 +294,8 @@ void gfx_canvas::draw_vline( gfx_xy_t x, gfx_xy_t y1, gfx_xy_t y2 ) {
 //----------------------------------------------------------------
 
 void gfx_canvas::draw_line_to( gfx_xy_t x, gfx_xy_t y ) {
-	this->draw_line( _spot.get_x(), _spot.get_y(), x, y );
-	_spot.set_xy( x, y );
+	this->draw_line( _pencil.get_x(), _pencil.get_y(), x, y );
+	_pencil.set_xy( x, y );
 }
 
 //----------------------------------------------------------------
@@ -304,8 +304,8 @@ void gfx_canvas::draw_line_to_polar( float distance, float angle ) {
 	float dx = distance * std::cos( angle );
 	float dy = distance * std::sin( angle );
 
-	gfx_xy_t x = _spot.get_x() + static_cast< gfx_dxy_t >( dx );
-	gfx_xy_t y = _spot.get_y() + static_cast< gfx_dxy_t >( dy );
+	gfx_xy_t x = _pencil.get_x() + static_cast< gfx_dxy_t >( dx );
+	gfx_xy_t y = _pencil.get_y() + static_cast< gfx_dxy_t >( dy );
 
 	this->draw_line_to( x, y );
 }
@@ -346,7 +346,7 @@ void gfx_canvas::fill_rectangle( gfx_xy_t x1, gfx_xy_t y1, gfx_xy_t x2, gfx_xy_t
 //----------------------------------------------------------------
 
 void gfx_canvas::draw_circle( gfx_xy_t r ) const {
-	this->draw_circle( _spot.get_x(), _spot.get_y(), r );
+	this->draw_circle( _pencil.get_x(), _pencil.get_y(), r );
 }
 
 //----------------------------------------------------------------
