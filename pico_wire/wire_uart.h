@@ -29,9 +29,12 @@ private:
 
 	pico_uart_ptr _uart_instance { nullptr };
 
-public:
+private:
 
 	wire_uart() = delete;
+
+public:
+
 	wire_uart( uint uart_num );
 	virtual ~wire_uart() noexcept override;
 

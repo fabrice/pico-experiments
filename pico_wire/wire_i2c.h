@@ -46,11 +46,11 @@ public:
 
 	virtual ~wire_i2c() noexcept override;
 
-	virtual void start_transaction() override;
-
 	void io_init( uint scl_gpio, uint sda_gpio, uint bitrate );
 
 	virtual void set_bitrate( uint bitrate ) override;
+
+	virtual void start_transaction() override;
 
 	virtual int write_bytes( const uint8_t* bytes, size_t length ) override;
 
