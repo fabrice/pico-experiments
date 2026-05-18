@@ -68,7 +68,7 @@ void mcp23008::gpio_init() {
 		0x00, // GPINTEN
 		0x00, // DEFVAL
 		0x00, // INTCON
-		0x00, // IOCON
+		0b00001000, // IOCON, HAEN enabled
 		_gpio_pull_up, // GPPU
 		0x00, // INTF
 		0x00, // GPIO
