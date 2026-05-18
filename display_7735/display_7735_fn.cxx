@@ -180,6 +180,30 @@ void display_7735_print_glyph( display_7735* that, const uint8_t glyph[6] ) {
 
 //----------------------------------------------------------------
 
+void display_7735_draw_pixel( display_7735* that, int16_t x, int16_t y, uint16_t color ) {
+	if ( that == nullptr ) return;
+
+	that->draw_pixel( x, y, color );
+}
+
+//----------------------------------------------------------------
+
+void display_7735_draw_line( display_7735* that, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color ) {
+	if ( that == nullptr ) return;
+
+	that->draw_line( x1, y1, x2, y2, color );
+}
+
+//----------------------------------------------------------------
+
+void display_7735_draw_line_to( display_7735* that, int16_t x, int16_t y, uint16_t color ) {
+	if ( that == nullptr ) return;
+
+	that->draw_line_to( x, y, color );
+}
+
+//----------------------------------------------------------------
+
 void display_7735_draw_pixmap( display_7735* that, const uint8_t* pixmap, uint16_t length, int16_t x, int16_t y, int16_t width, int16_t height ) {
 	if ( that == nullptr ) return;
 

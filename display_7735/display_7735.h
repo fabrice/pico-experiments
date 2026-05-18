@@ -130,6 +130,8 @@ public:
 	// graphics
 
 	void draw_pixel( int16_t x, int16_t y, uint16_t color );
+	void draw_line( int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color );
+	void draw_line_to( int16_t x, int16_t y, uint16_t color );
 	void draw_block( int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t color );
 
 	void draw_graymap( const uint8_t* xy_graymap, size_t length, int16_t x, int16_t y, uint16_t width, uint16_t height );

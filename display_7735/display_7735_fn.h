@@ -61,6 +61,9 @@ void display_7735_print_glyph( display_7735* that, const uint8_t glyph[6] );
 //----------------------------------------------------------------
 // graphics
 
+void display_7735_draw_pixel( display_7735* that, int16_t x, int16_t y, uint16_t color );
+void display_7735_draw_line( display_7735* that, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color );
+
 void display_7735_draw_pixmap( display_7735* that, const uint8_t* pixmap, uint16_t length, int16_t x, int16_t y, int16_t width, int16_t height );
 void display_7735_draw_bitmap( display_7735* that, const uint8_t* bitmap, uint16_t length, int16_t x, int16_t y, int16_t width, int16_t height );
 

@@ -555,6 +555,42 @@ void display_7735::draw_pixel( int16_t x, int16_t y, uint16_t color ) {
 
 //----------------------------------------------------------------
 
+void display_7735::draw_line( int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color ) {
+	int16_t dx = std::abs( x2 - x1 );
+	int16_t sx = x1 < x2 ? +1 : -1;
+
+	int16_t dy = std::abs( y2 - y1 );
+	int16_t sy = y1 < y2 ? +1 : -1;
+
+	int16_t err = dx - dy;
+
+	int16_t x = x1;
+	int16_t y = y1;
+
+	while ( true ) {
+		this->draw_pixel( x, y, color );
+
+		int16_t err2 = err * 2;
+		if ( err2 > -dy ) {
+			if ( x == x2 ) break;
+			err -= dy;
+			x += sx;
+		}
+		if ( err2 < +dx ) {
+			if ( y == y2 ) break;
+			err += dx;
+			y += sy;
+		}
+	}
+}
+
+//----------------------------------------------------------------
+
+void display_7735::draw_line_to( int16_t x, int16_t y, uint16_t color ) {
+}
+
+//----------------------------------------------------------------
+
 void display_7735::draw_block( int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t color ) {
 	int max_rows = 500 / w;
 	if (max_rows < 1) max_rows = 1;
