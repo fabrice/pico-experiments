@@ -25,7 +25,7 @@
 #include "rotary_encoder.h"
 
 #include "mcp23008.h"
-#include "memory_24lc02b.h"
+#include "mem24lc02b.h"
 
 #include "hardware/i2c.h"
 #include "hardware/clocks.h"
@@ -34,6 +34,8 @@
 #include "math_plus.h"
 
 #include <cstring>
+#include <experimental/scope>
+using std::experimental::scope_exit;
 
 #include "gfx.h"
 #include "gfx/fonts/cfpt_mono_6x8.h"

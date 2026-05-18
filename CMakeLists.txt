@@ -58,7 +58,7 @@ add_subdirectory(rotary_encoder)
 
 # pic i2c board
 add_subdirectory(mcp23008)
-add_subdirectory(memory_24lc02b)
+add_subdirectory(mem24lc02b)
 add_subdirectory(mcp41xxx)
 add_subdirectory(mcp3221)
 #add_subdirectory(tc1321)
@@ -91,7 +91,7 @@ target_link_libraries(${PROJECT_NAME}
 	lib_display_1309
 	lib_rotary_encoder
 	lib_mcp23008
-	lib_mem24lc02
+	lib_mem24lc02b
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
