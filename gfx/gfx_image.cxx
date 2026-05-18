@@ -24,8 +24,6 @@ gfx_bytemap_data gfx_image::make_yx_bytemap() const {
 	for ( gfx_xy_t x = 0 ; x < dimension.get_width() ; ++ x ) {
 		for ( gfx_xy_t y = 0 ; y < dimension.get_height() ; ++ y ) {
 			gfx_xy_t yindex = (y + 7) / 8;
-			//if ( this->get_pixel_lit( x, y ) ) bytemap[ yindex + x * dybytes ] |= (0x01 << y);
-			//else bytemap[ yindex + x * dybytes ] &= ~(0x01 << y);
 			if ( this->get_pixel_lit( x, y ) ) bytemap.set_bits_mask( yindex + x * dybytes, 0x01 << y );
 			else bytemap.clr_bits_mask( yindex + x * dybytes, 0x01 << y );
 		}
