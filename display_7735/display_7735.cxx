@@ -179,7 +179,7 @@ void display_7735::display_init() {
 //		ST7735_DISPON, DELAY_FLAG,
 //			100,
 		ST7735_MADCTL, 1,
-			static_cast<uint8_t>(0xC0 | _color_mode),
+			static_cast<uint8_t>( 0xC0 | _color_mode ),
 	};
 
 	size_t i = 0;
@@ -187,16 +187,16 @@ void display_7735::display_init() {
 
 	while (i < length) {
 		uint8_t cmd = commands[i];
-		++i;
+		++ i;
 		uint8_t num_args_and_delay = commands[i];
-		++i;
+		++ i;
 		uint8_t num_args = num_args_and_delay & ~DELAY_FLAG;
 		bool has_delay = (num_args_and_delay & DELAY_FLAG) != 0;
 
 		this->command(cmd);
 
 		for ( uint8_t a = 0 ; a < num_args ; ++ a ) {
-			this->data(commands[i++]);
+			this->data(commands[i ++]);
 		}
 
 		if (has_delay) {

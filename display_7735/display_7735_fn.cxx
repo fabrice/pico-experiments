@@ -15,6 +15,7 @@
 #include "wire_spi.h"
 
 #include <cstring>
+#include <map>
 
 //----------------------------------------------------------------
 
@@ -28,13 +29,87 @@ constexpr uint ST7735_BACKLIGHT_GPIO { 2 };
 
 //----------------------------------------------------------------
 
+// instance registry, an experiment
+// the goal is to hide the instance pointers from the API
+
+// https://cppreference.com/cpp/container/map
+
+namespace local {
+
+std::map< uint, display_7735* > instances {};
+
+}
+
+uint get_free_instance_num() {
+	uint instance_num = 0;
+	//while ( local::instances.contains( instance_num ) ) ++ instance_num;
+
+	for ( const auto& [key, value] : local::instances ) {
+		if ( (value == nullptr) or (key > instance_num) ) return instance_num;
+		if ( key == instance_num ) ++ instance_num;
+	}
+
+	return instance_num;
+}
+
+display_7735* get_instance( uint instance_num ) noexcept {
+	auto pair = local::instances.find( instance_num );
+	if ( pair == local::instances.end() ) return nullptr;
+
+	return pair->second;
+}
+
+void set_instance( uint instance_num, display_7735* that ) {
+	// TODO : check for get_instance() != nullptr
+	local::instances[ instance_num ] = that;
+}
+
+void erase_instance( uint instance_num ) {
+	local::instances.erase( instance_num );
+}
+
+void delete_instance( uint instance_num ) {
+	auto pair = local::instances.find( instance_num );
+	if ( pair == local::instances.end() ) return;
+
+	if ( pair->second == nullptr ) {
+		local::instances.erase( pair );
+		return;
+	}
+
+	delete pair->second;
+	local::instances.erase( pair );
+}
+
+uint display_7735_num_init( uint8_t spi_num, uint reset_gpio ) {
+	auto that = display_7735_init( spi_num, reset_gpio );
+
+	uint instance_num = get_free_instance_num();
+	set_instance( instance_num, that );
+
+	return instance_num;
+}
+
+uint16_t display_7735_num_get_width( const uint instance_num ) {
+	auto that = get_instance( instance_num );
+	if ( that == nullptr ) return 0;
+
+	return that->get_width();
+}
+
+void display_7735_num_deinit( const uint instance_num ) {
+	delete_instance( instance_num );
+}
+
+//----------------------------------------------------------------
+
 display_7735* display_7735_init( uint8_t spi_num, uint reset_gpio ) {
 	auto display_wire_spi = wire_spi::make( spi_num, ST7735_CS_GPIO );
 	display_wire_spi->io_init( SPI0_SCLK_GPIO, SPI0_MISO_GPIO, SPI0_MOSI_GPIO, 8e6 );
 
-	auto driver = new display_7735( display_wire_spi, reset_gpio, ST7735_DC_GPIO, ST7735_BACKLIGHT_GPIO );
+	auto that = new display_7735( display_wire_spi, reset_gpio, ST7735_DC_GPIO, ST7735_BACKLIGHT_GPIO );
 
-	return driver;
+	return that;
 }
 
 //----------------------------------------------------------------
