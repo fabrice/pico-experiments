@@ -10,12 +10,15 @@
 #include "pico/stdlib.h"
 #include "pico/binary_info.h"
 #include "pico/printf.h"
+#include "hardware/watchdog.h"
 
 #include "pwm.h"
 #include "wire_spi.h"
 #include "display_7735.h"
 #include "buzzer.h"
 #include "buzzer_melody_data.h"
+#include "ui_leds.h"
+#include "working_led.h"
 
 #include "oled.h"
 #include "oled_fn.h"
@@ -35,6 +38,7 @@
 #include "gfx.h"
 #include "gfx/fonts/cfpt_mono_6x8.h"
 #include "gfx/img/cfpt_128_160.h"
+#include "gfx/img/led_20_32.h"
 #include "gfx/third/arduino_font_5x7.c"
 #include "gfx/third/FreeMono9pt7b.h"
 #include "gfx/third/FreeSans9pt7b.h"
@@ -206,11 +210,48 @@ int main() {
 	sleep_ms( 250 );
 	if ( is_not_null( display_tft ) ) display_tft->fill_screen( ( 0 << 11) | ( 0 << 5) | (31 << 0) );
 	sleep_ms( 250 );
+	if ( is_not_null( display_oled ) ) {
+		display_oled->print( '0', 0, 20 );
+		display_oled->print( '1', 1, 20 );
+		display_oled->print( '2', 2, 20 );
+		display_oled->print( '3', 3, 20 );
+		display_oled->print( '4', 4, 20 );
+		display_oled->print( '5', 5, 20 );
+		display_oled->print( '6', 6, 20 );
+		display_oled->print( "012345678901234567890", 7, 0 );
+	}
+
 	if ( is_not_null( display_tft ) ) {
 		display_tft->fill_screen( 0, 0, 0 );
+		display_tft->set_foreground_color( 255, 255, 255 );
+		display_tft->set_background_color( 0, 0, 0 );
 		display_tft->set_cursor( 4, 0 );
 		display_tft->print_center( "Hello ST7735", 4 );
 
+		ui_leds* ui = ui_leds::make( display_tft );
+		ui->set_title( "Hello UI leds" );
+		ui->set_message( "message" );
+		ui->clr_leds();
+		ui->set_color( true, false, false );
+		ui->set_led( 0 );
+		ui->set_color( true, true, false );
+		ui->set_led( 1 );
+		ui->set_color( false, true, false );
+		ui->set_led( 2 );
+		ui->set_color( false, true, true );
+		ui->set_led( 3 );
+		ui->set_color( false, false, true );
+		ui->set_led( 4 );
+		ui->set_color( true, false, true );
+		ui->set_led( 5 );
+		ui->set_color( true, true, true );
+		ui->set_led( 6 );
+		//ui->put_leds( 0b100101101111 );
+		delete ui;
+		ui = nullptr;
+	}
+
+	sleep_ms( 5000 );
 	}
 
 	auto canvas = new gfx_canvas( display_tft->get_width(), display_tft->get_height(), 24 );
@@ -255,7 +296,7 @@ int main() {
 
 	if ( is_not_null( display_tft ) ) {
 		std::vector< uint16_t > pixmap = canvas->make_pixmap_565();
-		display_tft->draw_pixmap( 0, 0, 128, 160, (const uint8_t*) pixmap.data(), pixmap.size() * sizeof(uint16_t) );
+		display_tft->draw_pixmap( (const uint8_t*) pixmap.data(), pixmap.size() * sizeof(uint16_t), 0, 0, 128, 160 );
 	}
 
 	bitfont->release();
@@ -282,8 +323,9 @@ int main() {
 	if ( is_not_null( expander ) ) expander->gpio_put( 0, true );
 	if ( is_not_null( display_oled ) ) {
 		display_oled->erase( 0 );
+		display_oled->erase( 7, 9 );
 
-	uint8_t glyph[] { 0x44, 0x80, 0x90, 0x80, 0x44, 0x00 };
+		uint8_t glyph[] { 0x44, 0x80, 0x90, 0x80, 0x44, 0x00 };
 		display_oled->set_cursor( 5, 5 );
 		display_oled->print_glyph( glyph );
 		display_oled->set_cursor( 5, 7 );
