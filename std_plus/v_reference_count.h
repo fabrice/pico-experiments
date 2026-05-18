@@ -11,10 +11,17 @@
 
 //----------------------------------------------------------------
 
-#include "pico.h"
-
 #include <cstdint>
 #include <memory>
+
+//----------------------------------------------------------------
+
+template< typename T >
+concept reference_countable = requires( T t, const T ct ) {
+	{ ct.get_reference_count() } noexcept -> std::unsigned_integral;
+	{ ct.retain() } noexcept -> std::same_as< void >;
+	{ t.release() } noexcept -> std::same_as< bool >;
+};
 
 //----------------------------------------------------------------
 
@@ -40,10 +47,14 @@ public:
 
 	uint8_t get_reference_count() const noexcept { return _reference_count; }
 
-	void retain() const noexcept { ++_reference_count; }
+	void retain() const noexcept { ++ _reference_count; }
 
 	bool release() noexcept;
 
 };
+
+//----------------------------------------------------------------
+
+static_assert( reference_countable< v_reference_count > );
 
 //----------------------------------------------------------------
