@@ -33,6 +33,7 @@ project(Experiments CXX C ASM)
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
+#-----------------------------------------------------------------
 # Add executable.
 
 add_executable(${PROJECT_NAME}
@@ -45,6 +46,7 @@ add_subdirectory(gpio_plus)
 add_subdirectory(pwm_plus)
 add_subdirectory(pico_wire)
 add_subdirectory(gfx)
+add_subdirectory(neopixels)
 
 # pico explorer board
 add_subdirectory(display_7735)
@@ -83,6 +85,7 @@ target_link_libraries(${PROJECT_NAME}
 	lib_gpio_plus
 	lib_pwm_plus
 	lib_pico_wire
+	lib_neopixels
 	lib_gfx
 	lib_display_7735
 	lib_buzzer
@@ -98,7 +101,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 	${CMAKE_CURRENT_LIST_DIR}
 )
 
-pico_add_extra_outputs(${PROJECT_NAME})
+#-----------------------------------------------------------------
 
 pico_set_program_name(${PROJECT_NAME} "Playground")
 pico_set_program_version(${PROJECT_NAME} "avril 2026")

@@ -14,6 +14,7 @@
 
 #include "pwm.h"
 #include "wire_spi.h"
+#include "neopixels.h"
 #include "display_7735.h"
 #include "buzzer.h"
 #include "buzzer_melody_data.h"
@@ -62,6 +63,9 @@ constexpr uint ST7735_CS_GPIO { 17 };
 constexpr uint ST7735_RESET_GPIO { 6 };
 constexpr uint ST7735_DC_GPIO { 3 };
 constexpr uint ST7735_BACKLIGHT_GPIO { 2 };
+
+// Neopixels
+constexpr uint NEOPIXELS_GPIO { 1 };
 
 // Buzzer
 constexpr uint BUZZER_GPIO { 27 };
@@ -125,7 +129,7 @@ void io_info() {
 	bi_decl( bi_1pin_with_name( BUTTON_DOWN_GPIO, "Button Down" ) );
 	bi_decl( bi_1pin_with_name( BUTTON_LEFT_GPIO, "Button Left" ) );
 
-	bi_decl( bi_1pin_with_name( 1, "Neopixels x 4" ) );
+	bi_decl( bi_1pin_with_name( NEOPIXELS_GPIO, "Neopixels x 4" ) );
 
 	bi_decl( bi_1pin_with_name( ST7735_CS_GPIO, "ST7735 Chip Select" ) );
 	bi_decl( bi_1pin_with_name( ST7735_RESET_GPIO, "ST7735 Reset" ) );
@@ -210,8 +214,15 @@ int main() {
 	//--------------------
 	// working led
 
-	working_led_init( 25, 5000, 0.2f );
-	working_led_clr_led();
+	working_led_init( 255, 5000, 0.1f );
+	working_led_set_led();
+
+	//--------------------
+	// neopixels
+	auto leds = new neopixels( NEOPIXELS_GPIO, neopixels::FORMAT_RGB, 4 );
+	leds->start();
+	leds->send_all_black();
+	leds->finish();
 
 	//--------------------
 	// oled
@@ -344,6 +355,15 @@ int main() {
 	bitfont = nullptr;
 
 	//--------------------
+	// neopixels
+	leds->start();
+	leds->send_rgb( 31, 0, 0 );
+	leds->send_rgb( 0, 31, 0 );
+	leds->send_rgb( 0, 0, 31 );
+	leds->send_white( 31 );
+	leds->finish();
+
+	//--------------------
 	// expander
 	auto expander_wire = wire_i2c::make( 0, MCP23008_ADDRESS );
 	mcp23008* expander { nullptr };
@@ -437,6 +457,13 @@ int main() {
 	if ( is_not_null( expander ) ) {
 		delete expander;
 		expander = nullptr;
+	}
+
+	//--------------------
+
+	if ( is_not_null( leds ) ) {
+		delete leds;
+		leds = nullptr;
 	}
 
 	//--------------------
