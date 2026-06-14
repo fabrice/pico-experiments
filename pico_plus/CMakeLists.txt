@@ -7,6 +7,7 @@ cmake_minimum_required(VERSION 4.0)
 project(lib_pico_plus CXX C ASM)
 
 add_library(${PROJECT_NAME} STATIC
+	stdio_plus.cxx
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -17,6 +18,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 target_link_libraries(${PROJECT_NAME}
 	pico_stdlib
+	pico_stdio_usb
 )
 
 #-----------------------------------------------------------------

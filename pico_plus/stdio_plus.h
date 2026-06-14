@@ -3,7 +3,7 @@
 // Raspberry Pico
 // Target : PicoSDK C/C++
 //
-// pico_plus
+// stdio_plus
 //
 //----------------------------------------------------------------
 
@@ -11,14 +11,11 @@
 
 //----------------------------------------------------------------
 
-#include "pico/stdlib.h"
+#include "pico/stdio.h"
+#include "pico/time.h"
 
-#include "stdio_plus.h"
+//----------------------------------------------------------------
 
-#include "hardware/i2c.h"
-#include "hardware_i2c_plus.h"
-
-#include "hardware/spi.h"
-#include "hardware_spi_plus.h"
+bool stdio_usb_wait( uint timeout );
 
 //----------------------------------------------------------------
