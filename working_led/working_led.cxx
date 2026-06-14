@@ -11,6 +11,7 @@
 
 #include "hardware/gpio.h"
 #include "pico/time.h"
+#include "pico/status_led.h"
 
 #include <cstdint>
 #include <cmath>
@@ -31,7 +32,6 @@ absolute_time_t timestamp;
 //----------------------------------------------------------------
 
 void working_led_init( uint gpio, uint32_t period, float cycle ) {
-	if ( gpio == 255 ) return;
 	if ( (cycle < 0.0f) || (cycle > 1.0f) ) cycle = 0.5f;
 
 	local::gpio = gpio;
@@ -39,9 +39,15 @@ void working_led_init( uint gpio, uint32_t period, float cycle ) {
 	local::cycle = cycle;
 	local::timestamp = get_absolute_time();
 
-	gpio_init( local::gpio );
-	gpio_set_dir( local::gpio, GPIO_OUT );
-	gpio_put( local::gpio, false );
+	if ( local::gpio < 255 ) {
+		gpio_init( local::gpio );
+		gpio_set_dir( local::gpio, GPIO_OUT );
+		gpio_put( local::gpio, false );
+	}
+	else {
+		status_led_init();
+		status_led_set_state( true );
+	}
 }
 
 //----------------------------------------------------------------
@@ -76,7 +82,7 @@ void working_led_tick() {
 		working_led_set_led();
 	}
 	else {
-		uint32_t toggle_ms = static_cast< uint32_t >( std::round( static_cast< float >( local::period ) * local::cycle / 255.0f ) );
+		uint32_t toggle_ms = static_cast< uint32_t >( std::round( static_cast< float >( local::period ) * local::cycle ) );
 		working_led_put_led( now < delayed_by_ms( local::timestamp, toggle_ms ) );
 	}
 }
@@ -84,41 +90,41 @@ void working_led_tick() {
 //----------------------------------------------------------------
 
 bool working_led_get_led() {
-	if ( local::gpio == 255 ) return false;
-
-	return gpio_get( local::gpio );
+	if ( local::gpio < 255 ) {
+		return gpio_get( local::gpio );
+	}
+	else {
+		return status_led_get_state();
+	}
 }
 
 //----------------------------------------------------------------
 
 void working_led_put_led( bool on ) {
-	if ( local::gpio == 255 ) return;
-
-	gpio_put( local::gpio, on );
+	if ( local::gpio < 255 ) {
+		gpio_put( local::gpio, on );
+	}
+	else {
+		status_led_set_state( on );
+	}
 }
 
 //----------------------------------------------------------------
 
 void working_led_set_led() {
-	if ( local::gpio == 255 ) return;
-
-	gpio_put( local::gpio, true );
+	working_led_put_led( true );
 }
 
 //----------------------------------------------------------------
 
 void working_led_clr_led() {
-	if ( local::gpio == 255 ) return;
-
-	gpio_put( local::gpio, false );
+	working_led_put_led( false );
 }
 
 //----------------------------------------------------------------
 
 void working_led_xor_led() {
-	if ( local::gpio == 255 ) return;
-
-	gpio_put( local::gpio, !gpio_get( local::gpio ) );
+	working_led_put_led( working_led_get_led() );
 }
 
 //----------------------------------------------------------------
