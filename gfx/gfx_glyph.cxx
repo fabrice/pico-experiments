@@ -218,7 +218,7 @@ gfx_glyph& gfx_glyph::operator=( const gfx_glyph& that ) {
 	_x_advance = that._x_advance;
 	_bytemap = that._bytemap;
 
-	return *this;
+	return (*this);
 }
 
 //----------------------------------------------------------------

@@ -105,7 +105,7 @@ gfx_font* gfx_font::make_gfx_font_from_glyphmap( const uint8_t* glyphmap, uint8_
 	if ( glyphmap == nullptr ) return nullptr;
 
 	size_t bit_count = width * height;
-	size_t byte_count = (bit_count + 7) / 8; 
+	size_t byte_count = (bit_count + 7) / 8;
 
 	auto font = new gfx_font();
 	font->_y_advance = 8;
@@ -179,70 +179,70 @@ gfx_font* gfx_font::make_gfx_font_from_adafruit( const adafruit_gfx_font_data* a
 void gfx_font::print_gfx_font_files( const gfx_font* font, const char* font_name ) {
 	if ( font == nullptr ) return;
 
-	printf( "//----------------------------------------------------------------\n\n" );
-	printf( "// gfx_font : %s\n\n", font_name );
-	printf( "//----------------------------------------------------------------\n\n" );
-	printf( "#pragma once\n\n" );
-	printf( "//----------------------------------------------------------------\n\n" );
-	printf( "#include \"gfx_font_data.h\"\n\n" );
-	printf( "//----------------------------------------------------------------\n\n" );
+	stdio_printf( "//----------------------------------------------------------------\n\n" );
+	stdio_printf( "// gfx_font : %s\n\n", font_name );
+	stdio_printf( "//----------------------------------------------------------------\n\n" );
+	stdio_printf( "#pragma once\n\n" );
+	stdio_printf( "//----------------------------------------------------------------\n\n" );
+	stdio_printf( "#include \"gfx_font_data.h\"\n\n" );
+	stdio_printf( "//----------------------------------------------------------------\n\n" );
 
-	printf( "// %s_font_data.h\n", font_name );
-	printf( "extern const gfx_font_data %s_font_data;\n\n", font_name );
+	stdio_printf( "// %s_font_data.h\n", font_name );
+	stdio_printf( "extern const gfx_font_data %s_font_data;\n\n", font_name );
 
-	printf( "//----------------------------------------------------------------\n\n" );
+	stdio_printf( "//----------------------------------------------------------------\n\n" );
 
-	printf( "// %s_font_data.cxx\n", font_name );
-	printf( "const gfx_font_data %s_font_data {\n", font_name );
-	printf( ".x_advance = %d,\n", (int)font->get_x_advance() );
-	printf( ".y_advance = %d,\n", (int)font->get_y_advance() );
-	printf( ".glyphs = {\n" );
+	stdio_printf( "// %s_font_data.cxx\n", font_name );
+	stdio_printf( "const gfx_font_data %s_font_data {\n", font_name );
+	stdio_printf( ".x_advance = %d,\n", (int)font->get_x_advance() );
+	stdio_printf( ".y_advance = %d,\n", (int)font->get_y_advance() );
+	stdio_printf( ".glyphs = {\n" );
 
-	printf( "//             +-- character\n" );
-	printf( "//             |       +-- left\n" );
-	printf( "//             |       |     +-- top\n" );
-	printf( "//             |       |     |     +-- width\n" );
-	printf( "//             |       |     |     |     +-- height\n" );
-	printf( "//             |       |     |     |     |     +-- x_advance\n" );
-	printf( "//             |       |     |     |     |     |\n" );
+	stdio_printf( "//             +-- character\n" );
+	stdio_printf( "//             |       +-- left\n" );
+	stdio_printf( "//             |       |     +-- top\n" );
+	stdio_printf( "//             |       |     |     +-- width\n" );
+	stdio_printf( "//             |       |     |     |     +-- height\n" );
+	stdio_printf( "//             |       |     |     |     |     +-- x_advance\n" );
+	stdio_printf( "//             |       |     |     |     |     |\n" );
 	uint bitmap_offset = 0;
 	for ( const auto& [ character, glyph ] : font->get_glyph_map() ) {
 
-		printf( "{ 0x%02x_c , { %3u_c , %3u , %3u , %3u , %3u , %3u ,", (uint)character, (uint)character, (uint)glyph.get_left(), (uint)glyph.get_top(), (uint)glyph.get_width(), (uint)glyph.get_height(), (uint)glyph.get_x_advance() );
+		stdio_printf( "{ 0x%02x_c , { %3u_c , %3u , %3u , %3u , %3u , %3u ,", (uint)character, (uint)character, (uint)glyph.get_left(), (uint)glyph.get_top(), (uint)glyph.get_width(), (uint)glyph.get_height(), (uint)glyph.get_x_advance() );
 
 		size_t bit_count = glyph.get_dimension().get_area();
 		size_t byte_count = (bit_count + 7) / 8;
 		if ( bit_count > 0 ) {
 			size_t bit_index = 0;
 			uint8_t hex = 0;
-			printf( " {" );
+			stdio_printf( " {" );
 			for ( gfx_xy_t y = 0 ; y < glyph.get_height() ; ++ y ) {
 				for ( gfx_xy_t x = 0 ; x < glyph.get_width() ; ++ x ) {
 					if ( bit_index % 8 == 0 ) hex = 0;
 					bool lit = glyph.get_pixel_lit( x, y );
 					hex = (hex << 1) | lit;
-					if ( bit_index % 8 == 7 ) printf( " 0x%02x ,", (uint)hex );
+					if ( bit_index % 8 == 7 ) stdio_printf( " 0x%02x ,", (uint)hex );
 					++ bit_index;
 				}
 			}
 			while ( bit_index % 8 > 0 ) {
 				hex = hex << 1;
-				if ( bit_index % 8 == 7 ) printf( " 0x%02x", (uint)hex );
+				if ( bit_index % 8 == 7 ) stdio_printf( " 0x%02x", (uint)hex );
 				++ bit_index;
 			}
-			printf( " }" );
+			stdio_printf( " }" );
 		}
 		else {
-			printf( " { 0 }" );
+			stdio_printf( " { 0 }" );
 		}
-		printf( " } },\n" );
+		stdio_printf( " } },\n" );
 
 		bitmap_offset += bit_count > 0 ? byte_count : 1;
 	}
-	printf( "}\n" );
-	printf( "};\n\n" );
+	stdio_printf( "}\n" );
+	stdio_printf( "};\n\n" );
 
-	printf( "//----------------------------------------------------------------\n" );
+	stdio_printf( "//----------------------------------------------------------------\n" );
 }
 
 //----------------------------------------------------------------
@@ -258,10 +258,10 @@ void gfx_font::print_gfx_font_array( const gfx_font* font, const char* font_name
 	const auto character_count = font->get_glyph_map().size();
 	if ( character_count == 0 ) return;
 
-	printf( "const uint8_t %s_font_data[%u][5] {\n", font_name, (uint)character_count );
+	stdio_printf( "const uint8_t %s_font_data[%u][5] {\n", font_name, (uint)character_count );
 
 	for ( const auto& [ character, glyph ] : font->get_glyph_map() ) {
-		printf( "{ " );
+		stdio_printf( "{ " );
 		for ( gfx_xy_t x = 0 ; x < std::min( glyph.get_width(), (gfx_wh_t)5 ) ; ++ x ) {
 			uint8_t byte = 0;
 			for ( gfx_xy_t y = 0 ; y < std::min( glyph.get_height(), (gfx_wh_t)8 ) ; ++ y ) {
@@ -269,11 +269,11 @@ void gfx_font::print_gfx_font_array( const gfx_font* font, const char* font_name
 				lit = invert ? !lit : lit;
 				if ( lit ) byte |= lsb_first ? (0b00000001 << y) : (0b10000000 >> y);
 			}
-			printf( "0x%02x , ", (uint)byte );
+			stdio_printf( "0x%02x , ", (uint)byte );
 		}
-		printf( " }, // %3u\n", (uint)character );
+		stdio_printf( " }, // %3u\n", (uint)character );
 	}
-	printf( "};\n" );
+	stdio_printf( "};\n" );
 }
 
 //----------------------------------------------------------------
@@ -282,20 +282,20 @@ void gfx_font::print_gfx_font_asciiart( const gfx_font* font, const char* font_n
 	uint bit_count = 0;
 	for ( const auto& [ character, glyph ] : font->get_glyph_map() ) {
 		bit_count += glyph.get_dimension().get_area();
-		printf( "[ '%c' 0x%x %d ]\n", (char)character, (uint)character, (int)glyph.get_dimension().get_area() );
+		stdio_printf( "[ '%c' 0x%x %d ]\n", (char)character, (uint)character, (int)glyph.get_dimension().get_area() );
 
 		for ( uint y = 0 ; y < glyph.get_height() ; ++ y ) {
 			for ( uint x = 0 ; x < glyph.get_width() ; ++ x ) {
 				bool lit = glyph.get_pixel_lit( x, y );
-				printf( "%c", (char)(lit ? '#' : ' ') );
+				stdio_printf( "%c", (char)(lit ? '#' : ' ') );
 			}
-			printf( "\n" );
+			stdio_printf( "\n" );
 		}
-		printf( "\n" );
+		stdio_printf( "\n" );
 	}
-	printf( "font : nchar %d nbits %d \n", (int)font->get_glyph_map().size(), (int)bit_count );
+	stdio_printf( "font : nchar %d nbits %d \n", (int)font->get_glyph_map().size(), (int)bit_count );
 
-	printf( "\n" );
+	stdio_printf( "\n" );
 }
 
 //----------------------------------------------------------------

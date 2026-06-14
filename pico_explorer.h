@@ -39,7 +39,7 @@
 */
 //----------------------------------------------------------------
 
-// Buttons
+// buttons
 constexpr uint BUTTON_UP_GPIO { 10 };
 constexpr uint BUTTON_RIGHT_GPIO { 11 };
 constexpr uint BUTTON_DOWN_GPIO { 14 };
@@ -48,40 +48,39 @@ constexpr uint BUTTON_LEFT_GPIO { 15 };
 // LEDs
 constexpr uint LEDS_GPIO { 1 };
 
-// Display
+// display
 constexpr uint DISPLAY_CS_GPIO { 17 };
 constexpr uint DISPLAY_DC_GPIO { 3 };
 constexpr uint DISPLAY_RES_GPIO { 6 };
 constexpr uint DISPLAY_BKL_GPIO { 2 };
 
-// Buzzer
+// buzzer
 constexpr uint BUZZER_GPIO { 27 };
 
 // DHT11
 constexpr uint DHT_GPIO { 0 };
 
-// Relay
+// relay
 constexpr uint RELAY_GPIO { 28 };
 
-// UART0
-constexpr uint UART_TX_GPIO { 12 };
-constexpr uint UART_RX_GPIO { 13 };
-
-// I2C0
-constexpr uint I2C0_SDA_GPIO { 4 };
-constexpr uint I2C0_SCL_GPIO { 5 };
-
-// SPI0
-constexpr uint SPI0_MISO_GPIO { 16 };
-constexpr uint SPI0_MOSI_GPIO { 19 };
-constexpr uint SPI_SCLK_GPIO { 18 };
-
-// Servos
+// servos
 constexpr uint SERVO_1_GPIO { 7 };
 constexpr uint SERVO_2_GPIO { 8 };
 constexpr uint SERVO_3_GPIO { 9 };
 constexpr uint SERVO_4_GPIO { 20 };
 
+// UART 0
+constexpr uint UART0_TX_GPIO { 12 };
+constexpr uint UART0_RX_GPIO { 13 };
+
+// I2C 0
+constexpr uint I2C0_SDA_GPIO { 4 };
+constexpr uint I2C0_SCL_GPIO { 5 };
+
+// SPI 0
+constexpr uint SPI0_MISO_GPIO { 16 };
+constexpr uint SPI0_MOSI_GPIO { 19 };
+constexpr uint SPI0_SCLK_GPIO { 18 };
 
 //----------------------------------------------------------------
 // MicroChip PKSERIAL-I2C1

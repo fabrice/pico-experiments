@@ -15,7 +15,6 @@
 
 constexpr uint UI_LEDS_COUNT = 12;
 
-
 //----------------------------------------------------------------
 
 ui_leds* ui_leds::make( display_7735* display ) {

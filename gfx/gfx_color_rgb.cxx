@@ -74,7 +74,7 @@ gfx_color_rgb< color_t >& gfx_color_rgb< color_t >::operator=( const gfx_color_r
 	_green = that._green;
 	_blue = that._blue;
 
-	return *this;
+	return (*this);
 }
 
 //----------------------------------------------------------------

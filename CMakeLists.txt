@@ -43,6 +43,8 @@ add_executable(${PROJECT_NAME}
 add_subdirectory(std_plus)
 add_subdirectory(pico_plus)
 add_subdirectory(gpio_plus)
+
+add_subdirectory(working_led)
 add_subdirectory(pwm_plus)
 add_subdirectory(pico_wire)
 add_subdirectory(gfx)
@@ -52,7 +54,6 @@ add_subdirectory(neopixels)
 add_subdirectory(display_7735)
 add_subdirectory(buzzer)
 add_subdirectory(ui_leds)
-add_subdirectory(working_led)
 
 # cfpt stuff
 add_subdirectory(display_1309)
@@ -104,18 +105,37 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 #-----------------------------------------------------------------
 
 pico_set_program_name(${PROJECT_NAME} "Playground")
-pico_set_program_version(${PROJECT_NAME} "avril 2026")
+pico_set_program_version(${PROJECT_NAME} "01 juin 2026")
+
+pico_add_extra_outputs(${PROJECT_NAME})
 
 # Modify the below lines to enable/disable output over UART/USB
 pico_enable_stdio_uart(${PROJECT_NAME} 0)
 pico_enable_stdio_usb(${PROJECT_NAME} 1)
 
-#add_compile_options(-fexec-charset=ISO-8859-1)
+#-----------------------------------------------------------------
+
 target_compile_options(${PROJECT_NAME} PRIVATE -fexec-charset=ISO-8859-1)
+
+# compilation optimisée
+#target_compile_options(${PROJECT_NAME} PUBLIC -O3)
+
+# compilation pour le debugging
+target_compile_options(${PROJECT_NAME} PUBLIC -Og -g)
+
+# analyser
+#target_compile_options(${PROJECT_NAME} PUBLIC -fanalyzer)
+
+# warnings
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
+#target_compile_options(${PROJECT_NAME} PRIVATE -Wextra)
+
+#-----------------------------------------------------------------
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 	COMMAND ${PICO_TOOLCHAIN_PATH}/bin/arm-none-eabi-size $<TARGET_FILE:${PROJECT_NAME}>
 #	COMMAND ${PICO_TOOLCHAIN_PATH}/bin/arm-none-eabi-size --format=sysv $<TARGET_FILE:${PROJECT_NAME}>
 	COMMENT "Binary sizes:"
 )
+
+#-----------------------------------------------------------------

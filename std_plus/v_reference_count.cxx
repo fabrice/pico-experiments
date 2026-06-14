@@ -9,10 +9,12 @@
 
 #include "v_reference_count.h"
 
+#include "pico/stdio.h"
+
 //----------------------------------------------------------------
 
 v_reference_count::~v_reference_count() noexcept {
-	if ( _reference_count > 1 ) printf( "v_reference_count::~v_reference_count : _reference_count = %d \n", (int)_reference_count );
+	if ( _reference_count > 1 ) stdio_printf( "v_reference_count::~v_reference_count : _reference_count = %d \n", (int)_reference_count );
 }
 
 //----------------------------------------------------------------

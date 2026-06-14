@@ -617,7 +617,7 @@ void display_7735::draw_block( int16_t x, int16_t y, uint16_t w, uint16_t h, uin
 
 //----------------------------------------------------------------
 
-// TODO unfinished
+// TODO: unfinished
 
 void display_7735::draw_graymap( const uint8_t* xy_graymap, size_t length, int16_t x, int16_t y, uint16_t width, uint16_t height ) {
 	if (x >= _width || y >= _height) return;
