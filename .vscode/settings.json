@@ -16,32 +16,46 @@
     "cmake.automaticReconfigure": false,
     "cmake.configureOnOpen": false,
     "cmake.generator": "Ninja",
-    "cmake.cmakePath": "${userHome}/.pico-sdk/cmake/v4.3.2/bin/cmake",
+    "cmake.cmakePath": "${userHome}/.pico-sdk/cmake/v4.3.4/bin/cmake",
     "C_Cpp.debugShortcut": false,
     "terminal.integrated.env.windows": {
 		"PICO_SDK_PATH": "${env:USERPROFILE}/.pico-sdk/sdk/2.2.0",
 		"PICO_TOOLCHAIN_PATH": "${env:USERPROFILE}/.pico-sdk/toolchain/15_2_Rel1",
-		"Path": "${env:USERPROFILE}/.pico-sdk/toolchain/15_2_Rel1/bin;${env:USERPROFILE}/.pico-sdk/picotool/2.2.0-a4/picotool;${env:USERPROFILE}/.pico-sdk/cmake/v4.3.2/bin;${env:USERPROFILE}/.pico-sdk/ninja/v1.13.2;${env:PATH}"
+		"Path": "${env:USERPROFILE}/.pico-sdk/toolchain/15_2_Rel1/bin;${env:USERPROFILE}/.pico-sdk/picotool/2.2.0-a4/picotool;${env:USERPROFILE}/.pico-sdk/cmake/v4.3.4/bin;${env:USERPROFILE}/.pico-sdk/ninja/v1.13.2;${env:PATH}"
 	},
     "terminal.integrated.env.osx": {
 		"PICO_SDK_PATH": "${env:HOME}/.pico-sdk/sdk/2.2.0",
 		"PICO_TOOLCHAIN_PATH": "${env:HOME}/.pico-sdk/toolchain/15_2_Rel1",
-		"PATH": "${env:HOME}/.pico-sdk/toolchain/15_2_Rel1/bin:${env:HOME}/.pico-sdk/picotool/2.2.0-a4/picotool:${env:HOME}/.pico-sdk/cmake/v4.3.2/bin:${env:HOME}/.pico-sdk/ninja/v1.13.2:${env:PATH}"
+		"PATH": "${env:HOME}/.pico-sdk/toolchain/15_2_Rel1/bin:${env:HOME}/.pico-sdk/picotool/2.2.0-a4/picotool:${env:HOME}/.pico-sdk/cmake/v4.3.4/bin:${env:HOME}/.pico-sdk/ninja/v1.13.2:${env:PATH}"
 	},
     "terminal.integrated.env.linux": {
 		"PICO_SDK_PATH": "${env:HOME}/.pico-sdk/sdk/2.2.0",
 		"PICO_TOOLCHAIN_PATH": "${env:HOME}/.pico-sdk/toolchain/15_2_Rel1",
-		"PATH": "${env:HOME}/.pico-sdk/toolchain/15_2_Rel1/bin:${env:HOME}/.pico-sdk/picotool/2.2.0-a4/picotool:${env:HOME}/.pico-sdk/cmake/v4.3.2/bin:${env:HOME}/.pico-sdk/ninja/v1.13.2:${env:PATH}"
+		"PATH": "${env:HOME}/.pico-sdk/toolchain/15_2_Rel1/bin:${env:HOME}/.pico-sdk/picotool/2.2.0-a4/picotool:${env:HOME}/.pico-sdk/cmake/v4.3.4/bin:${env:HOME}/.pico-sdk/ninja/v1.13.2:${env:PATH}"
 	},
 	"terminal.integrated.scrollback": 10000,
     "raspberry-pi-pico.cmakeAutoConfigure": true,
     "raspberry-pi-pico.useCmakeTools": false,
-    "raspberry-pi-pico.cmakePath": "${HOME}/.pico-sdk/cmake/v4.3.2/bin/cmake",
+    "raspberry-pi-pico.cmakePath": "${HOME}/.pico-sdk/cmake/v4.3.4/bin/cmake",
     "raspberry-pi-pico.ninjaPath": "${HOME}/.pico-sdk/ninja/v1.13.2/ninja",
     "chat.disableAIFeatures": true,
 	"editor.detectIndentation": false,
 	"editor.fontFamily": "'JetBrains Mono NL Regular', 'Monaspace Neon NF Regular', Menlo, Consolas, 'Courier New', monospace",
 	"editor.fontLigatures": true,
 	"editor.fontSize": 13,
-	"cortex-debug.variableUseNaturalFormat": false
+	"cortex-debug.variableUseNaturalFormat": false,
+	"C_Cpp.vcFormat.indent.namespaceContents": false,
+	"C_Cpp.vcFormat.newLine.beforeOpenBrace.block": "sameLine",
+	"C_Cpp.vcFormat.newLine.beforeOpenBrace.function": "sameLine",
+	"C_Cpp.vcFormat.newLine.beforeOpenBrace.lambda": "sameLine",
+	"C_Cpp.vcFormat.newLine.beforeOpenBrace.namespace": "sameLine",
+	"C_Cpp.vcFormat.newLine.beforeOpenBrace.type": "sameLine",
+	"C_Cpp.vcFormat.space.beforeInitializerListOpenBrace": true,
+	"C_Cpp.vcFormat.space.insertAfterSemicolon": true,
+	"C_Cpp.vcFormat.space.removeBeforeSemicolon": false,
+	"C_Cpp.vcFormat.space.removeAroundUnaryOperator": false,
+	"C_Cpp.vcFormat.space.withinControlFlowStatementParentheses": true,
+	"C_Cpp.vcFormat.space.withinLambdaBrackets": true,
+	"C_Cpp.vcFormat.space.withinParameterListParentheses": true,
+	"C_Cpp.vcFormat.space.withinSquareBrackets": true
 }
