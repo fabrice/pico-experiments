@@ -115,9 +115,10 @@ pico_set_program_version(${PROJECT_NAME} "01 juin 2026")
 
 pico_add_extra_outputs(${PROJECT_NAME})
 
-# Modify the below lines to enable/disable output over UART/USB
-pico_enable_stdio_uart(${PROJECT_NAME} 0)
+# Modify the below lines to enable/disable output over USB/UART/SWD
 pico_enable_stdio_usb(${PROJECT_NAME} 1)
+pico_enable_stdio_uart(${PROJECT_NAME} 0)
+pico_enable_stdio_rtt(${PROJECT_NAME} 0)
 
 #-----------------------------------------------------------------
 
