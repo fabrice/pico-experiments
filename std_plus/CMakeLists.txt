@@ -7,6 +7,7 @@ cmake_minimum_required(VERSION 4.0)
 project(lib_std_plus CXX C ASM)
 
 add_library(${PROJECT_NAME} STATIC
+    string_plus.cxx
 	v_reference_count.cxx
 )
 
