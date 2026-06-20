@@ -85,6 +85,15 @@ bool gfx_rectangle::is_empty() const {
 
 //----------------------------------------------------------------
 
+gfx_rectangle& gfx_rectangle::operator=( const gfx_rectangle& rhs ) {
+	_top_left = rhs._top_left;
+	_bottom_right = rhs._bottom_right;
+
+	return (*this);
+}
+
+//----------------------------------------------------------------
+
 gfx_rectangle& gfx_rectangle::operator+=( const gfx_rectangle& rhs ) {
 	const gfx_xy_t left = std::min( this->get_left(), rhs.get_left() );
 	const gfx_xy_t top = std::min( this->get_top(), rhs.get_top() );

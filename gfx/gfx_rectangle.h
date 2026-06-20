@@ -100,6 +100,8 @@ public:
 	bool is_zero() const;
 	bool is_empty() const;
 
+	gfx_rectangle& operator=( const gfx_rectangle& rhs );
+
 	gfx_rectangle& operator+=( const gfx_rectangle& rhs );
 	gfx_rectangle& operator+=( const gfx_point& rhs );
 
