@@ -10,7 +10,9 @@
 #include "stdio_plus.h"
 
 #include "pico/stdio.h"
+#if defined(LIB_PICO_STDIO_USB) && LIB_PICO_STDIO_USB
 #include "pico/stdio_usb.h"
+#endif
 #include "pico/time.h"
 
 //----------------------------------------------------------------
@@ -23,12 +25,15 @@
  * \author Fabrice de Chambrier, 2026
  */
 bool stdio_usb_wait( uint timeout ) {
+#if defined(LIB_PICO_STDIO_USB) && LIB_PICO_STDIO_USB
 	absolute_time_t deadline = make_timeout_time_ms( timeout );
 	while ( !stdio_usb_connected() && !time_reached( deadline ) ) {
 		sleep_ms( 100 );
 	}
-
 	return stdio_usb_connected();
+#else
+	return false;
+#endif
 }
 
 //----------------------------------------------------------------
