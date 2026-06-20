@@ -27,7 +27,16 @@ OLED* oled_init( uint8_t i2c_num, uint8_t address, uint reset_gpio );
 //----------------------------------------------------------------
 // properties
 
+/*! oled_get_width()
+ * \brief retourne la largeur en pixels de l'écran.
+ * \return largeur
+ */
 uint16_t oled_get_width( const OLED* that );
+
+/*! oled_get_height()
+ * \brief retourne la hauteur en pixels de l'écran.
+ * \return hauteur
+ */
 uint16_t oled_get_height( const OLED* that );
 
 uint16_t oled_get_column_count( const OLED* that );
