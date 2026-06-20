@@ -13,6 +13,7 @@
 
 #include "pico/stdlib.h"
 #include "wire_spi.h"
+#include "instance_registry.h"
 
 #include <cstring>
 #include <map>
@@ -36,71 +37,62 @@ constexpr uint ST7735_BACKLIGHT_GPIO { 2 };
 
 namespace local {
 
-std::map< uint, display_7735* > instances {};
+instance_registry< display_7735* >* registry { nullptr };
 
 }
 
-uint get_free_instance_num() {
-	uint instance_num = 0;
-	//while ( local::instances.contains( instance_num ) ) ++ instance_num;
+//----------------------------------------------------------------
 
-	for ( const auto& [key, value] : local::instances ) {
-		if ( (value == nullptr) or (key > instance_num) ) return instance_num;
-		if ( key == instance_num ) ++ instance_num;
-	}
+void instance_registry_init() {
+	if ( local::registry != nullptr ) return;
 
-	return instance_num;
+	local::registry = instance_registry< display_7735* >::make();
 }
 
-display_7735* get_instance( uint instance_num ) noexcept {
-	auto pair = local::instances.find( instance_num );
-	if ( pair == local::instances.end() ) return nullptr;
-
-	return pair->second;
-}
-
-void set_instance( uint instance_num, display_7735* that ) {
-	// TODO : check for get_instance() != nullptr
-	local::instances[ instance_num ] = that;
-}
-
-void erase_instance( uint instance_num ) {
-	local::instances.erase( instance_num );
-}
-
-void delete_instance( uint instance_num ) {
-	auto pair = local::instances.find( instance_num );
-	if ( pair == local::instances.end() ) return;
-
-	if ( pair->second == nullptr ) {
-		local::instances.erase( pair );
-		return;
-	}
-
-	delete pair->second;
-	local::instances.erase( pair );
-}
+//----------------------------------------------------------------
 
 uint display_7735_num_init( uint8_t spi_num, uint reset_gpio ) {
+	instance_registry_init();
+
 	auto that = display_7735_init( spi_num, reset_gpio );
 
-	uint instance_num = get_free_instance_num();
-	set_instance( instance_num, that );
+	uint instance_num = local::registry->get_free_instance_num();
+	local::registry->set_instance( instance_num, that );
 
 	return instance_num;
 }
 
+//----------------------------------------------------------------
+
 uint16_t display_7735_num_get_width( const uint instance_num ) {
-	auto that = get_instance( instance_num );
+	if ( local::registry == nullptr ) return 0;
+
+	auto that = local::registry->get_instance( instance_num );
 	if ( that == nullptr ) return 0;
 
 	return that->get_width();
 }
 
-void display_7735_num_deinit( const uint instance_num ) {
-	delete_instance( instance_num );
+//----------------------------------------------------------------
+
+uint16_t display_7735_num_get_height( const uint instance_num ) {
+	if ( local::registry == nullptr ) return 0;
+
+	auto that = local::registry->get_instance( instance_num );
+	if ( that == nullptr ) return 0;
+
+	return that->get_height();
 }
 
+//----------------------------------------------------------------
+
+void display_7735_num_deinit( const uint instance_num ) {
+	if ( local::registry == nullptr ) return;
+
+	local::registry->delete_instance( instance_num );
+}
+
+//----------------------------------------------------------------
 //----------------------------------------------------------------
 
 display_7735* display_7735_init( uint8_t spi_num, uint reset_gpio ) {
