@@ -3,24 +3,14 @@
 // Raspberry Pico
 // Target : PicoSDK C/C++
 //
-// pico_plus
+// gpio_plus
 //
 //----------------------------------------------------------------
 
-#pragma once
+#include "pico/stdio.h"
 
 //----------------------------------------------------------------
 
-#include "pico/stdlib.h"
-
-#include "stdio_plus.h"
-
-#include "gpio_plus.h"
-
-#include "hardware/i2c.h"
-#include "hardware_i2c_plus.h"
-
-#include "hardware/spi.h"
-#include "hardware_spi_plus.h"
+constexpr uint NULL_GPIO { 255 };
 
 //----------------------------------------------------------------
